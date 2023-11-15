@@ -1,8 +1,15 @@
 #include <Arduino.h>
+#include <Wire.h>
+
+void requestEvent() {
+    Wire.write("hello ");
+}
+
 void setup() {
-// write your initialization code here
+    Wire.begin(8);
+    Wire.onRequest(requestEvent);
 }
 
 void loop() {
-// write your code here
+    delay(100);
 }
