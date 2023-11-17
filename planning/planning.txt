@@ -1,5 +1,7 @@
 Planning
 
+[Song Length][Instrument][Instrument Data Length][Instrument][..][Song Length][..]
+
 ==============================================
 
 Controller -> Instruments
