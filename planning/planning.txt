@@ -1,1 +1,31 @@
 Planning
+
+==============================================
+
+Controller -> Instruments
+Poll
+
+----------------------------------------------
+
+Controller -> Instruments
+Begin Recording
+
+Controller -> Instruments
+Stop Recording
+
+(Controller Requests) Instruments -> Controller
+Song Data Length
+
+(Controller Requests) Instruments -> Controller
+Song Data
+
+-----------------------------------------------
+
+Controller -> Instruments
+Song Data
+
+Controller -> Instruments
+Begin Playback
+
+Controller -> Instruments
+Stop Playback
