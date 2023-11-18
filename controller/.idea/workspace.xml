@@ -19,7 +19,6 @@
       <change afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../keyboard/.idea/editor.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../shared/.idea/editor.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../shared/src/CommunicationActor.h" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../shared/src/CommunicationController.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../shared/src/Communication.cpp" beforeDir="false" />

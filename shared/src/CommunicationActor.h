@@ -38,9 +38,9 @@ namespace CommunicationActor {
 
         const uint8_t code = Wire.read();
         switch (code) {
-            case Code::StopRecording:
+            case static_cast<int>(Code::StopRecording):
                 stopRecording();
-            break;
+                break;
             default:
                 Serial.print("Unrecognised code received: ");
                 Serial.println(code);
