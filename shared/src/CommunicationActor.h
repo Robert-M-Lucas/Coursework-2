@@ -14,7 +14,7 @@ namespace CommunicationActor {
     unsigned int(*getSongLength)() = nullptr;
     byte*(*getSong)() = nullptr;
 
-    void(*receiveSong)(unsigned int, bool*) = nullptr;
+    bool*(*getSongStorage)() = nullptr;
 
     Request request = Request::None;
 
