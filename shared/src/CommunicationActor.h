@@ -5,17 +5,19 @@
 #ifndef COMMUNICATIONACTOR_H
 #define COMMUNICATIONACTOR_H
 
+#include <DataStoreActor.h>
 #include <Wire.h>
 #include "Communication.h"
 
 namespace CommunicationActor {
-    void(*beginRecording)(unsigned long) = nullptr; // Offset ms
-    void(*stopRecording)() = nullptr;
-    unsigned int(*getSongLength)() = nullptr;
-    byte*(*getSong)() = nullptr;
+    // void(*beginRecording)(unsigned long) = nullptr; // Offset ms
+    // void(*stopRecording)() = nullptr;
+    // // Get the length of the currently stored song data
+    // unsigned int(*getSongLength)() = nullptr;
+    // // Get pointer to where data should be read from / written too
+    // byte*(*getSong)() = nullptr;
 
-    // Gets the address where the song data should be written into
-    bool*(*getSongStorage)() = nullptr;
+    DataStoreActorInterface* dataStore = nullptr;
 
     Request request = Request::None;
 
@@ -40,18 +42,35 @@ namespace CommunicationActor {
         const uint8_t code = Wire.read();
         switch (code) {
             case static_cast<int>(Code::StopRecording):
-                stopRecording();
+                dataStore->stopRecording();
                 break;
             default:
                 Serial.print("Unrecognised code received: ");
                 Serial.println(code);
         }
+
+        if (Wire.available() != 0) { Serial.print("Leftover data after code '"); Serial.print(code); Serial.println("' was handled"); }
     }
 
-    inline void initialise(Instrument address) {
+    /*inline void initialise(Instrument address,
+        void(*_beginRecording)(unsigned long), void(*_stopRecording)(),
+        byte*(*_getSong)()) {
+
         Wire.begin(static_cast<uint8_t>(address));
         Wire.onRequest(requestEvent);
         Wire.onReceive(receiveEvent);
+
+        beginRecording = _beginRecording;
+        stopRecording = _stopRecording;
+        getSong = _getSong;
+    }*/
+
+    inline void initialise(Instrument address, DataStoreActorInterface *_dataStore) {
+        Wire.begin(static_cast<uint8_t>(address));
+        Wire.onRequest(requestEvent);
+        Wire.onReceive(receiveEvent);
+
+        dataStore = _dataStore;
     }
 };
 
