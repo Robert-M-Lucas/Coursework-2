@@ -27,6 +27,9 @@ namespace CommunicationActor {
         }
 
         switch (request) {
+            case Request::SongLength:
+                dataStore->getSongLength();
+                break;
             default:
                 Serial.print("Request type '");
                 Serial.print(static_cast<uint8_t>(request));
