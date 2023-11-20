@@ -13,12 +13,17 @@ enum class Instrument : uint8_t {
 };
 
 enum class Code : uint8_t {
-    StopRecording = 1
+    StartRecording = 1,
+    StopRecording = 2,
+    RequestSongLength = 3,
+    RequestSongData = 4,
+    WriteSongData = 5
 };
 
 enum class Request : uint8_t {
     None = 0,
-    SongLength = 1
+    SongLength = 1,
+    SongData = 2,
 };
 
 #endif //SHARED_COMMUNICATION_H

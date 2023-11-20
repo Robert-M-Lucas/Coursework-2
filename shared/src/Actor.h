@@ -9,9 +9,9 @@
 
 #include "Constants.h"
 
-class DataStoreActorInterface {
+class ActorInterface {
 public:
-    virtual ~DataStoreActorInterface() = default;
+    virtual ~ActorInterface() = default;
     virtual void startRecording();
     virtual void stopRecording();
     virtual unsigned getSongLength();
@@ -20,7 +20,7 @@ public:
     virtual void writeSongData(unsigned index, byte data);
 };
 
-class DataStoreActor final : public DataStoreActorInterface {
+class Actor final : public ActorInterface {
 private:
     byte storage[INSTRUMENT_STORAGE_SIZE] = {};
     unsigned songLength = 0;

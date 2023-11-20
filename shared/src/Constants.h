@@ -5,6 +5,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-constexpr unsigned int INSTRUMENT_STORAGE_SIZE = 4096;
+constexpr unsigned int INSTRUMENT_STORAGE_SIZE = 1024;
 
 #endif //CONSTANTS_H
