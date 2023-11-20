@@ -1,3 +1,10 @@
+//
+// Created by robertlucas on 20/11/23.
+//
+
+#ifndef SHARED_UTIL_H
+#define SHARED_UTIL_H
+
 #include "Arduino.h"
 
 namespace Util {
@@ -16,3 +23,5 @@ namespace Util {
         return *reinterpret_cast<T*>(input);
     }
 }
+
+#endif //SHARED_UTIL_H
