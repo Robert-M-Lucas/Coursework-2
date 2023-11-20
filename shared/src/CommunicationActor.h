@@ -20,7 +20,7 @@ namespace CommunicationActor {
     ActorInterface* dataStore = nullptr;
 
     Request request = Request::None;
-    unsigned requestData = 0; // I miss Rust enums
+    unsigned lastBufferLength = 0; // I miss Rust enums
 
     inline void requestEvent() {
         if (request == Request::None) {
@@ -28,20 +28,37 @@ namespace CommunicationActor {
         }
 
         switch (request) {
-            case Request::SongLength: {
-                unsigned length = dataStore->getSongLength();
-                const auto* b = static_cast<byte*>(static_cast<void*>(&length)); // Disgusting
+            case Request::BufferLength : {
+                unsigned length = dataStore->getBufferLength();
+                lastBufferLength = length;
+                const auto* b = reinterpret_cast<byte*>(&length); // Disgusting
                 for (unsigned i = 0; i < sizeof(unsigned); i++) {
                     Wire.write(b[i]);
                 }
                 break;
             }
-            case Request::SongData: {
-                const unsigned length = dataStore->getSongLength();
-                const byte* song_storage = dataStore->getSongStorage();
+            case Request::Buffer: {
+                const unsigned length = lastBufferLength;
+                const ArrAndOffset arr_data = dataStore->getBufferRead();
                 for (unsigned i = 0; i < length; i++) {
-                    Wire.write(song_storage[i]);
+                    unsigned index = (*arr_data.offset) + i;
+                    if (index > INSTRUMENT_BUFFER_SIZE) {
+                        index -= INSTRUMENT_BUFFER_SIZE;
+                    }
+                    Wire.write(arr_data.arr[index]);
                 }
+                *arr_data.offset += length;
+                if (*arr_data.offset > INSTRUMENT_BUFFER_SIZE) {
+                    *arr_data.offset -= INSTRUMENT_BUFFER_SIZE;
+                }
+            }
+            case Request::BufferEmpty: {
+                unsigned length = dataStore->getBufferEmpty();
+                const auto* b = reinterpret_cast<byte*>(&length); // Disgusting
+                for (unsigned i = 0; i < sizeof(unsigned); i++) {
+                    Wire.write(b[i]);
+                }
+                break;
             }
             default: {
                 Serial.print("Request type '");
@@ -66,21 +83,43 @@ namespace CommunicationActor {
                 dataStore->stopRecording();
                 break;
             }
-            case Code::RequestSongLength: {
-                request = Request::SongLength;
-                requestData = dataStore->getSongLength();
+            case Code::RequestBufferLength: {
+                request = Request::BufferLength;
                 break;
             }
-            case Code::RequestSongData: {
-                request = Request::SongData;
+            case Code::RequestBuffer: {
+                request = Request::Buffer;
                 break;
             }
-            case Code::WriteSongData: {
+            case Code::RequestBufferNeeded: {
+                request = Request::BufferEmpty;
+                break;
+            }
+            case Code::BufferData: {
+                ArrAndOffset arr_data = dataStore->getBufferWrite();
                 unsigned i = 0;
                 while (Wire.available() > 0) {
-                    dataStore->writeSongData(i, static_cast<byte>(Wire.read()));
+                    unsigned index = (*arr_data.offset) + i;
+                    if (index > INSTRUMENT_BUFFER_SIZE) {
+                        index -= INSTRUMENT_BUFFER_SIZE;
+                    }
+
+                    arr_data.arr[index] = static_cast<byte>(Wire.read());
+
                     i++;
                 }
+
+                *arr_data.offset += i;
+                if (*arr_data.offset > INSTRUMENT_BUFFER_SIZE) {
+                    *arr_data.offset -= INSTRUMENT_BUFFER_SIZE;
+                }
+            }
+            case Code::StartPlayback: {
+                dataStore->startPlayback();
+                break;
+            }
+            case Code::StopPlayback: {
+                dataStore->stopPlayback();
                 break;
             }
             default: {
