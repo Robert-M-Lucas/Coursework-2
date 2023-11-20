@@ -9,6 +9,7 @@
 
 #include "Communication.h"
 #include "ControllerStorage.h"
+#include "Util.h"
 
 namespace CommunicationController {
     namespace Internal {
@@ -41,10 +42,17 @@ namespace CommunicationController {
             }
         }
 
+        /// Read bytes from an instrument
+        template <class T>
+        inline T readResponse() {
+            byte bytes[sizeof(T)];
 
+            for (unsigned int i = 0; i < sizeof(T) && Wire.available(); ++i) {
+                bytes[i] = Wire.read();
+            }
 
-
-
+            return Util::fromBytes<T>(bytes);
+        }
     }
 
     /// Called during `setup()`
@@ -63,12 +71,21 @@ namespace CommunicationController {
     }
 
     /// Read song data from an instrument
-    inline void readSongData(int instrument) {
-        // Request song length
-        Internal::message(instrument, Code::RequestSongLength);
+    inline void readBuffer(int instrument) {
+        // Request buffer length
+        Internal::message(instrument, Code::RequestBufferLength);
 
-        //
+        // Wait for response
+        delay(TRANSMISSION_DELAY);
 
+        // Read response
+        auto len = Internal::readResponse<unsigned int>();
+
+        // Request buffer data
+        Internal::message(instrument, Code::RequestBuffer);
+
+        // Wait for response
+        delay(TRANSMISSION_DELAY);
     }
 }
 
