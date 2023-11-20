@@ -8,6 +8,7 @@
 #include <Wire.h>
 #include "Communication.h"
 #include "Actor.h"
+#include "Util.h"
 
 namespace CommunicationActor {
     // void(*beginRecording)(unsigned long) = nullptr; // Offset ms
@@ -31,7 +32,8 @@ namespace CommunicationActor {
             case Request::BufferLength : {
                 unsigned length = dataStore->getBufferLength();
                 lastBufferLength = length;
-                const auto* b = reinterpret_cast<byte*>(&length); // Disgusting
+                byte* b = nullptr;
+                Util::toBytes(&length, b);
                 for (unsigned i = 0; i < sizeof(unsigned); i++) {
                     Wire.write(b[i]);
                 }
@@ -54,7 +56,8 @@ namespace CommunicationActor {
             }
             case Request::BufferEmpty: {
                 unsigned length = dataStore->getBufferEmpty();
-                const auto* b = reinterpret_cast<byte*>(&length); // Disgusting
+                byte* b = nullptr;
+                Util::toBytes(&length, b);
                 for (unsigned i = 0; i < sizeof(unsigned); i++) {
                     Wire.write(b[i]);
                 }

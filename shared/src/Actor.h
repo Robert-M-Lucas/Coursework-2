@@ -30,7 +30,7 @@ public:
     virtual void writeSongData(unsigned index, byte data);
 };
 
-class Actor final : public ActorInterface {
+class DefaultActor : public ActorInterface {
 private:
     byte buffer[INSTRUMENT_BUFFER_SIZE] = {};
     unsigned bufferHead = 0;
@@ -79,6 +79,18 @@ public:
     void writeSongData(const unsigned index, const byte data) override {
         if (isRecording) { Serial.println("Data is being written during recording!"); }
         buffer[index] = data;
+    }
+};
+
+class DebugActor: public DefaultActor {
+    void startRecording() override {
+        Serial.println("Starting recording");
+        DefaultActor::startRecording();
+    }
+
+    void stopRecording() override {
+        Serial.println("Stopping recording");
+        DefaultActor::stopRecording();
     }
 };
 
