@@ -29,7 +29,7 @@ namespace CommunicationController {
         /// Transmit a `Code` to an instrument
         inline void message(u8 instrument, Code code) {
             Wire.beginTransmission(instrument);
-            Wire.write(static_cast<u8>(Code::StartRecording));
+            Wire.write(static_cast<u8>(code));
             Wire.endTransmission();
         }
 
