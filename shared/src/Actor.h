@@ -84,11 +84,13 @@ public:
 
 class DebugActor: public DefaultActor {
     void startRecording() override {
+        digitalWrite(LED_BUILTIN, HIGH);
         Serial.println("Starting recording");
         DefaultActor::startRecording();
     }
 
     void stopRecording() override {
+        digitalWrite(LED_BUILTIN, LOW);
         Serial.println("Stopping recording");
         DefaultActor::stopRecording();
     }

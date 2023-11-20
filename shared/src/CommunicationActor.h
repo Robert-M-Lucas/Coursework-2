@@ -131,7 +131,11 @@ namespace CommunicationActor {
             }
         }
 
-        if (Wire.available() >= 0) { Serial.print("Leftover data after code '"); Serial.print(static_cast<uint8_t>(code)); Serial.println("' was handled"); }
+        if (Wire.available() > 0) {
+            Serial.print("Leftover data after code '");
+            Serial.print(static_cast<uint8_t>(code));
+            Serial.println("' was handled");
+        }
     }
 
     /*inline void initialise(Instrument address,
