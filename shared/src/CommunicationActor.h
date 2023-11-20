@@ -31,7 +31,7 @@ namespace CommunicationActor {
             case Request::BufferLength : {
                 unsigned length = dataStore->getBufferLength();
                 lastBufferLength = length;
-                const auto* b = static_cast<byte*>(static_cast<void*>(&length)); // Disgusting
+                const auto* b = reinterpret_cast<byte*>(&length); // Disgusting
                 for (unsigned i = 0; i < sizeof(unsigned); i++) {
                     Wire.write(b[i]);
                 }
@@ -51,6 +51,14 @@ namespace CommunicationActor {
                 if (*arr_data.offset > INSTRUMENT_BUFFER_SIZE) {
                     *arr_data.offset -= INSTRUMENT_BUFFER_SIZE;
                 }
+            }
+            case Request::BufferEmpty: {
+                unsigned length = dataStore->getBufferEmpty();
+                const auto* b = reinterpret_cast<byte*>(&length); // Disgusting
+                for (unsigned i = 0; i < sizeof(unsigned); i++) {
+                    Wire.write(b[i]);
+                }
+                break;
             }
             default: {
                 Serial.print("Request type '");

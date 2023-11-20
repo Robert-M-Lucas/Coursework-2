@@ -61,7 +61,7 @@ public:
     }
 
     unsigned getBufferEmpty() override {
-        return INSTRUMENT_BUFFER_SIZE - getBufferLength();
+        return INSTRUMENT_BUFFER_SIZE - getBufferLength() - 1;
     }
 
     ArrAndOffset getBufferWrite() override {
