@@ -1,0 +1,34 @@
+Planning - Proposed updates based on plan for centralised storage and low ram capacity of individual boards
+
+Data 
+[Song Length][Instrument][Instrument Data Length][Instrument][..][Song Length][..]
+
+==============================================
+
+Controller -> Instruments
+Poll
+
+----------------------------------------------
+
+Controller -> Instruments
+Begin Recording
+
+Controller -> Instruments
+Stop Recording
+
+(Controller Requests) Instruments -> Controller
+Song Data Buffer Length
+
+(Controller Requests) Instruments -> Controller
+Song Data Buffer
+
+-----------------------------------------------
+
+Controller -> Instruments
+Song Data Buffer
+
+Controller -> Instruments
+Begin Playback
+
+Controller -> Instruments
+Stop Playback

@@ -9,22 +9,34 @@
 
 #include "Constants.h"
 
+struct ArrAndOffset {
+    byte* arr;
+    unsigned* offset;
+};
+
 class ActorInterface {
 public:
     virtual ~ActorInterface() = default;
     virtual void startRecording();
     virtual void stopRecording();
-    virtual unsigned getSongLength();
-    virtual byte* getSongStorage();
+    virtual unsigned getBufferLength();
+    virtual ArrAndOffset getBufferRead();
+
+    virtual unsigned getBufferEmpty();
+    virtual ArrAndOffset getBufferWrite();
+    virtual void startPlayback();
+    virtual void stopPlayback();
 
     virtual void writeSongData(unsigned index, byte data);
 };
 
 class Actor final : public ActorInterface {
 private:
-    byte storage[INSTRUMENT_STORAGE_SIZE] = {};
-    unsigned songLength = 0;
+    byte buffer[INSTRUMENT_BUFFER_SIZE] = {};
+    unsigned bufferHead = 0;
+    unsigned bufferTail = 0;
     bool isRecording = false;
+    bool isPlayingBack = false;
 
 public:
     void startRecording() override {
@@ -35,17 +47,38 @@ public:
         isRecording = false;
     }
 
-    unsigned getSongLength() override {
-        return songLength;
+    unsigned getBufferLength() override {
+        if (bufferTail > bufferHead) {
+            return bufferTail - bufferHead;
+        }
+        else {
+            return bufferTail + (INSTRUMENT_BUFFER_SIZE - bufferHead);
+        }
     }
 
-    byte* getSongStorage() override {
-        return storage;
+    ArrAndOffset getBufferRead() override {
+        return ArrAndOffset {buffer, &bufferHead };
+    }
+
+    unsigned getBufferEmpty() override {
+        return INSTRUMENT_BUFFER_SIZE - getBufferLength();
+    }
+
+    ArrAndOffset getBufferWrite() override {
+        return ArrAndOffset {buffer, &bufferTail };
+    }
+
+    void startPlayback() override {
+        isPlayingBack = true;
+    }
+
+    void stopPlayback() override {
+        isPlayingBack = false;
     }
 
     void writeSongData(const unsigned index, const byte data) override {
         if (isRecording) { Serial.println("Data is being written during recording!"); }
-        storage[index] = data;
+        buffer[index] = data;
     }
 };
 
