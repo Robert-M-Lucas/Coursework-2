@@ -41,6 +41,7 @@ byte readKeys(Adafruit_MCP3008 keys)
 void loop() {
     byte whiteBitMask = readKeys(inputAdcWhiteKeys);
     byte blackBitMask = readKeys(inputAdcBlackKeys);
+    byte timingBitMask;
 }
 
 
