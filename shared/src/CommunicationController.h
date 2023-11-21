@@ -107,6 +107,7 @@ namespace CommunicationController {
         Internal::storage->writeBufferToSD(length, instrument);
     }
 
+    // TODO: Handle no more data
     /// Write song data to an instrument
     inline void writeInstrumentBuffer(Instrument instrument) {
         // Request buffer length
@@ -129,6 +130,15 @@ namespace CommunicationController {
             Wire.write(buffer[i]);
         }
         Wire.endTransmission();
+    }
+
+    inline void storeAllInstrumentBuffers() {
+        storeInstrumentBuffer(Instrument::Keyboard);
+    }
+
+    inline void writeAllInstrumentBuffers() {
+        // TODO:
+        writeInstrumentBuffer(Instrument::Keyboard);
     }
 }
 
