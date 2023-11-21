@@ -5,17 +5,29 @@
 #include <Adafruit_MCP3008.h>
 
 DebugActor actor = DebugActor();
-Adafruit_MCP3008 inputAdc;
+Adafruit_MCP3008 inputAdcWhiteKeys;
+
+const int highThreshold = 512;
 
 void setup() {
 
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(9600);
-    inputAdc.begin(13,11,12,10);
+    inputAdcWhiteKeys.begin(13,11,12,10);
     Serial.println("Init");
     CommunicationActor::initialise(Instrument::Keyboard, &actor);
 }
 
 void loop() {
+    for(int channel = 0; channel < 8; channel++)
+    {
+        //reading inputs to create bitmask for piano keys
+        inputAdcWhiteKeys.readADC(channel);
+    }
+}
 
+bool readHigh(int reading)
+{
+    //test if input is above highThreshold
+    return (reading > highThreshold);
 }
