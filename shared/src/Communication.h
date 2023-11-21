@@ -23,6 +23,7 @@ enum class Code : uint8_t {
     BufferData = 6,
     StartPlayback = 7,
     StopPlayback = 8,
+    ClearBuffer = 9
 };
 
 /// Represents the data the controller is expecting when it requests data from the actor

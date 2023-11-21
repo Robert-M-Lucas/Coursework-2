@@ -17,6 +17,10 @@ public:
     byte* getBuffer() { return buffer; }
 
     void writeBufferToSD(uint8_t length, Instrument instrument) {}
+
+    byte* loadInstrumentDataIntoBuffer(Instrument instrument, uint8_t length) {
+        return buffer;
+    }
 };
 
 #endif //SHARED_CONTROLLERSTORAGE_H

@@ -31,7 +31,7 @@ namespace CommunicationActor {
 
         switch (request) {
             case Request::BufferLength: {
-                uint8_t length = actorBuffer->getBufferLength();
+                const uint8_t length = actorBuffer->getBufferLength();
                 lastBufferLength = length;
                 Wire.write(length);
                 break;
@@ -40,7 +40,7 @@ namespace CommunicationActor {
                 const uint8_t length = lastBufferLength;
                 const ArrAndOffset arr_data = actorBuffer->getBufferRead();
                 for (uint8_t i = 0; i < length; i++) {
-                    unsigned index = (*arr_data.offset) + i;
+                    unsigned index = *arr_data.offset + i;
                     if (index >= BUFFER_SIZE) {
                         index -= BUFFER_SIZE;
                     }
@@ -52,7 +52,7 @@ namespace CommunicationActor {
                 }
             }
             case Request::BufferEmpty: {
-                uint8_t length = actorBuffer->getBufferLength();
+                const uint8_t length = actorBuffer->getBufferLength();
                 Wire.write(length);
                 break;
             }
@@ -96,10 +96,10 @@ namespace CommunicationActor {
                 break;
             }
             case Code::BufferData: {
-                ArrAndOffset arr_data = actorBuffer->getBufferWrite();
+                const ArrAndOffset arr_data = actorBuffer->getBufferWrite();
                 unsigned i = 0;
                 while (Wire.available() > 0) {
-                    unsigned index = (*arr_data.offset) + i;
+                    unsigned index = *arr_data.offset + i;
                     if (index >= BUFFER_SIZE) {
                         index -= BUFFER_SIZE;
                     }
@@ -120,6 +120,10 @@ namespace CommunicationActor {
             }
             case Code::StopPlayback: {
                 actorBuffer->stopPlayback();
+                break;
+            }
+            case Code::ClearBuffer: {
+                actorBuffer->clearBuffer();
                 break;
             }
             default: {

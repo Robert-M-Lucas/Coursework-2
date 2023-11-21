@@ -23,13 +23,13 @@ namespace CommunicationController {
         }
 
         /// Transmit a `Code` to all connected instruments
-        inline void messageAll(Code code) {
+        inline void messageAll(const Code code) {
             message(Instrument::Keyboard, code);
         }
 
         /// Read bytes from an instrument
         template <class T>
-        inline T readResponse() {
+        T readResponse() {
             byte bytes[sizeof(T)];
 
             for (unsigned int i = 0; i < sizeof(T) && Wire.available(); ++i) {
@@ -64,8 +64,23 @@ namespace CommunicationController {
         Internal::messageAll(Code::StopRecording);
     }
 
-    /// Read song data from an instrument
-    inline void readBuffer(Instrument instrument) {
+    /// Called to begin playback
+    inline void startPlayback() {
+        Internal::messageAll(Code::StartPlayback);
+    }
+
+    /// Called to end playback
+    inline void stopPlayback() {
+        Internal::messageAll(Code::StopPlayback);
+    }
+
+    /// Empties the buffers of every instrument
+    inline void clearBuffers() {
+        Internal::messageAll(Code::ClearBuffer);
+    }
+
+    /// Read song data from an instrument and store it
+    inline void storeInstrumentBuffer(Instrument instrument) {
         // Request buffer length
         Internal::message(instrument, Code::RequestBufferLength);
 
@@ -74,7 +89,7 @@ namespace CommunicationController {
 
         if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
         // Read response
-        uint8_t length = Wire.read();
+        const uint8_t length = Wire.read();
         if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
 
         // Request buffer data
@@ -89,6 +104,30 @@ namespace CommunicationController {
 
         // Write to storage
         Internal::storage.writeBufferToSD(length, instrument);
+    }
+
+    /// Write song data to an instrument
+    inline void writeInstrumentBuffer(Instrument instrument) {
+        // Request buffer length
+        Internal::message(instrument, Code::RequestBufferNeeded);
+
+        // Wait for response
+        delay(TRANSMISSION_DELAY);
+
+        if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
+        // Read response
+        const uint8_t length = Wire.read();
+        if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
+
+        delay(TRANSMISSION_DELAY);
+        byte* buffer = Internal::storage.loadInstrumentDataIntoBuffer(instrument, length);
+
+        Wire.beginTransmission(static_cast<uint8_t>(instrument));
+        Wire.write(static_cast<byte>(Code::BufferData));
+        for (uint8_t i = 0; i < length; i++) {
+            Wire.write(buffer[i]);
+        }
+        Wire.endTransmission();
     }
 }
 
