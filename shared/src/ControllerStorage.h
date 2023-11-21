@@ -21,6 +21,11 @@ public:
     byte* loadInstrumentDataIntoBuffer(Instrument instrument, uint8_t length) {
         return buffer;
     }
+
+    void selectSong(uint8_t song) {}
+
+    void writeMode() {}
+    void readMode() {}
 };
 
 #endif //SHARED_CONTROLLERSTORAGE_H

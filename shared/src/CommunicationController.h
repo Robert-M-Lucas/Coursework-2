@@ -13,7 +13,7 @@
 
 namespace CommunicationController {
     namespace Internal {
-        ControllerStorage storage;
+        ControllerStorage* storage = nullptr;
 
         /// Transmit a `Code` to an instrument
         inline void message(Instrument instrument, Code code) {
@@ -50,8 +50,9 @@ namespace CommunicationController {
     }
 
     /// Called during `setup()` - does not initialise serial
-    inline void initialise() {
+    inline void initialise(ControllerStorage* storage) {
         Wire.begin();
+        Internal::storage = storage;
     }
 
     /// Called to begin recording
@@ -100,10 +101,10 @@ namespace CommunicationController {
         Wire.requestFrom(static_cast<uint8_t>(instrument), length);
 
         // Receive buffer data
-        Internal::readResponseToBuffer(Internal::storage.getBuffer());
+        Internal::readResponseToBuffer(Internal::storage->getBuffer());
 
         // Write to storage
-        Internal::storage.writeBufferToSD(length, instrument);
+        Internal::storage->writeBufferToSD(length, instrument);
     }
 
     /// Write song data to an instrument
@@ -120,7 +121,7 @@ namespace CommunicationController {
         if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
 
         delay(TRANSMISSION_DELAY);
-        byte* buffer = Internal::storage.loadInstrumentDataIntoBuffer(instrument, length);
+        const byte* buffer = Internal::storage->loadInstrumentDataIntoBuffer(instrument, length);
 
         Wire.beginTransmission(static_cast<uint8_t>(instrument));
         Wire.write(static_cast<byte>(Code::BufferData));
