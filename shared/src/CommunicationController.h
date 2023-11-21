@@ -15,17 +15,6 @@ namespace CommunicationController {
     namespace Internal {
         ControllerStorage storage;
 
-        bool instrumentsConnected[MAX_INSTRUMENTS] = {
-                false,
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-        };
-
         /// Transmit a `Code` to an instrument
         inline void message(Instrument instrument, Code code) {
             Wire.beginTransmission(static_cast<uint8_t>(instrument));
