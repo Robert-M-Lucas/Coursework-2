@@ -17,17 +17,28 @@ struct ArrAndOffset {
 class ActorInterface {
 public:
     virtual ~ActorInterface() = default;
+    /// Starts recording
     virtual void startRecording();
+    /// Stops recording
     virtual void stopRecording();
+    /// Returns the current length of the buffer
     virtual unsigned getBufferLength();
+    /// Returns the buffer and the head pointer
     virtual ArrAndOffset getBufferRead();
 
+    /// Empties the buffer
+    virtual void clearBuffer();
+    /// Returns the empty space in the buffer
     virtual unsigned getBufferEmpty();
+    /// Returns the buffer nad the tail pointer
     virtual ArrAndOffset getBufferWrite();
+    /// Starts playback
     virtual void startPlayback();
+    /// Stops playback
     virtual void stopPlayback();
 
-    virtual void writeSongData(unsigned index, byte data);
+    /// Writes data to the buffer
+    virtual void writeData(byte* data, unsigned length);
 };
 
 class DefaultActor : public ActorInterface {
@@ -48,7 +59,7 @@ public:
     }
 
     unsigned getBufferLength() override {
-        if (bufferTail > bufferHead) {
+        if (bufferTail >= bufferHead) {
             return bufferTail - bufferHead;
         }
         else {
@@ -58,6 +69,11 @@ public:
 
     ArrAndOffset getBufferRead() override {
         return ArrAndOffset {buffer, &bufferHead };
+    }
+
+    void clearBuffer() override {
+        bufferHead = 0;
+        bufferTail = 0;
     }
 
     unsigned getBufferEmpty() override {
@@ -76,9 +92,18 @@ public:
         isPlayingBack = false;
     }
 
-    void writeSongData(const unsigned index, const byte data) override {
-        if (isRecording) { Serial.println("Data is being written during recording!"); }
-        buffer[index] = data;
+    void writeData(byte *data, unsigned int length) override {
+        if (isPlayingBack) { return; }
+        for (unsigned i = 0; i < length; i++) {
+            unsigned index = i;
+            if (index >= INSTRUMENT_BUFFER_SIZE) { index -= INSTRUMENT_BUFFER_SIZE; }
+
+            buffer[index] = data[i];
+        }
+        bufferTail += length;
+        if (bufferTail >= INSTRUMENT_BUFFER_SIZE) {
+            bufferTail -= INSTRUMENT_BUFFER_SIZE;
+        }
     }
 };
 

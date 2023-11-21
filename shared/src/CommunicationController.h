@@ -55,7 +55,7 @@ namespace CommunicationController {
         }
     }
 
-    /// Called during `setup()`
+    /// Called during `setup()` - does not initialise serial
     inline void initialise() {
         Wire.begin();
     }
