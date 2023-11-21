@@ -6,7 +6,7 @@
 #define CONSTANTS_H
 
 /// Buffer size on the actors
-constexpr unsigned int INSTRUMENT_BUFFER_SIZE = 1024;
+constexpr unsigned int BUFFER_SIZE = 1024;
 
 /// Delay between consecutive transfers/requests to actors to prevent an interrupt during an interrupt
 constexpr unsigned int TRANSMISSION_DELAY     = 5;

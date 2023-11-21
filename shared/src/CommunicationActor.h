@@ -45,14 +45,14 @@ namespace CommunicationActor {
                 const ArrAndOffset arr_data = actorBuffer->getBufferRead();
                 for (unsigned i = 0; i < length; i++) {
                     unsigned index = (*arr_data.offset) + i;
-                    if (index >= INSTRUMENT_BUFFER_SIZE) {
-                        index -= INSTRUMENT_BUFFER_SIZE;
+                    if (index >= BUFFER_SIZE) {
+                        index -= BUFFER_SIZE;
                     }
                     Wire.write(arr_data.arr[index]);
                 }
                 *arr_data.offset += length;
-                if (*arr_data.offset > INSTRUMENT_BUFFER_SIZE) {
-                    *arr_data.offset -= INSTRUMENT_BUFFER_SIZE;
+                if (*arr_data.offset > BUFFER_SIZE) {
+                    *arr_data.offset -= BUFFER_SIZE;
                 }
             }
             case Request::BufferEmpty: {
@@ -105,8 +105,8 @@ namespace CommunicationActor {
                 unsigned i = 0;
                 while (Wire.available() > 0) {
                     unsigned index = (*arr_data.offset) + i;
-                    if (index >= INSTRUMENT_BUFFER_SIZE) {
-                        index -= INSTRUMENT_BUFFER_SIZE;
+                    if (index >= BUFFER_SIZE) {
+                        index -= BUFFER_SIZE;
                     }
 
                     arr_data.arr[index] = static_cast<byte>(Wire.read());
@@ -115,8 +115,8 @@ namespace CommunicationActor {
                 }
 
                 *arr_data.offset += i;
-                if (*arr_data.offset > INSTRUMENT_BUFFER_SIZE) {
-                    *arr_data.offset -= INSTRUMENT_BUFFER_SIZE;
+                if (*arr_data.offset > BUFFER_SIZE) {
+                    *arr_data.offset -= BUFFER_SIZE;
                 }
             }
             case Code::StartPlayback: {

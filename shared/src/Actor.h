@@ -43,7 +43,7 @@ public:
 
 class DefaultActor : public ActorInterface {
 private:
-    byte buffer[INSTRUMENT_BUFFER_SIZE] = {};
+    byte buffer[BUFFER_SIZE] = {};
     unsigned bufferHead = 0;
     unsigned bufferTail = 0;
     bool isRecording = false;
@@ -63,7 +63,7 @@ public:
             return bufferTail - bufferHead;
         }
         else {
-            return bufferTail + (INSTRUMENT_BUFFER_SIZE - bufferHead);
+            return bufferTail + (BUFFER_SIZE - bufferHead);
         }
     }
 
@@ -77,7 +77,7 @@ public:
     }
 
     unsigned getBufferEmpty() override {
-        return INSTRUMENT_BUFFER_SIZE - getBufferLength() - 1;
+        return BUFFER_SIZE - getBufferLength() - 1;
     }
 
     ArrAndOffset getBufferWrite() override {
@@ -96,13 +96,13 @@ public:
         if (isPlayingBack) { return; }
         for (unsigned i = 0; i < length; i++) {
             unsigned index = i;
-            if (index >= INSTRUMENT_BUFFER_SIZE) { index -= INSTRUMENT_BUFFER_SIZE; }
+            if (index >= BUFFER_SIZE) { index -= BUFFER_SIZE; }
 
             buffer[index] = data[i];
         }
         bufferTail += length;
-        if (bufferTail >= INSTRUMENT_BUFFER_SIZE) {
-            bufferTail -= INSTRUMENT_BUFFER_SIZE;
+        if (bufferTail >= BUFFER_SIZE) {
+            bufferTail -= BUFFER_SIZE;
         }
     }
 };

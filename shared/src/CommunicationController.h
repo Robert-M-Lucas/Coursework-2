@@ -84,6 +84,11 @@ namespace CommunicationController {
         // Request buffer data
         Internal::message(instrument, Code::RequestBuffer);
 
+        delay(TRANSMISSION_DELAY);
+
+        // Receive buffer data
+
+
         // Wait for response
         delay(TRANSMISSION_DELAY);
     }
