@@ -13,19 +13,24 @@ class ControllerStorage {
 private:
     byte buffer[BUFFER_SIZE] = {};
 
+    bool write = false;
+
+    uint8_t song = 0;
 public:
     byte* getBuffer() { return buffer; }
 
+    // TODO:
     void writeBufferToSD(uint8_t length, Instrument instrument) {}
 
+    // TODO:
     byte* loadInstrumentDataIntoBuffer(Instrument instrument, uint8_t length) {
         return buffer;
     }
 
-    void selectSong(uint8_t song) {}
+    void selectSong(const uint8_t song) { ControllerStorage::song = song; }
 
-    void writeMode() {}
-    void readMode() {}
+    void writeMode() { write = true; }
+    void readMode() { write = false; }
 };
 
 #endif //SHARED_CONTROLLERSTORAGE_H
