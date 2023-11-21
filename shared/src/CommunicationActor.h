@@ -18,19 +18,20 @@ namespace CommunicationActor {
     // // Get pointer to where data should be read from / written too
     // byte*(*getSong)() = nullptr;
 
-    ActorInterface* dataStore = nullptr;
+    ActorInterface* actorBuffer = nullptr;
 
     Request request = Request::None;
     unsigned lastBufferLength = 0; // I miss Rust enums
 
+    /// Interrupt called when the actor receives a request for bytes
     inline void requestEvent() {
         if (request == Request::None) {
             Serial.println("Received a request when the request type has not been specified");
         }
 
         switch (request) {
-            case Request::BufferLength : {
-                unsigned length = dataStore->getBufferLength();
+            case Request::BufferLength: {
+                unsigned length = actorBuffer->getBufferLength();
                 lastBufferLength = length;
                 byte* b = nullptr;
                 Util::toBytes(&length, b);
@@ -41,10 +42,10 @@ namespace CommunicationActor {
             }
             case Request::Buffer: {
                 const unsigned length = lastBufferLength;
-                const ArrAndOffset arr_data = dataStore->getBufferRead();
+                const ArrAndOffset arr_data = actorBuffer->getBufferRead();
                 for (unsigned i = 0; i < length; i++) {
                     unsigned index = (*arr_data.offset) + i;
-                    if (index > INSTRUMENT_BUFFER_SIZE) {
+                    if (index >= INSTRUMENT_BUFFER_SIZE) {
                         index -= INSTRUMENT_BUFFER_SIZE;
                     }
                     Wire.write(arr_data.arr[index]);
@@ -55,7 +56,7 @@ namespace CommunicationActor {
                 }
             }
             case Request::BufferEmpty: {
-                unsigned length = dataStore->getBufferEmpty();
+                unsigned length = actorBuffer->getBufferEmpty();
                 byte* b = nullptr;
                 Util::toBytes(&length, b);
                 for (unsigned i = 0; i < sizeof(unsigned); i++) {
@@ -73,17 +74,18 @@ namespace CommunicationActor {
         request = Request::None;
     }
 
+    /// Interrupt called when actor receives data from tbe controller
     inline void receiveEvent(int length) {
         if (Wire.available() <= 0) { return; }
 
         const Code code = static_cast<Code>(Wire.read());
         switch (code) {
             case Code::StartRecording: {
-                dataStore->startRecording();
+                actorBuffer->startRecording();
                 break;
             }
             case Code::StopRecording: {
-                dataStore->stopRecording();
+                actorBuffer->stopRecording();
                 break;
             }
             case Code::RequestBufferLength: {
@@ -99,11 +101,11 @@ namespace CommunicationActor {
                 break;
             }
             case Code::BufferData: {
-                ArrAndOffset arr_data = dataStore->getBufferWrite();
+                ArrAndOffset arr_data = actorBuffer->getBufferWrite();
                 unsigned i = 0;
                 while (Wire.available() > 0) {
                     unsigned index = (*arr_data.offset) + i;
-                    if (index > INSTRUMENT_BUFFER_SIZE) {
+                    if (index >= INSTRUMENT_BUFFER_SIZE) {
                         index -= INSTRUMENT_BUFFER_SIZE;
                     }
 
@@ -118,11 +120,11 @@ namespace CommunicationActor {
                 }
             }
             case Code::StartPlayback: {
-                dataStore->startPlayback();
+                actorBuffer->startPlayback();
                 break;
             }
             case Code::StopPlayback: {
-                dataStore->stopPlayback();
+                actorBuffer->stopPlayback();
                 break;
             }
             default: {
@@ -151,12 +153,12 @@ namespace CommunicationActor {
         getSong = _getSong;
     }*/
 
+    /// Initialises actor for communication - does not initialise serial
     inline void initialise(Instrument address, ActorInterface *_dataStore) {
         Wire.begin(static_cast<uint8_t>(address));
         Wire.onRequest(requestEvent);
         Wire.onReceive(receiveEvent);
-
-        dataStore = _dataStore;
+        actorBuffer = _dataStore;
     }
 }
 
