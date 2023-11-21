@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include "../../shared/src/CommunicationActor.h"
 #include "../../shared/src/Actor.h"
+#include <Adafruit_MCP3008.h>
 
 DebugActor actor = DebugActor();
 
