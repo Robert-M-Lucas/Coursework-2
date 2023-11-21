@@ -7,13 +7,16 @@
 
 #include "Arduino.h"
 #include "Constants.h"
+#include "Communication.h"
 
 class ControllerStorage {
-public:
-
-
 private:
-    byte storage[INSTRUMENT_BUFFER_SIZE] = {};
+    byte buffer[BUFFER_SIZE] = {};
+
+public:
+    byte* getBuffer() { return buffer; }
+
+    void writeBufferToSD(uint8_t length, Instrument instrument) {}
 };
 
 #endif //SHARED_CONTROLLERSTORAGE_H
