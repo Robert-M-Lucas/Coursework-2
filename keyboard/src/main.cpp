@@ -11,6 +11,8 @@ Adafruit_MCP3008 inputAdcBlackKeys;
 
 const int highThreshold = 512;
 const byte fullByte = 255;
+unsigned long currentTime = 0;
+
 void setup() {
 
     pinMode(LED_BUILTIN, OUTPUT);
@@ -41,7 +43,11 @@ byte readKeys(Adafruit_MCP3008 keys)
 void loop() {
     byte whiteBitMask = readKeys(inputAdcWhiteKeys);
     byte blackBitMask = readKeys(inputAdcBlackKeys);
-    byte timingBitMask;
+
+
+    unsigned long timeElapsed = millis() - currentTime;
+    currentTime = millis();
+
 }
 
 
