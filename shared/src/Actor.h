@@ -22,14 +22,14 @@ public:
     /// Stops recording
     virtual void stopRecording();
     /// Returns the current length of the buffer
-    virtual unsigned getBufferLength();
+    virtual uint8_t getBufferLength();
     /// Returns the buffer and the head pointer
     virtual ArrAndOffset getBufferRead();
 
     /// Empties the buffer
     virtual void clearBuffer();
     /// Returns the empty space in the buffer
-    virtual unsigned getBufferEmpty();
+    virtual uint8_t getBufferEmpty();
     /// Returns the buffer nad the tail pointer
     virtual ArrAndOffset getBufferWrite();
     /// Starts playback
@@ -38,7 +38,7 @@ public:
     virtual void stopPlayback();
 
     /// Writes data to the buffer
-    virtual void writeData(byte* data, unsigned length);
+    virtual void writeData(byte* data, uint8_t length);
 };
 
 class DefaultActor : public ActorInterface {
@@ -58,7 +58,7 @@ public:
         isRecording = false;
     }
 
-    unsigned getBufferLength() override {
+    uint8_t getBufferLength() override {
         if (bufferTail >= bufferHead) {
             return bufferTail - bufferHead;
         }
@@ -76,7 +76,7 @@ public:
         bufferTail = 0;
     }
 
-    unsigned getBufferEmpty() override {
+    uint8_t getBufferEmpty() override {
         return BUFFER_SIZE - getBufferLength() - 1;
     }
 
@@ -92,13 +92,16 @@ public:
         isPlayingBack = false;
     }
 
-    void writeData(byte *data, unsigned int length) override {
+    void writeData(byte *data, uint8_t length) override {
         if (isPlayingBack) { return; }
         for (unsigned i = 0; i < length; i++) {
             unsigned index = i;
             if (index >= BUFFER_SIZE) { index -= BUFFER_SIZE; }
 
             buffer[index] = data[i];
+        }
+        if (bufferTail < bufferHead && bufferTail + length > bufferHead) {
+            Serial.println("Overflowed buffer storage!");
         }
         bufferTail += length;
         if (bufferTail >= BUFFER_SIZE) {

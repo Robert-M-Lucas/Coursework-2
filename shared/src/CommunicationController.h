@@ -27,19 +27,15 @@ namespace CommunicationController {
         };
 
         /// Transmit a `Code` to an instrument
-        inline void message(u8 instrument, Code code) {
-            Wire.beginTransmission(instrument);
+        inline void message(Instrument instrument, Code code) {
+            Wire.beginTransmission(static_cast<uint8_t>(instrument));
             Wire.write(static_cast<u8>(code));
             Wire.endTransmission();
         }
 
         /// Transmit a `Code` to all connected instruments
         inline void messageAll(Code code) {
-            for (u8 instrument = 0; instrument < MAX_INSTRUMENTS; ++instrument) {
-                if (instrumentsConnected[instrument]) {
-                    message(instrument, code);
-                }
-            }
+            message(Instrument::Keyboard, code);
         }
 
         /// Read bytes from an instrument
@@ -52,6 +48,15 @@ namespace CommunicationController {
             }
 
             return Util::fromBytes<T>(bytes);
+        }
+
+        inline unsigned readResponseToBuffer(byte* buffer) {
+            unsigned i = 0;
+            while (Wire.available() > 0) {
+                buffer[i] = static_cast<byte>(Wire.read());
+                i++;
+            }
+            return i;
         }
     }
 
@@ -71,26 +76,30 @@ namespace CommunicationController {
     }
 
     /// Read song data from an instrument
-    inline void readBuffer(int instrument) {
+    inline void readBuffer(Instrument instrument) {
         // Request buffer length
         Internal::message(instrument, Code::RequestBufferLength);
 
         // Wait for response
         delay(TRANSMISSION_DELAY);
 
+        if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
         // Read response
-        auto len = Internal::readResponse<unsigned int>();
+        uint8_t length = Wire.read();
+        if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
 
         // Request buffer data
         Internal::message(instrument, Code::RequestBuffer);
 
         delay(TRANSMISSION_DELAY);
 
+        Wire.requestFrom(static_cast<uint8_t>(instrument), length);
+
         // Receive buffer data
+        Internal::readResponseToBuffer(Internal::storage.getBuffer());
 
-
-        // Wait for response
-        delay(TRANSMISSION_DELAY);
+        // Write to storage
+        Internal::storage.writeBufferToSD(length, instrument);
     }
 }
 

@@ -21,7 +21,7 @@ namespace CommunicationActor {
     ActorInterface* actorBuffer = nullptr;
 
     Request request = Request::None;
-    unsigned lastBufferLength = 0; // I miss Rust enums
+    uint8_t lastBufferLength = 0; // I miss Rust enums
 
     /// Interrupt called when the actor receives a request for bytes
     inline void requestEvent() {
@@ -31,19 +31,15 @@ namespace CommunicationActor {
 
         switch (request) {
             case Request::BufferLength: {
-                unsigned length = actorBuffer->getBufferLength();
+                uint8_t length = actorBuffer->getBufferLength();
                 lastBufferLength = length;
-                byte* b = nullptr;
-                Util::toBytes(&length, b);
-                for (unsigned i = 0; i < sizeof(unsigned); i++) {
-                    Wire.write(b[i]);
-                }
+                Wire.write(length);
                 break;
             }
             case Request::Buffer: {
-                const unsigned length = lastBufferLength;
+                const uint8_t length = lastBufferLength;
                 const ArrAndOffset arr_data = actorBuffer->getBufferRead();
-                for (unsigned i = 0; i < length; i++) {
+                for (uint8_t i = 0; i < length; i++) {
                     unsigned index = (*arr_data.offset) + i;
                     if (index >= BUFFER_SIZE) {
                         index -= BUFFER_SIZE;
@@ -56,13 +52,12 @@ namespace CommunicationActor {
                 }
             }
             case Request::BufferEmpty: {
-                unsigned length = actorBuffer->getBufferEmpty();
-                byte* b = nullptr;
-                Util::toBytes(&length, b);
-                for (unsigned i = 0; i < sizeof(unsigned); i++) {
-                    Wire.write(b[i]);
-                }
+                uint8_t length = actorBuffer->getBufferLength();
+                Wire.write(length);
                 break;
+            }
+            case Request::None: {
+                Serial.println("Request type not set when request was received");
             }
             default: {
                 Serial.print("Request type '");
