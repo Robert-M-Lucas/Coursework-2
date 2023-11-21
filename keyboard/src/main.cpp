@@ -25,14 +25,18 @@ bool readHigh(int reading)
     return (reading > highThreshold);
 }
 
-void loop() {
-
+byte readWhiteKeys()
+{
     byte inputMask = fullByte;
 
     for(int channel = 0; channel < 8; channel++)
     {
         inputMask = inputMask & byte(readHigh(inputAdcWhiteKeys.readADC(channel)) * pow(2,channel));
     }
+}
+
+void loop() {
+    byte whiteBitMask = readWhiteKeys();
 }
 
 
