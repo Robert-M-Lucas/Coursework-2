@@ -16,4 +16,6 @@ constexpr unsigned int INSTRUMENT_POLL_INTERVAL = 60;
 /// Debug value
 constexpr unsigned int MAX_INSTRUMENTS        = 8;
 
+constexpr unsigned long MAX_NOTE_DURATION_MS = 60 * 256;
+
 #endif //CONSTANTS_H

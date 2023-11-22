@@ -9,9 +9,8 @@ DebugActor actor = DebugActor();
 Adafruit_MCP3008 inputAdcWhiteKeys;
 Adafruit_MCP3008 inputAdcBlackKeys;
 
-const int highThreshold = 512;
-const byte fullByte = 255;
-unsigned long currentTime = 0;
+constexpr int highThreshold = 512;
+constexpr byte fullByte = 255;
 
 void setup() {
 
@@ -24,29 +23,47 @@ void setup() {
     CommunicationActor::initialise(Instrument::Keyboard, &actor);
 }
 
-bool readHigh(int reading)
+bool readHigh(const int reading)
 {
     //test if input is above highThreshold
     return (reading > highThreshold);
 }
 
-byte readKeys(Adafruit_MCP3008 keys)
+uint16_t readKeys(Adafruit_MCP3008 *keys)
 {
-    byte inputMask = fullByte;
+    uint16_t inputMask = fullByte;
 
-    for(int channel = 0; channel < 8; channel++)
+    for(unsigned channel = 0; channel < 8; channel++)
     {
-        inputMask = inputMask & byte(readHigh(keys.readADC(channel)) * pow(2,channel));
+        inputMask = inputMask & static_cast<uint16_t>(readHigh(keys->readADC(channel)) << channel);
     }
+
+    return inputMask;
 }
 
+// 2 Bytes
+uint16_t fullBitMask = 0;
+unsigned long startTime = 0;
+
 void loop() {
-    byte whiteBitMask = readKeys(inputAdcWhiteKeys);
-    byte blackBitMask = readKeys(inputAdcBlackKeys);
+    const unsigned long currentTime = millis();
+    const unsigned long ellapsedTime = currentTime - startTime;
 
+    uint16_t newFullBitMask = readKeys(&inputAdcWhiteKeys);
+    newFullBitMask |= readKeys(&inputAdcBlackKeys) << 8;
 
-    unsigned long timeElapsed = millis() - currentTime;
-    currentTime = millis();
+    if (ellapsedTime > MAX_NOTE_DURATION_MS || fullBitMask != newFullBitMask) {
+        // TODO: Implement this functionality in 'shared'
+        byte data[3] = {};
+        data[0] = static_cast<byte>(fullBitMask); // White keys
+        data[1] = static_cast<byte>(fullBitMask >> 8); // Black keys
+        data[2] = static_cast<byte>(ellapsedTime / 60); // Duration
+
+        actor.writeData(data, 3);
+
+        fullBitMask = newFullBitMask;
+        startTime = currentTime;
+    }
 
 }
 
