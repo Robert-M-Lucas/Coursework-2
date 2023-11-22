@@ -52,8 +52,8 @@ void loop() {
     const unsigned long currentTime = millis();
     const unsigned long ellapsedTime = currentTime - startTime;
 
-    byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
-    byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
+    const byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
+    const byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
 
     if (ellapsedTime > MAX_NOTE_DURATION_MS || whiteBitMask != newWhiteBitMask || blackBitMask != newBlackBitMask) {
         // TODO: Implement this functionality in 'shared'
