@@ -44,6 +44,9 @@ public:
     virtual bool readDataAvailable(uint8_t length);
     /// Reads data from the buffer
     virtual void readDataAndRemove(byte* destination, uint8_t length);
+
+    virtual bool getRecording();
+    virtual bool getPlayback();
 };
 
 class DefaultActor : public ActorInterface {
@@ -132,6 +135,14 @@ public:
         if (bufferHead > BUFFER_SIZE) {
             bufferHead -= BUFFER_SIZE;
         }
+    }
+
+    bool getRecording() override {
+        return isRecording;
+    }
+
+    bool getPlayback() override {
+        return isPlayingBack;
     }
 };
 

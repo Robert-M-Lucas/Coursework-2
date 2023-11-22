@@ -109,7 +109,7 @@ namespace CommunicationController {
 
     // TODO: Handle no more data
     /// Write song data to an instrument
-    inline void writeInstrumentBuffer(Instrument instrument) {
+    inline bool writeInstrumentBuffer(Instrument instrument) {
         // Request buffer length
         Internal::message(instrument, Code::RequestBufferNeeded);
 
@@ -118,11 +118,18 @@ namespace CommunicationController {
 
         if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
         // Read response
-        const uint8_t length = Wire.read();
+        uint8_t length = Wire.read();
         if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
-
+        
         delay(TRANSMISSION_DELAY);
+        const unsigned dataAvailable = Internal::storage->instrumentDataAvailable(instrument);
+
+        if (dataAvailable == 0) { return false; }
+
+        length = (uint8_t) min((unsigned) length, dataAvailable);
         const byte* buffer = Internal::storage->loadInstrumentDataIntoBuffer(instrument, length);
+
+
 
         Wire.beginTransmission(static_cast<uint8_t>(instrument));
         Wire.write(static_cast<byte>(Code::BufferData));
@@ -130,15 +137,19 @@ namespace CommunicationController {
             Wire.write(buffer[i]);
         }
         Wire.endTransmission();
+
+        return true;
     }
 
     inline void storeAllInstrumentBuffers() {
         storeInstrumentBuffer(Instrument::Keyboard);
     }
 
-    inline void writeAllInstrumentBuffers() {
+    inline bool writeAllInstrumentBuffers() {
+        bool dataWritten = false;
         // TODO:
-        writeInstrumentBuffer(Instrument::Keyboard);
+        dataWritten |= writeInstrumentBuffer(Instrument::Keyboard);
+        return dataWritten;
     }
 }
 

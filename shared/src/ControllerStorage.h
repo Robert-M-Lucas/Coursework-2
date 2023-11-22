@@ -22,6 +22,8 @@ public:
     // TODO:
     void writeBufferToSD(uint8_t length, Instrument instrument) {}
 
+    unsigned instrumentDataAvailable(Instrument instrument);
+
     // TODO:
     byte* loadInstrumentDataIntoBuffer(Instrument instrument, uint8_t length) {
         return buffer;
