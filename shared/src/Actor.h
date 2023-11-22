@@ -135,17 +135,35 @@ public:
     }
 };
 
-class DebugActor final : public DefaultActor {
+class LEDActor final : public DefaultActor {
+private:
+    uint8_t recordingLED;
+    uint8_t playbackLED;
+public:
+    LEDActor(const uint8_t recordingLED, const uint8_t playbackLED) :
+        recordingLED(recordingLED), playbackLED(playbackLED) {
+        pinMode(recordingLED, OUTPUT);
+        pinMode(playbackLED, OUTPUT);
+    }
+
     void startRecording() override {
-        digitalWrite(LED_BUILTIN, HIGH);
-        Serial.println("Starting recording");
+        digitalWrite(recordingLED, HIGH);
         DefaultActor::startRecording();
     }
 
     void stopRecording() override {
-        digitalWrite(LED_BUILTIN, LOW);
-        Serial.println("Stopping recording");
+        digitalWrite(recordingLED, LOW);
         DefaultActor::stopRecording();
+    }
+
+    void startPlayback() override {
+        digitalWrite(playbackLED, HIGH);
+        DefaultActor::startPlayback();
+    }
+
+    void stopPlayback() override {
+        digitalWrite(playbackLED, LOW);
+        DefaultActor::stopPlayback();
     }
 };
 

@@ -2,10 +2,11 @@
 #include <Wire.h>
 #include "../../shared/src/CommunicationActor.h"
 #include "../../shared/src/Constants.h"
+#include "../../shared/src/Actor.h"
 #include <Adafruit_MCP3008.h>
 
 
-DebugActor actor = DebugActor();
+LEDActor actor = LEDActor(2, 3);
 Adafruit_MCP3008 inputAdcWhiteKeys;
 Adafruit_MCP3008 inputAdcBlackKeys;
 
