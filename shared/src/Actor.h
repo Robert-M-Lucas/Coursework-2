@@ -39,6 +39,11 @@ public:
 
     /// Writes data to the buffer
     virtual void writeData(byte* data, uint8_t length);
+
+    /// Checks if there is data to read from the buffer
+    virtual bool readDataAvailable(uint8_t length);
+    /// Reads data from the buffer
+    virtual void readDataAndRemove(byte* destination, uint8_t length);
 };
 
 class DefaultActor : public ActorInterface {
@@ -92,7 +97,7 @@ public:
         isPlayingBack = false;
     }
 
-    void writeData(byte *data, uint8_t length) override {
+    void writeData(byte *data, const uint8_t length) override {
         if (isPlayingBack) { return; }
         for (unsigned i = 0; i < length; i++) {
             unsigned index = i;
@@ -108,9 +113,29 @@ public:
             bufferTail -= BUFFER_SIZE;
         }
     }
+
+    bool readDataAvailable(const uint8_t length) override {
+        return getBufferLength() >= length;
+    }
+
+    void readDataAndRemove(byte* destination, const uint8_t amount) override {
+        for (uint8_t i = 0; i < amount; i++) {
+            unsigned index = bufferHead + i;
+            if (index > BUFFER_SIZE) {
+                index -= BUFFER_SIZE;
+            }
+
+            destination[i] = buffer[index];
+        }
+
+        bufferHead += amount;
+        if (bufferHead > BUFFER_SIZE) {
+            bufferHead -= BUFFER_SIZE;
+        }
+    }
 };
 
-class DebugActor: public DefaultActor {
+class DebugActor final : public DefaultActor {
     void startRecording() override {
         digitalWrite(LED_BUILTIN, HIGH);
         Serial.println("Starting recording");
