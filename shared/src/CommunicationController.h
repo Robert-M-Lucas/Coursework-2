@@ -81,12 +81,18 @@ namespace CommunicationController {
     }
 
     /// Read song data from an instrument and store it
-    inline void storeInstrumentBuffer(Instrument instrument) {
+    inline unsigned storeInstrumentBuffer(Instrument instrument) {
         // Request buffer length
         Internal::message(instrument, Code::RequestBufferLength);
 
+        delay(TRANSMISSION_DELAY);
+
+        Wire.requestFrom(static_cast<uint8_t>(instrument), (uint8_t) 1);
+
         // Wait for response
         delay(TRANSMISSION_DELAY);
+
+
 
         if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
         // Read response
@@ -105,6 +111,8 @@ namespace CommunicationController {
 
         // Write to storage
         Internal::storage->writeBufferToSD(length, instrument);
+
+        return length;
     }
 
     // TODO: Handle no more data

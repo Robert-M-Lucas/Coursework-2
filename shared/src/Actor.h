@@ -103,7 +103,7 @@ public:
     void writeData(byte *data, const uint8_t length) override {
         if (isPlayingBack) { return; }
         for (unsigned i = 0; i < length; i++) {
-            unsigned index = i;
+            unsigned index = bufferTail + i;
             if (index >= BUFFER_SIZE) { index -= BUFFER_SIZE; }
 
             buffer[index] = data[i];
@@ -124,7 +124,7 @@ public:
     void readDataAndRemove(byte* destination, const uint8_t amount) override {
         for (uint8_t i = 0; i < amount; i++) {
             unsigned index = bufferHead + i;
-            if (index > BUFFER_SIZE) {
+            if (index >= BUFFER_SIZE) {
                 index -= BUFFER_SIZE;
             }
 
@@ -132,7 +132,7 @@ public:
         }
 
         bufferHead += amount;
-        if (bufferHead > BUFFER_SIZE) {
+        if (bufferHead >= BUFFER_SIZE) {
             bufferHead -= BUFFER_SIZE;
         }
     }

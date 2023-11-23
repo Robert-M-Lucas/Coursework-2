@@ -48,7 +48,7 @@ namespace CommunicationActor {
                         Wire.write(arr_data.arr[index]);
                     }
                     *arr_data.offset += length;
-                    if (*arr_data.offset > BUFFER_SIZE) {
+                    if (*arr_data.offset >= BUFFER_SIZE) {
                         *arr_data.offset -= BUFFER_SIZE;
                     }
                 }
@@ -111,7 +111,7 @@ namespace CommunicationActor {
                     }
 
                     *arr_data.offset += i;
-                    if (*arr_data.offset > BUFFER_SIZE) {
+                    if (*arr_data.offset >= BUFFER_SIZE) {
                         *arr_data.offset -= BUFFER_SIZE;
                     }
                 }
