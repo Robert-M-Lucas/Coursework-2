@@ -11,7 +11,7 @@ Adafruit_MCP3008 inputAdcWhiteKeys;
 Adafruit_MCP3008 inputAdcBlackKeys;
 
 constexpr unsigned highThreshold = 512;
-constexpr byte fullByte = 255;
+constexpr byte emptyByte = 0;
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -34,7 +34,7 @@ bool readHigh(const unsigned reading)
 
 byte readKeys(Adafruit_MCP3008 *keys)
 {
-    byte inputMask = 0;
+    byte inputMask = emptyByte;
 
     for(uint8_t channel = 0; channel < 8; channel++)
     {
@@ -54,6 +54,7 @@ bool playback = false;
 
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
+
     if (playback || actor.getPlayback()) {
         // If playback is starting
         if (!playback) {
@@ -87,7 +88,6 @@ void loop() {
             whiteBitMask = newWhiteBitMask;
             blackBitMask = newBlackBitMask;
         }
-
         // If not changed, note too long or recording is ending
         else if (elapsedTime > MAX_NOTE_DURATION_MS ||
                 whiteBitMask != newWhiteBitMask || blackBitMask != newBlackBitMask //||
