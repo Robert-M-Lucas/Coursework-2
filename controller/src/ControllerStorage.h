@@ -31,11 +31,6 @@ public:
     // Append data in the song buffer to the correct file on the SD card
     void storeBufferToDisk(uint8_t length, Instrument instrument) const;
 
-    //
-    bool fillBufferFromDisk() {
-
-    }
-
     // Returns true if the song exists on disk
     static bool hasSongOnDisk(uint8_t song);
 
