@@ -110,7 +110,7 @@ namespace CommunicationController {
         Internal::readResponseToBuffer(Internal::storage->getBuffer());
 
         // Write to storage
-        Internal::storage->writeBufferToSD(length, instrument);
+        Internal::storage->storeBufferToDisk(length, instrument);
 
         return length;
     }
