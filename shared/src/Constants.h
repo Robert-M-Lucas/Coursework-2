@@ -5,6 +5,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+typedef uint8_t pin;
+
 /// Buffer size on the actors
 constexpr unsigned int BUFFER_SIZE = 256;
 
