@@ -130,6 +130,7 @@ namespace CommunicationController {
         if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
         
         delay(TRANSMISSION_DELAY);
+        /*
         const unsigned dataAvailable = Internal::storage->instrumentDataAvailable(instrument);
 
         if (dataAvailable == 0) { return false; }
@@ -145,6 +146,7 @@ namespace CommunicationController {
             Wire.write(buffer[i]);
         }
         Wire.endTransmission();
+        */
 
         return true;
     }
