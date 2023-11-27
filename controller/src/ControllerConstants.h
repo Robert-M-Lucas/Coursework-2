@@ -16,6 +16,7 @@ pin SELECT_INPUT = A1;
 
 pin RECORDING_LED = 8;
 pin PLAYBACK_LED = 9;
+pin CHIP_SELECT = 10;
 
 namespace LCD {
     pin RS = 2;
