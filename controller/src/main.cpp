@@ -1,8 +1,11 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "../../shared/src/CommunicationController.h"
+#include "ControllerStorage.h"
+#include "ControllerInterface.h"
 
 ControllerStorage storage;
+ControllerInterface interface(&storage);
 
 void setup() {
     Serial.begin(9600);
@@ -12,7 +15,9 @@ void setup() {
     Serial.println("Starting recording");
     CommunicationController::Internal::messageAll(Code::StartRecording);
 
-    pinMode(3, OUTPUT);
+    pinMode(A0, INPUT_PULLUP);
+    pinMode(A1, INPUT_PULLUP);
+    pinMode(A2, INPUT_PULLUP);
 }
 
 void playbackSong(const uint8_t song) {
@@ -59,26 +64,23 @@ void recordSong(const uint8_t song) {
 }
 
 void loop() {
-    for (unsigned i = 0; i < 50; i++) {
-        delay(15);
-        digitalWrite(3, HIGH);
-        delay(15);
-        digitalWrite(3, LOW);
-    }
-
-
-    unsigned len = CommunicationController::storeInstrumentBuffer(Instrument::Keyboard);
-
-    if (len > 0) {
-        Serial.println("Data:");
-        byte* buffer = CommunicationController::Internal::storage->getBuffer();
-        for (unsigned i = 0; i < len; i++) {
-            Serial.print((int) buffer[i]);
-            Serial.print("|");
-        }
-        Serial.println();
-    }
-    else {
-        Serial.println("Nothing to receive");
-    }
+    interface.update();
+    delay(15);
 }
+
+//void loop() {
+//    unsigned len = CommunicationController::storeInstrumentBuffer(Instrument::Keyboard);
+//
+//    if (len > 0) {
+//        Serial.println("Data:");
+//        byte* buffer = CommunicationController::Internal::storage->getBuffer();
+//        for (unsigned i = 0; i < len; i++) {
+//            Serial.print((int) buffer[i]);
+//            Serial.print("|");
+//        }
+//        Serial.println();
+//    }
+//    else {
+//        Serial.println("Nothing to receive");
+//    }
+//}
