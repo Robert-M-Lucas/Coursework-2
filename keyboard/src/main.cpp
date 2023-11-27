@@ -3,7 +3,9 @@
 #include "../../shared/src/CommunicationActor.h"
 #include "../../shared/src/Constants.h"
 #include "../../shared/src/Actor.h"
+#include "constants.h"
 #include <Adafruit_MCP3008.h>
+
 
 
 LEDActor actor = LEDActor(2, 3);
@@ -20,8 +22,8 @@ void setup() {
     Serial.println("Init");
 
     //inputs used are not important, just placeholders for now
-    inputAdcWhiteKeys.begin(13,11,12,10);
-    inputAdcBlackKeys.begin(9,8,7,6);
+    inputAdcWhiteKeys.begin(WHITE_ADC_PINS[3],WHITE_ADC_PINS[2],WHITE_ADC_PINS[1],WHITE_ADC_PINS[0]);
+    inputAdcBlackKeys.begin(BLACK_ADC_PINS[3],BLACK_ADC_PINS[2],BLACK_ADC_PINS[1],BLACK_ADC_PINS[0]);
 
     CommunicationActor::initialise(Instrument::Keyboard, &actor);
 }
