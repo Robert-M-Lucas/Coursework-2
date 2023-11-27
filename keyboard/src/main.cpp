@@ -75,25 +75,44 @@ void loop() {
     }
     else if (recording || actor.getRecording()) {
         const unsigned long currentTime = millis();
-        const unsigned long ellapsedTime = currentTime - startTime;
+        const unsigned long elapsedTime = currentTime - startTime;
 
         const byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
         const byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
 
+
         // If recording is starting
         if (!recording) {
+            Serial.println("Starting recording");
             startTime = currentTime;
             whiteBitMask = newWhiteBitMask;
             blackBitMask = newBlackBitMask;
         }
         // If not changed, note too long or recording is ending
-        else if (ellapsedTime > MAX_NOTE_DURATION_MS ||
-                whiteBitMask != newWhiteBitMask || blackBitMask != newBlackBitMask ||
-                actor.getRecording() == false) {
+        else if (elapsedTime > MAX_NOTE_DURATION_MS ||
+                whiteBitMask != newWhiteBitMask || blackBitMask != newBlackBitMask //||
+                 /*!actor.getRecording()*/) {
+                Serial.println("Writing notes:");
+                for (uint8_t i = 0; i < 8; i++) {
+                    if ((whiteBitMask & (1 << i)) != 0) Serial.print(1);
+                    else Serial.print(0);
+                }
+                Serial.print("-");
+                for (uint8_t i = 0; i < 8; i++) {
+                    if ((blackBitMask & (1 << i)) != 0) Serial.print(1);
+                    else Serial.print(0);
+                }
+
+                auto duration = (uint8_t) constrain(elapsedTime / INSTRUMENT_POLL_INTERVAL, 0, 255);
+
+                Serial.println();
+                Serial.print("Duration (x60ms): ");
+                Serial.println(duration);
+
                 byte data[3] = {};
                 data[0] = whiteBitMask; // White keys
                 data[1] = blackBitMask; // Black keys
-                data[2] = static_cast<byte>(ellapsedTime / INSTRUMENT_POLL_INTERVAL); // Duration
+                data[2] = static_cast<byte>(duration); // Duration
 
                 actor.writeData(data, 3);
 
