@@ -138,8 +138,6 @@ namespace CommunicationController {
         length = (uint8_t) min((unsigned) length, dataAvailable);
         const byte* buffer = Internal::storage->loadInstrumentDataIntoBuffer(instrument, length);
 
-
-
         Wire.beginTransmission(static_cast<uint8_t>(instrument));
         Wire.write(static_cast<byte>(Code::BufferData));
         for (uint8_t i = 0; i < length; i++) {

@@ -20,23 +20,47 @@ void ControllerInterface::onLeft() {
     if (!songSelected) {
         if (song == 1) { song = SONG_COUNT; }
         else { song--; }
+        updateLCD();
     }
-    updateLCD();
+    else {
+        if (!recordingSelected && !playbackSelected)  {
+            playbackSelected = true;
+            updateLCD();
+        }
+    }
 }
 
 void ControllerInterface::onRight() {
     if (!songSelected) {
         if (song == SONG_COUNT) { song = 1; }
         else { song++; }
+        updateLCD();
     }
-    updateLCD();
+    else {
+        if (!recordingSelected && !playbackSelected)  {
+            recordingSelected = true;
+            updateLCD();
+        }
+    }
 }
 
 void ControllerInterface::onSelect() {
     if (!songSelected) {
         songSelected = true;
+        updateLCD();
     }
-    updateLCD();
+    else {
+        if (recordingSelected) {
+            recordingSelected = false;
+        }
+        else if (playbackSelected) {
+            playbackSelected = false;
+        }
+        else {
+            songSelected = false;
+        }
+        updateLCD();
+    }
 }
 
 void ControllerInterface::updateLCD() {
@@ -57,17 +81,33 @@ void ControllerInterface::updateLCD() {
         lcd.print("S: ");
         lcd.print(song);
 
-        if (true) {
+        if (playbackSelected) {
             lcd.setCursor(8, 0);
             lcd.print("Has Data");
+
+            lcd.setCursor(0, 1);
+            lcd.print("Playing [STOP]");
+        }
+        else if (recordingSelected) {
+            lcd.setCursor(8, 0);
+            lcd.print("Has Data");
+
+            lcd.setCursor(0, 1);
+            lcd.print("Recording [STOP]");
         }
         else {
-            lcd.setCursor(9, 0);
-            lcd.print("No Data");
-        }
+            if (storage->hasSongOnDisk(song)) {
+                lcd.setCursor(8, 0);
+                lcd.print("Has Data");
+            }
+            else {
+                lcd.setCursor(9, 0);
+                lcd.print("No Data");
+            }
 
-        lcd.setCursor(0, 1);
-        lcd.print("Play< [Bck] >Rec");
+            lcd.setCursor(0, 1);
+            lcd.print("Play< [Bck] >Rec");
+        }
     }
 }
 
