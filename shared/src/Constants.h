@@ -20,4 +20,7 @@ constexpr unsigned int MAX_INSTRUMENTS        = 8;
 
 constexpr unsigned long MAX_NOTE_DURATION_MS = 60 * 256;
 
+/// serial communications standardised baud rate
+constexpr unsigned int SERIAL_BAUD_RATE               = 9600;
+
 #endif //CONSTANTS_H
