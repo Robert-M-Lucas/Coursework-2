@@ -2,12 +2,12 @@
 // Created by Benny on 20/11/2023.
 //
 
-#ifndef SHARED_CONTROLLERSTORAGE_H
-#define SHARED_CONTROLLERSTORAGE_H
+#ifndef CONTROLLER_CONTROLLERSTORAGE_H
+#define CONTROLLER_CONTROLLERSTORAGE_H
 
 #include "Arduino.h"
-#include "Constants.h"
-#include "Communication.h"
+#include "../../shared/src/Constants.h"
+#include "../../shared/src/Communication.h"
 
 class ControllerStorage {
 private:
@@ -35,4 +35,4 @@ public:
     void readMode() { write = false; }
 };
 
-#endif //SHARED_CONTROLLERSTORAGE_H
+#endif //CONTROLLER_CONTROLLERSTORAGE_H
