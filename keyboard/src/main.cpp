@@ -18,7 +18,7 @@ constexpr byte emptyByte = 0;
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    Serial.begin(9600);
+    Serial.begin(SERIAL_BAUD_RATE);
     Serial.println("Init");
 
     //inputs used are not important, just placeholders for now
