@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include "../../shared/src/Constants.h"
 
-const uint8_t SONG_COUNT = 10;
+const u8 SONG_COUNT = 10;
 
 const pin LEFT_INPUT = A2;
 const pin RIGHT_INPUT = A0;

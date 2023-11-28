@@ -14,13 +14,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Fixes and testing code for communication">
-      <change afterPath="$PROJECT_DIR$/src/ControllerConstants.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ControllerInterface.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ControllerInterface.h" afterDir="false" />
+    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="More work on controller storage">
+      <change afterPath="$PROJECT_DIR$/src/ControllerCommunication.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerConstants.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerConstants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerStorage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerStorage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shared/src/CommunicationController.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,10 +102,19 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="controller" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
+      <method v="2" />
+    </configuration>
+    <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="controller" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
+      <method v="2" />
+    </configuration>
+    <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="controller" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
+      <method v="2" />
     </configuration>
     <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="controller" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
       <method v="2" />
@@ -130,8 +140,10 @@
       <workItem from="1700580646079" duration="1360000" />
       <workItem from="1700670392585" duration="119000" />
       <workItem from="1700748505276" duration="4736000" />
-      <workItem from="1700754075582" duration="147000" />
-      <workItem from="1701097865478" duration="4323000" />
+      <workItem from="1700754075582" duration="11000" />
+      <workItem from="1701103845895" duration="1149000" />
+      <workItem from="1701105137680" duration="24000" />
+      <workItem from="1701166953642" duration="4668000" />
     </task>
     <task id="LOCAL-00001" summary="Created example code for controller">
       <option name="closed" value="true" />
@@ -141,15 +153,31 @@
       <option name="project" value="LOCAL" />
       <updated>1700581450456</updated>
     </task>
-    <task id="LOCAL-00002" summary="Fixes and testing code for communication">
+    <task id="LOCAL-00002" summary="More work on controller storage">
       <option name="closed" value="true" />
-      <created>1700754104132</created>
+      <created>1701104050809</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1700754104132</updated>
+      <updated>1701104050809</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="More work on controller storage">
+      <option name="closed" value="true" />
+      <created>1701104637734</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701104637734</updated>
+    </task>
+    <task id="LOCAL-00004" summary="More work on controller storage">
+      <option name="closed" value="true" />
+      <created>1701105147259</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701105147259</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,7 +185,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created example code for controller" />
-    <MESSAGE value="Fixes and testing code for communication" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixes and testing code for communication" />
+    <MESSAGE value="More work on controller storage" />
+    <option name="LAST_COMMIT_MESSAGE" value="More work on controller storage" />
   </component>
 </project>
