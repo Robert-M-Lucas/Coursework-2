@@ -61,18 +61,28 @@ void loop() {
 
     if (interface.isRecording()) {
         if (!prevRecording) {
+            Serial.println("Starting recording");
             communication.startRecording(interface.getSong());
             digitalWrite(RECORDING_LED, HIGH);
+        }
+
+        if ((millis() / 1000) % 2 == 0) {
+            digitalWrite(RECORDING_LED, HIGH);
+        }
+        else {
+            digitalWrite(RECORDING_LED, LOW);
         }
 
         communication.recordingLoop();
     }
     else if (prevRecording) {
+        Serial.println("Starting recording");
         communication.stopRecording();
         digitalWrite(RECORDING_LED, LOW);
     }
     else if (interface.isPlayback()) {
         if (!prevPlaying) {
+            Serial.println("Starting playback");
             communication.startPlayback(interface.getSong());
             digitalWrite(PLAYBACK_LED, HIGH);
         }
@@ -80,6 +90,7 @@ void loop() {
         communication.playbackLoop();
     }
     else if (prevPlaying) {
+        Serial.println("Stopping playback");
         communication.stopPlayback();
         digitalWrite(PLAYBACK_LED, LOW);
     }

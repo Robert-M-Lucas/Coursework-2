@@ -67,8 +67,16 @@ void ControllerInterface::updateLCD() {
     lcd.clear();
     if (!songSelected) {
         lcd.setCursor(0, 0);
-        lcd.print("Song: ");
+        lcd.print("Song:");
         lcd.print(song);
+        if (storage->hasSongOnDisk(song)) {
+            lcd.setCursor(8, 0);
+            lcd.print("Has Data");
+        }
+        else {
+            lcd.setCursor(9, 0);
+            lcd.print("No Data");
+        }
         lcd.setCursor(0, 1);
         lcd.print('<');
         lcd.setCursor(4, 1);
@@ -78,7 +86,7 @@ void ControllerInterface::updateLCD() {
     }
     else {
         lcd.setCursor(0, 0);
-        lcd.print("S: ");
+        lcd.print("Song:");
         lcd.print(song);
 
         if (playbackSelected) {

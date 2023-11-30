@@ -22,6 +22,8 @@ private:
     bool prevLeft = false;
     bool prevRight = false;
     bool prevSelect = false;
+
+    unsigned long time = 0;
 public:
     explicit ControllerInterface(ControllerStorage* storage);
 
