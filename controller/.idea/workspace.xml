@@ -14,15 +14,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="More work on controller storage">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.h" afterDir="false" />
+    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Fully implemented recording and playback functionality on controller">
       <change beforePath="$PROJECT_DIR$/src/ControllerInterface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControllerInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../documentation/Communication/Communication Protocol.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../documentation/Communication/Recording.md" beforeDir="false" afterPath="$PROJECT_DIR$/../documentation/Communication/Recording.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,7 +146,7 @@
       <workItem from="1701105137680" duration="24000" />
       <workItem from="1701166953642" duration="4668000" />
       <workItem from="1701360308283" duration="23000" />
-      <workItem from="1701382080286" duration="1464000" />
+      <workItem from="1701382080286" duration="2044000" />
     </task>
     <task id="LOCAL-00001" summary="Created example code for controller">
       <option name="closed" value="true" />
@@ -185,7 +180,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701105147259</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Fully implemented recording and playback functionality on controller">
+      <option name="closed" value="true" />
+      <created>1701383616359</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1701383616359</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,7 +197,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created example code for controller" />
     <MESSAGE value="More work on controller storage" />
-    <option name="LAST_COMMIT_MESSAGE" value="More work on controller storage" />
+    <MESSAGE value="Fully implemented recording and playback functionality on controller" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fully implemented recording and playback functionality on controller" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
