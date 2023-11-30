@@ -15,13 +15,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="More work on controller storage">
-      <change afterPath="$PROJECT_DIR$/src/ControllerCommunication.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerConstants.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerConstants.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerStorage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerStorage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerInterface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shared/src/CommunicationController.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../documentation/Communication/Communication Protocol.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../documentation/Communication/Recording.md" beforeDir="false" afterPath="$PROJECT_DIR$/../documentation/Communication/Recording.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +40,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/.platformio/packages/framework-arduino-avr/cores/arduino/Arduino.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="PlatformioLocalSettings">
     <option name="availableProjects">
@@ -81,26 +85,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/rober/Documents/Coding/Coursework-2/keyboard&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/rober/Documents/Coding/Coursework-2/shared",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "serialmonitor.settings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
@@ -144,6 +150,8 @@
       <workItem from="1701103845895" duration="1149000" />
       <workItem from="1701105137680" duration="24000" />
       <workItem from="1701166953642" duration="4668000" />
+      <workItem from="1701360308283" duration="23000" />
+      <workItem from="1701382080286" duration="1464000" />
     </task>
     <task id="LOCAL-00001" summary="Created example code for controller">
       <option name="closed" value="true" />
@@ -187,5 +195,9 @@
     <MESSAGE value="Created example code for controller" />
     <MESSAGE value="More work on controller storage" />
     <option name="LAST_COMMIT_MESSAGE" value="More work on controller storage" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

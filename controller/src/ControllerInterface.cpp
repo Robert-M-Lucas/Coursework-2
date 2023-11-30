@@ -8,9 +8,9 @@
 
 ControllerInterface::ControllerInterface(ControllerStorage *storage):
 storage(storage), lcd(LCD::RS, LCD::ENABLE, LCD::D0, LCD::D1, LCD::D2, LCD::D3) {
-    pinMode(LEFT_INPUT, INPUT);
-    pinMode(RIGHT_INPUT, INPUT);
-    pinMode(SELECT_INPUT, INPUT);
+    pinMode(LEFT_INPUT, INPUT_PULLUP);
+    pinMode(RIGHT_INPUT, INPUT_PULLUP);
+    pinMode(SELECT_INPUT, INPUT_PULLUP);
 
     lcd.begin(16, 2);
     updateLCD();
@@ -112,12 +112,15 @@ void ControllerInterface::updateLCD() {
 }
 
 void ControllerInterface::updateButtons() {
+    // Use !digital read as LOW is read when a button with a pull-up resistor is read
     bool left = !digitalRead(LEFT_INPUT);
     bool right = !digitalRead(RIGHT_INPUT);
     bool select = !digitalRead(SELECT_INPUT);
+
     if (left && !prevLeft) { onLeft(); }
     if (right && !prevRight) { onRight(); }
     if (select && !prevSelect) { onSelect(); }
+
     prevLeft = left;
     prevRight = right;
     prevSelect = select;

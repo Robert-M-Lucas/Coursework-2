@@ -14,16 +14,34 @@ ControllerCommunication::ControllerCommunication(ControllerStorage &storage) :
     Wire.begin();
 }
 
-void ControllerCommunication::startRecording() {
+void ControllerCommunication::startRecording(uint8_t song) {
+    storage.selectSong(song);
+    clearBuffers();
+    delay(TRANSMISSION_DELAY);
     messageAll(Code::StartRecording);
+}
+
+void ControllerCommunication::recordingLoop() {
+    storeAllInstrumentBuffers();
 }
 
 void ControllerCommunication::stopRecording() {
     messageAll(Code::StopRecording);
+    delay(TRANSMISSION_DELAY);
+    storeAllInstrumentBuffers();
 }
 
-void ControllerCommunication::startPlayback() {
+void ControllerCommunication::startPlayback(uint8_t song) {
+    storage.selectSong(song);
+    clearBuffers();
+    delay(TRANSMISSION_DELAY);
+    writeAllInstrumentBuffers();
+    delay(TRANSMISSION_DELAY);
     messageAll(Code::StartPlayback);
+}
+
+void ControllerCommunication::playbackLoop() {
+    writeAllInstrumentBuffers();
 }
 
 void ControllerCommunication::stopPlayback() {

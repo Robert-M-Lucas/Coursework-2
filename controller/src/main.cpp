@@ -3,17 +3,18 @@
 #include "ControllerStorage.h"
 #include "ControllerCommunication.h"
 #include "ControllerInterface.h"
+#include "ControllerConstants.h"
 //#include "../../shared/src/Communication.h"
 
 ControllerStorage storage;
 ControllerCommunication communication(storage);
 ControllerInterface interface(&storage);
 
-enum class Mode {
-    Standby,
-    Playback,
-    Recording,
-} mode;
+//enum class Mode {
+//    Standby,
+//    Playback,
+//    Recording,
+//} mode;
 
 const char* instrument_to_name(Instrument instrument) {
     switch (instrument) {
@@ -44,18 +45,49 @@ void setup() {
     Serial.begin(9600);
 
     communication.updateConnected();
+    bitmask_to_serial(communication.getConnected());
+
     storage.init();
 
-    pinMode(A0, INPUT_PULLUP);
-    pinMode(A1, INPUT_PULLUP);
-    pinMode(A2, INPUT_PULLUP);
-//    _bitmask_to_serial(communication.getConnected());
-    bitmask_to_serial(communication.getConnected());
+    pinMode(RECORDING_LED, OUTPUT);
+    pinMode(PLAYBACK_LED, OUTPUT);
 }
+
+bool prevRecording;
+bool prevPlaying;
 
 void loop() {
     interface.update();
-    delay(15);
+
+    if (interface.isRecording()) {
+        if (!prevRecording) {
+            communication.startRecording(interface.getSong());
+            digitalWrite(RECORDING_LED, HIGH);
+        }
+
+        communication.recordingLoop();
+    }
+    else if (prevRecording) {
+        communication.stopRecording();
+        digitalWrite(RECORDING_LED, LOW);
+    }
+    else if (interface.isPlayback()) {
+        if (!prevPlaying) {
+            communication.startPlayback(interface.getSong());
+            digitalWrite(PLAYBACK_LED, HIGH);
+        }
+
+        communication.playbackLoop();
+    }
+    else if (prevPlaying) {
+        communication.stopPlayback();
+        digitalWrite(PLAYBACK_LED, LOW);
+    }
+
+    prevRecording = interface.isRecording();
+    prevPlaying = interface.isPlayback();
+
+    delay(TRANSMISSION_DELAY);
 }
 
 // Called to begin playback

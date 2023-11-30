@@ -40,16 +40,20 @@ public:
 
     uint8_t getConnected() { return connected_devices_bitmask; }
 
-    /// Called to begin recording
-    void startRecording();
+    /// Called to begin isRecording
+    void startRecording(uint8_t song);
 
-    /// Called to end recording
+    void recordingLoop();
+
+    /// Called to end isRecording
     void stopRecording();
 
-    /// Called to begin playback
-    void startPlayback();
+    /// Called to begin isPlayback
+    void startPlayback(uint8_t song);
 
-    /// Called to end playback
+    void playbackLoop();
+
+    /// Called to end isPlayback
     void stopPlayback();
 
     /// Empties the buffers of every instrument

@@ -25,6 +25,12 @@ private:
 public:
     explicit ControllerInterface(ControllerStorage* storage);
 
+    bool isRecording() const { return recordingSelected; }
+
+    bool isPlayback() const { return  playbackSelected; }
+
+    uint8_t getSong() const { return song; }
+
     void onLeft();
 
     void onRight();
