@@ -10,6 +10,10 @@
 #include "ControllerConstants.h"
 
 ControllerStorage::ControllerStorage() {
+}
+
+void ControllerStorage::init() {
+    Serial.println("Initialising SD");
     // Initialise SD library
     bool ok = SD.begin(CHIP_SELECT);
     if (ok) {
@@ -45,6 +49,8 @@ void ControllerStorage::storeBufferToDisk(const u8 length, const Instrument inst
 
     // Write data to file
     file.write(buffer, length);
+
+    file.close();
 }
 
 bool ControllerStorage::deleteSong(const u8 song) const {

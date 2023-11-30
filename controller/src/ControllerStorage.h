@@ -14,6 +14,8 @@ class ControllerStorage {
 public:
     ControllerStorage();
 
+    void init();
+
     // Set the current song to be recorded or played
     void selectSong(u8 song);
 
