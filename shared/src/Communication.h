@@ -15,6 +15,7 @@ enum class Instrument : uint8_t {
 
 /// Code that is is always the first bit of a transfer
 enum class Code : uint8_t {
+    Poll = 0,
     StartRecording = 1,
     StopRecording = 2,
     RequestBufferLength = 3,

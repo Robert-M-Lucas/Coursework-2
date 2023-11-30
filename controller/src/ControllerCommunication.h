@@ -12,9 +12,33 @@
 #include "../../shared/src/Util.h"
 #include "ControllerStorage.h"
 
+
 class ControllerCommunication {
+private:
+    ControllerStorage &storage;
+    uint8_t connected_devices_bitmask = 0;
+
+    /// Transmit a `Code` to an instrument
+    void message(Instrument instrument, Code code);
+
+    /// Read bytes from an instrument
+    template <class T>
+    T readResponse();
+
+    /// Transmit a `Code` to all connected instruments
+    void messageAll(Code code);
+
+    unsigned readResponseToBuffer(byte* buffer);
+
+    /// Transmit a `Code` alongside the buffer contents to an instrument
+    void sendBuffer(Instrument instrument, Code code, const u8 *buffer, u16 length);
+
 public:
-    ControllerCommunication(ControllerStorage &storage);
+    explicit ControllerCommunication(ControllerStorage &storage);
+
+    void updateConnected();
+
+    uint8_t getConnected() { return connected_devices_bitmask; }
 
     /// Called to begin recording
     void startRecording();
@@ -41,24 +65,6 @@ public:
     void storeAllInstrumentBuffers();
 
     bool writeAllInstrumentBuffers();
-
-private:
-    /// Transmit a `Code` to an instrument
-    void message(Instrument instrument, Code code);
-
-    /// Transmit a `Code` to all connected instruments
-    void messageAll(const Code code);
-
-    /// Read bytes from an instrument
-    template <class T>
-    T readResponse();
-
-    unsigned readResponseToBuffer(byte* buffer);
-
-    /// Transmit a `Code` alongside the buffer contents to an instrument
-    void sendBuffer(const Instrument instrument, const Code code, const u8 *buffer, const u16 length);
-
-    ControllerStorage &storage;
 };
 
 template<class T>

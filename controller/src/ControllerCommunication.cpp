@@ -3,6 +3,11 @@
 //
 
 #include "ControllerCommunication.h"
+#include "../../shared/src/Constants.h"
+
+extern "C" {
+#include "utility/twi.h"
+};
 
 ControllerCommunication::ControllerCommunication(ControllerStorage &storage) :
         storage(storage) {
@@ -131,4 +136,14 @@ void ControllerCommunication::sendBuffer(
     Wire.write(static_cast<u8>(code));
     for (u16 i = 0; i < length; i++) Wire.write(buffer[i]);
     Wire.endTransmission();
+}
+
+void ControllerCommunication::updateConnected() {
+    // Scan for connected devices
+    for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
+        byte rc = twi_writeTo(addr, nullptr, 0, 1, 0);
+        if (rc == 0) {
+            connected_devices_bitmask |= 1 << addr;
+        }
+    }
 }
