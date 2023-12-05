@@ -10,8 +10,8 @@
 
 /// Unique instrument ID
 enum class Instrument : uint8_t {
-    TestInstrument = 0,
-    Keyboard = 1
+    Keyboard = 1,
+    TestInstrument = 2,
 };
 
 /// Code that is is always the first bit of a transfer
