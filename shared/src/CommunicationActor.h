@@ -26,14 +26,17 @@ namespace CommunicationActor {
 
         /// Interrupt called when the actor receives a request for bytes
         inline void requestEvent() {
+            //Serial.println("request event happened");
             if (request == Request::None) {
                 Serial.println("Received a request when the request type has not been specified");
             }
+            //Serial.println("request: " + String(static_cast<uint8_t>(request)));
 
             switch (request) {
                 case Request::BufferLength: {
                     const uint8_t length = actorBuffer->getBufferLength();
                     lastBufferLength = length;
+                    //Serial.println("length: " + String(length));
                     Wire.write(length);
                     break;
                 }
@@ -53,8 +56,9 @@ namespace CommunicationActor {
                     }
                 }
                 case Request::BufferEmpty: {
-                    const uint8_t length = actorBuffer->getBufferLength();
+                    const uint8_t length = actorBuffer->getBufferEmpty();
                     Wire.write(length);
+                    //Serial.println("buffer empty request, empty space: " + String(length));
                     break;
                 }
                 case Request::None: {
@@ -72,9 +76,12 @@ namespace CommunicationActor {
 
         /// Interrupt called when actor receives data from tbe controller
         inline void receiveEvent(int length) {
+            //Serial.println("received event");
+
             if (Wire.available() <= 0) { return; }
 
             const Code code = static_cast<Code>(Wire.read());
+            //Serial.println("code: " + String(static_cast<uint8_t>(code)));
             switch (code) {
                 case Code::StartRecording: {
                     actorBuffer->startRecording();
@@ -97,6 +104,7 @@ namespace CommunicationActor {
                     break;
                 }
                 case Code::BufferData: {
+                    Serial.println("receiving buffer data");
                     const ArrAndOffset arr_data = actorBuffer->getBufferWrite();
                     unsigned i = 0;
                     while (Wire.available() > 0) {
@@ -106,6 +114,9 @@ namespace CommunicationActor {
                         }
 
                         arr_data.arr[index] = static_cast<byte>(Wire.read());
+
+                        Serial.print("byte: ");
+                        Serial.println(static_cast<char>(arr_data.arr[index]));
 
                         i++;
                     }
