@@ -7,7 +7,10 @@
 #include "ControllerConstants.h"
 
 ControllerInterface::ControllerInterface(ControllerStorage *storage):
-storage(storage), lcd(LCD::RS, LCD::ENABLE, LCD::D0, LCD::D1, LCD::D2, LCD::D3) {
+storage(storage), lcd(LCD::RS, LCD::ENABLE, LCD::D0, LCD::D1, LCD::D2, LCD::D3) {}
+
+
+void ControllerInterface::initialise() {
     pinMode(LEFT_INPUT, INPUT_PULLUP);
     pinMode(RIGHT_INPUT, INPUT_PULLUP);
     pinMode(SELECT_INPUT, INPUT_PULLUP);
