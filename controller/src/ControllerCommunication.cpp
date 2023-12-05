@@ -58,7 +58,7 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
 
     delay(TRANSMISSION_DELAY);
 
-    Wire.requestFrom(static_cast<u8>(instrument), 1u);
+    Wire.requestFrom(static_cast<u8>(instrument), (uint8_t) 1);
 
     // Wait for response
     delay(TRANSMISSION_DELAY);
@@ -89,6 +89,10 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     // Request buffer length
     message(instrument, Code::RequestBufferNeeded);
 
+    delay(TRANSMISSION_DELAY);
+
+    Wire.requestFrom(static_cast<u8>(instrument), (uint8_t) 1);
+
     // Wait for response
     delay(TRANSMISSION_DELAY);
     if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
@@ -97,11 +101,20 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     u16 length = static_cast<u16>(Wire.read());
     if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
 
+    Serial.println(length);
+
     delay(TRANSMISSION_DELAY);
 
     // Load song data for this instrument into the storage buffer
     length = storage.loadSongData(instrument, length);
     const byte* buffer = storage.getBuffer();
+
+    for (u16 i = 0; i < length; i++) {
+        Serial.print(static_cast<char>(buffer[i]));
+    }
+    Serial.println();
+
+    Serial.println(length);
 
     // Send buffer to instrument
     sendBuffer(
@@ -115,13 +128,13 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
 }
 
 void ControllerCommunication::storeAllInstrumentBuffers() {
-    storeInstrumentBuffer(Instrument::Keyboard);
+    storeInstrumentBuffer(Instrument::TestInstrument);
 }
 
 bool ControllerCommunication::writeAllInstrumentBuffers() {
     bool dataWritten = false;
     // TODO:
-    dataWritten |= writeInstrumentBuffer(Instrument::Keyboard);
+    dataWritten |= writeInstrumentBuffer(Instrument::TestInstrument);
     return dataWritten;
 }
 
@@ -132,7 +145,7 @@ void ControllerCommunication::message(Instrument instrument, Code code) {
 }
 
 void ControllerCommunication::messageAll(const Code code) {
-    message(Instrument::Keyboard, code);
+    message(Instrument::TestInstrument, code);
 }
 
 unsigned ControllerCommunication::readResponseToBuffer(byte *buffer) {

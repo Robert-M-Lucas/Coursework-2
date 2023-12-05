@@ -41,9 +41,9 @@ public:
     // Returns the number of bytes loaded, which is <= lengthRequested
     u16 loadSongData(Instrument instrument, u16 lengthRequested);
 
-private:
     // Return the file path for the specified song and instrument
-    String getFilePath(u8 song, Instrument instrument) const;
+    static String getFilePath(u8 song, Instrument instrument) ;
+private:
 
     // Buffer used to hold data to be transferred between the instruments and the SD card
     byte buffer[BUFFER_SIZE] = {};

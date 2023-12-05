@@ -26,9 +26,9 @@ void ControllerStorage::init() {
     resetPlayback();
 }
 
-String ControllerStorage::getFilePath(const u8 song, const Instrument instrument) const {
+String ControllerStorage::getFilePath(const u8 song, const Instrument instrument) {
     auto instrumentIndex = static_cast<u8>(instrument);
-    return String(song) + "/" + String(instrumentIndex) + ".dat";
+    return String(song) + "/" + String(instrumentIndex) + ".DAT";
 }
 
 void ControllerStorage::selectSong(const u8 song) {
@@ -54,41 +54,48 @@ void ControllerStorage::storeBufferToDisk(const u8 length, const Instrument inst
 }
 
 bool ControllerStorage::deleteSong(const u8 song) const {
-    return SD.rmdir(String(song));
+    return SD.rmdir("1");
 }
 
 bool ControllerStorage::hasSongOnDisk(const u8 song) const {
     // A song exists if there is a folder for it - a song folder will never be created
     // except when writing data to it
-    return SD.exists(String(song));
+    return SD.exists("1");
 }
 
 u16 ControllerStorage::loadSongData(const Instrument instrument, const u16 lengthRequested) {
     // Open file for reading
-    auto path = getFilePath(currentSong, instrument);
-    auto file = SD.open(path, FILE_READ);
-
+    // TODO:
+//    auto path = getFilePath(currentSong, instrument);
+//    Serial.print("Path: ");
+//    Serial.println(path);
+    Serial.println("1");
+    if (SD.exists("1/2.DAT")) { Serial.println("Exists"); }
+    if (SD.exists("1\\2.DAT")) { Serial.println("Exists 2"); }
+    auto file = SD.open("1/2.DAT", FILE_READ);
+    Serial.println("2");
     // Move to the position in the file corresponding to the current playback position
     auto instrumentIndex = static_cast<u8>(instrument);
-    file.seek(playbackPosition[instrumentIndex]);
-
+//    file.seek(playbackPosition[instrumentIndex]);
+    Serial.println("3");
     // Query file for the number of remaining bytes to read
     // The actual number of bytes to read is the minimum of this and the length requested
     auto length = static_cast<u16>(file.available());
+    Serial.println(length);
     length = min(length, lengthRequested);
-
+    Serial.println(length);
     // Read song data into buffer, using buffered read for efficiency
     file.read(
             reinterpret_cast<void*>(buffer),
             length
     );
-
+    Serial.println("5");
     // Update playback position so that the next call to loadSongData starts at the next segment
     playbackPosition[instrumentIndex] += length;
-
+    Serial.println("6");
     // Make sure to close the file now we're finished
     file.close();
-
+    Serial.println("7");
     return length;
 }
 

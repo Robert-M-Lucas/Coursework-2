@@ -27,6 +27,8 @@ private:
 public:
     explicit ControllerInterface(ControllerStorage* storage);
 
+    void initialise();
+
     bool isRecording() const { return recordingSelected; }
 
     bool isPlayback() const { return  playbackSelected; }

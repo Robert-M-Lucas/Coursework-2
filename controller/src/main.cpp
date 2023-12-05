@@ -21,6 +21,9 @@ const char* instrument_to_name(Instrument instrument) {
         case (Instrument::Keyboard): {
             return "Keyboard";
         }
+        case (Instrument::TestInstrument): {
+            return "Test Instrument";
+        }
         default: {
             return "Unrecognised Instrument";
         }
@@ -43,11 +46,21 @@ void bitmask_to_serial(uint8_t bitmask) {
 
 void setup() {
     Serial.begin(9600);
+    Serial.println("Init");
 
     communication.updateConnected();
     bitmask_to_serial(communication.getConnected());
 
     storage.init();
+    interface.initialise();
+
+//    auto length = storage.loadSongData(Instrument::TestInstrument, 255);
+//    const byte* buffer = storage.getBuffer();
+//
+//    for (u16 i = 0; i < length; i++) {
+//        Serial.print(static_cast<char>(buffer[i]));
+//    }
+//    Serial.println();
 
     pinMode(RECORDING_LED, OUTPUT);
     pinMode(PLAYBACK_LED, OUTPUT);
@@ -83,6 +96,7 @@ void loop() {
     else if (interface.isPlayback()) {
         if (!prevPlaying) {
             Serial.println("Starting playback");
+            storage.resetPlayback();
             communication.startPlayback(interface.getSong());
             digitalWrite(PLAYBACK_LED, HIGH);
         }
@@ -91,8 +105,8 @@ void loop() {
     }
     else if (prevPlaying) {
         Serial.println("Stopping playback");
-        communication.stopPlayback();
         digitalWrite(PLAYBACK_LED, LOW);
+        communication.stopPlayback();
     }
 
     prevRecording = interface.isRecording();
