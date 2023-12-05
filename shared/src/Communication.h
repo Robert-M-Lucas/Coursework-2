@@ -10,6 +10,7 @@
 
 /// Unique instrument ID
 enum class Instrument : uint8_t {
+    TestInstrument = 0,
     Keyboard = 1
 };
 
