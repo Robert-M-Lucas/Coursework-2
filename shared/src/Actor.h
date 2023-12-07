@@ -18,35 +18,35 @@ class ActorInterface {
 public:
     virtual ~ActorInterface() = default;
     /// Starts recording
-    virtual void startRecording();
+    virtual void startRecording() = 0;
     /// Stops recording
-    virtual void stopRecording();
+    virtual void stopRecording() = 0;
     /// Returns the current length of the buffer
-    virtual uint8_t getBufferLength();
+    virtual uint8_t getBufferLength() = 0;
     /// Returns the buffer and the head pointer
-    virtual ArrAndOffset getBufferRead();
+    virtual ArrAndOffset getBufferRead() = 0;
 
     /// Empties the buffer
-    virtual void clearBuffer();
+    virtual void clearBuffer() = 0;
     /// Returns the empty space in the buffer
-    virtual uint8_t getBufferEmpty();
+    virtual uint8_t getBufferEmpty() = 0;
     /// Returns the buffer nad the tail pointer
-    virtual ArrAndOffset getBufferWrite();
+    virtual ArrAndOffset getBufferWrite() = 0;
     /// Starts playback
-    virtual void startPlayback();
+    virtual void startPlayback() = 0;
     /// Stops playback
-    virtual void stopPlayback();
+    virtual void stopPlayback() = 0;
 
     /// Writes data to the buffer
-    virtual void writeData(byte* data, uint8_t length);
+    virtual void writeData(byte* data, uint8_t length) = 0;
 
     /// Checks if there is data to read from the buffer
-    virtual bool readDataAvailable(uint8_t length);
+    virtual bool readDataAvailable(uint8_t length) = 0;
     /// Reads data from the buffer
-    virtual void readDataAndRemove(byte* destination, uint8_t length);
+    virtual void readDataAndRemove(byte* destination, uint8_t length) = 0;
 
-    virtual bool getRecording();
-    virtual bool getPlayback();
+    virtual bool getRecording() = 0;
+    virtual bool getPlayback() = 0;
 };
 
 class DefaultActor : public ActorInterface {
