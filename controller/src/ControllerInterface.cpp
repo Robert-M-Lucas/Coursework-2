@@ -28,9 +28,9 @@ void ControllerInterface::init() {
 
     lcd.setCursor(0, 0);
     lcd.print(F("SD OK"));
-    lcd.setCursor(1, 0);
+    lcd.setCursor(0, 1);
     lcd.print(F("Instruments: "));
-    lcd.setCursor(13, 0);
+    lcd.setCursor(13, 1);
     lcd.print(communication->countConnected());
 
     delay(3000);
