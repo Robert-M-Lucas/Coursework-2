@@ -67,6 +67,8 @@ void loop() {
                 byte data[3] = {};
                 actor.readDataAndRemove(data, 3);
                 unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
+                const byte whiteKeys = data[0];
+                const byte blackKeys = data[1];
                 delay(500); // TODO: Play sounds
             }
             // Playback ended and all notes in buffer have been played
