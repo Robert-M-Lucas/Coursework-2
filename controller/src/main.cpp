@@ -32,6 +32,9 @@ bool prevRecording;
 bool prevPlaying;
 
 void loop() {
+    // Prevent wild behaviour from SD error
+    if (!storage.loaded()) { return; }
+
     interface.update();
 
     if (interface.isRecording()) {

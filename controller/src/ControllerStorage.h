@@ -12,6 +12,8 @@
 
 class ControllerStorage {
 private:
+    bool load = false;
+
     // Buffer used to hold data to be transferred between the instruments and the SD card
     byte buffer[BUFFER_SIZE] = {};
 
@@ -28,7 +30,9 @@ private:
 
     void buffer_file(uint8_t song, uint8_t instrument);
 public:
-    static void init();
+    void init();
+
+    bool loaded() const { return load; }
 
     // Set the current song to be recorded or played
     void selectSong(uint8_t song);

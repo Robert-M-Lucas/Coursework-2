@@ -77,8 +77,10 @@ void ControllerStorage::init() {
     // Initialise SD library
     const bool ok = SD.begin(CHIP_SELECT);
     if (ok) {
+        load = true;
         Serial.println(F("[INFO] [ControllerStorage] SD card initialised successfully"));
     } else {
+        load = false;
         Serial.println(F("[ERROR] [ControllerStorage] Failed to initialise SD card!"));
     }
 }

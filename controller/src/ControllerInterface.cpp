@@ -70,6 +70,12 @@ void ControllerInterface::onSelect() {
 
 void ControllerInterface::updateLCD() {
     lcd.clear();
+    if (!storage->loaded()) {
+        lcd.setCursor(4, 0);
+        lcd.print("SD ERROR");
+        return;
+    }
+
     if (!songSelected) {
         lcd.setCursor(0, 0);
         lcd.print("Song:");
