@@ -29,7 +29,7 @@ public:
     /// Empties the buffer
     virtual void clearBuffer() = 0;
     /// Returns the empty space in the buffer
-    virtual uint8_t getBufferEmpty() = 0;
+    virtual uint8_t getBufferSpaceRemaining() = 0;
     /// Returns the buffer nad the tail pointer
     virtual ArrAndOffset getBufferWrite() = 0;
     /// Starts playback
@@ -45,12 +45,15 @@ public:
     /// Reads data from the buffer
     virtual void readDataAndRemove(byte* destination, uint8_t length) = 0;
 
+    /// Returns whether a recording is in progress
     virtual bool getRecording() = 0;
+    /// Returns whether a playback is in progress
     virtual bool getPlayback() = 0;
 };
 
 class DefaultActor : public ActorInterface {
 private:
+    /// Circular data buffer
     byte buffer[BUFFER_SIZE] = {};
     unsigned bufferHead = 0;
     unsigned bufferTail = 0;
@@ -84,7 +87,7 @@ public:
         bufferTail = 0;
     }
 
-    uint8_t getBufferEmpty() override {
+    uint8_t getBufferSpaceRemaining() override {
         return BUFFER_SIZE - getBufferLength() - 1;
     }
 
@@ -102,6 +105,8 @@ public:
 
     void writeData(byte *data, const uint8_t length) override {
         if (isPlayingBack) { return; }
+
+        // Write to circular buffer
         for (unsigned i = 0; i < length; i++) {
             unsigned index = bufferTail + i;
             if (index >= BUFFER_SIZE) { index -= BUFFER_SIZE; }
@@ -122,6 +127,7 @@ public:
     }
 
     void readDataAndRemove(byte* destination, const uint8_t amount) override {
+        // Read from circular buffer
         for (uint8_t i = 0; i < amount; i++) {
             unsigned index = bufferHead + i;
             if (index >= BUFFER_SIZE) {

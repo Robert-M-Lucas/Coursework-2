@@ -24,39 +24,43 @@ private:
 
     u8 currentSong = 0;
 
+    /// Writes a number as character into a buffer without a null terminator. Returns chars written
     static uint8_t write_num_to_buffer_pos(char* buffer_pos, uint8_t num);
 
+    /// Writes a folder path to the path_buf
     void buffer_folder(uint8_t song);
 
+    /// Writes a file path to the path_buf
     void buffer_file(uint8_t song, uint8_t instrument);
 public:
     void init();
 
+    /// Returns whether ControllerStorage correctly initialised
     bool loaded() const { return load; }
 
-    // Set the current song to be recorded or played
+    /// Set the current song to be recorded or played
     void selectSong(uint8_t song);
 
-    // Returns a pointer to the internal storage buffer
+    /// Returns a pointer to the internal storage buffer
     byte* getBuffer() { return buffer; }
 
-    // Append data in the song buffer to the correct file on the SD card
+    /// Append data in the song buffer to the correct file on the SD card
     void storeBufferToDisk(Instrument instrument, uint8_t length);
 
-    // Returns true if the song exists on disk
+    /// Returns true if the song exists on disk
     bool hasSongOnDisk(uint8_t song);
 
-    // Delete a song from the disk
+    /// Delete a song from the disk
     bool deleteSong(uint8_t song);
 
-    // Reset the playback to start at the beginning of the file
+    /// Reset the playback to start at the beginning of the file
     void resetPlayback();
 
-    // Loads data from the SD card and stores it in the instrument file
-    // Data is loaded from the current playback position
-    // The loaded data is stored in the buffer, meaning that it is only valid until another
-    // operation overwrites the buffer
-    // Returns the number of bytes loaded, which is <= lengthRequested
+    /// Loads data from the SD card and stores it in the instrument file
+    /// Data is loaded from the current playback position
+    /// The loaded data is stored in the buffer, meaning that it is only valid until another
+    /// operation overwrites the buffer
+    /// Returns the number of bytes loaded, which is <= lengthRequested
     uint8_t loadSongData(Instrument instrument, uint8_t lengthRequested);
 
     // Return the file path for the specified song and instrument

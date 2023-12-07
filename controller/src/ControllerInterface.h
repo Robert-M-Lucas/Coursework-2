@@ -26,7 +26,23 @@ private:
     bool prevSelect = false;
 
     unsigned long time = 0;
+
+    /// Called when left button is pressed
+    void onLeft();
+
+    /// Called when right button is pressed
+    void onRight();
+
+    /// Called when select button is pressed
+    void onSelect();
+
+    /// Called to refresh LCD contents
+    void updateLCD();
+
+    /// Called to update the button states and call corresponding function if a button is pressed
+    void updateButtons();
 public:
+
     explicit ControllerInterface(ControllerStorage* storage, ControllerCommunication* communication);
 
     void init();
@@ -37,16 +53,7 @@ public:
 
     uint8_t getSong() const { return song; }
 
-    void onLeft();
-
-    void onRight();
-
-    void onSelect();
-
-    void updateLCD();
-
-    void updateButtons();
-
+    /// Called to update interface state
     void update();
 };
 

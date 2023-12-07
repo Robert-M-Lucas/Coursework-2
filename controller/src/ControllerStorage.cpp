@@ -55,7 +55,7 @@ uint8_t ControllerStorage::write_num_to_buffer_pos(char* buffer_pos, uint8_t num
 
 void ControllerStorage::buffer_folder(const uint8_t song) {
     const uint8_t pos = write_num_to_buffer_pos(path_buf, song);
-    path_buf[pos] = '\0';
+    path_buf[pos] = '\0'; // Null terminator
 }
 
 void ControllerStorage::buffer_file(const uint8_t song, const uint8_t instrument) {
@@ -67,7 +67,7 @@ void ControllerStorage::buffer_file(const uint8_t song, const uint8_t instrument
     path_buf[pos+1] = 'D';
     path_buf[pos+2] = 'A';
     path_buf[pos+3] = 'T';
-    path_buf[pos+4] = '\0';
+    path_buf[pos+4] = '\0'; // Null terminator
 }
 
 void ControllerStorage::init() {
@@ -84,11 +84,6 @@ void ControllerStorage::init() {
         Serial.println(F("[ERROR] [ControllerStorage] Failed to initialise SD card!"));
     }
 }
-
-// String ControllerStorage::getFilePath(const u8 song, const Instrument instrument) {
-//     const auto instrumentIndex = static_cast<u8>(instrument);
-//     return String(song) + "/" + String(instrumentIndex) + ".DAT";
-// }
 
 void ControllerStorage::selectSong(const uint8_t song) {
     currentSong = song;
@@ -108,6 +103,7 @@ void ControllerStorage::storeBufferToDisk(Instrument instrument, uint8_t length)
     // Write data to file
     file.write(buffer, length);
 
+    // Close file
     file.close();
 }
 

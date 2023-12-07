@@ -33,19 +33,25 @@ private:
     void messageAll(Code code) const;
 
     /// Read bytes from an instrument
-    template <class T>
-    T readResponse();
+//    template <class T>
+//    T readResponse();
 
+    /// Reads the actors response to the buffer
     static unsigned readResponseToBuffer(byte* buffer);
 
     /// Transmit a `Code` alongside the buffer contents to an instrument
     static void sendBuffer(Instrument instrument, Code code, const byte *buffer, uint8_t length);
 
+    /// Write instrument buffer to storage
+    unsigned storeInstrumentBuffer(Instrument instrument);
+
     /// Write song data to an instrument
     bool writeInstrumentBuffer(Instrument instrument);
 
+    /// Write all instrument buffers to storage
     void storeAllInstrumentBuffers();
 
+    /// Write song data to all instruments
     bool writeAllInstrumentBuffers();
 
 public:
@@ -53,44 +59,45 @@ public:
 
     static void init();
 
+    /// Polls for connected devices and stores the result
     void updateConnected();
 
+    /// Counts the connected devices from the stored bitmask
     uint8_t countConnected();
 
-    byte* getConnected() { return connected_devices_bitmask; }
+    byte* getConnectedBitmask() { return connected_devices_bitmask; }
 
-    /// Called to begin isRecording
+    /// Called to begin recording
     void startRecording(uint8_t song);
 
+    /// Called while recording
     void recordingLoop();
 
-    /// Called to end isRecording
+    /// Called to end recording
     void stopRecording();
 
-    /// Called to begin isPlayback
+    /// Called to begin playback
     void startPlayback(uint8_t song);
 
+    /// Called during playback
     void playbackLoop();
 
-    /// Called to end isPlayback
+    /// Called to end playback
     void stopPlayback();
 
-    /// Empties the buffers of every instrument
+    /// Clears every instrument's buffer
     void clearBuffers();
-
-    /// Read song data from an instrument and store it
-    unsigned storeInstrumentBuffer(Instrument instrument);
 };
 
-template<class T>
-T ControllerCommunication::readResponse() {
-    byte bytes[sizeof(T)];
-
-    for (unsigned int i = 0; i < sizeof(T) && Wire.available(); ++i) {
-        bytes[i] = Wire.read();
-    }
-
-    return Util::fromBytes<T>(bytes);
-}
+//template<class T>
+//T ControllerCommunication::readResponse() {
+//    byte bytes[sizeof(T)];
+//
+//    for (unsigned int i = 0; i < sizeof(T) && Wire.available(); ++i) {
+//        bytes[i] = Wire.read();
+//    }
+//
+//    return Util::fromBytes<T>(bytes);
+//}
 
 #endif //CONTROLLER_CONTROLLERCOMMUNICATION_H

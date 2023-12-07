@@ -14,12 +14,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Untested path buffer implementation for ControllerStorage">
+    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Added missing return statement">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerStorage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerStorage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +160,7 @@
       <workItem from="1701382080286" duration="2044000" />
       <workItem from="1701774907328" duration="6545000" />
       <workItem from="1701937919300" duration="8172000" />
-      <workItem from="1701946188237" duration="1463000" />
+      <workItem from="1701946188237" duration="3081000" />
     </task>
     <task id="LOCAL-00001" summary="Created example code for controller">
       <option name="closed" value="true" />
@@ -238,7 +234,47 @@
       <option name="project" value="LOCAL" />
       <updated>1701946081243</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Small ControllerStorage changes from testing SD">
+      <option name="closed" value="true" />
+      <created>1701947751140</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1701947751140</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added SD error message and prevented main loop from running if ControllerStorage fails to initialise">
+      <option name="closed" value="true" />
+      <created>1701948046718</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1701948046718</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Improved interface and moved constant interface strings from RAM to flash">
+      <option name="closed" value="true" />
+      <created>1701948926903</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1701948926903</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Fixed bad interface text position">
+      <option name="closed" value="true" />
+      <created>1701949247824</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1701949247824</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added missing return statement">
+      <option name="closed" value="true" />
+      <created>1701949271439</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1701949271439</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,7 +288,12 @@
     <MESSAGE value="Various refactors" />
     <MESSAGE value="ControllerCommunication refactors" />
     <MESSAGE value="Untested path buffer implementation for ControllerStorage" />
-    <option name="LAST_COMMIT_MESSAGE" value="Untested path buffer implementation for ControllerStorage" />
+    <MESSAGE value="Small ControllerStorage changes from testing SD" />
+    <MESSAGE value="Added SD error message and prevented main loop from running if ControllerStorage fails to initialise" />
+    <MESSAGE value="Improved interface and moved constant interface strings from RAM to flash" />
+    <MESSAGE value="Fixed bad interface text position" />
+    <MESSAGE value="Added missing return statement" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added missing return statement" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -79,11 +79,12 @@ void ControllerCommunication::clearBuffers() {
 }
 
 unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
-    // Request buffer length
+    // Set next request to buffer length
     message(instrument, Code::RequestBufferLength);
 
     delay(TRANSMISSION_DELAY);
 
+    // Request buffer length
     Wire.requestFrom(static_cast<uint8_t>(instrument), 1u);
 
     // Wait for response
@@ -95,11 +96,12 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
     const uint8_t length = Wire.read();
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer length data transferred")); }
 
-    // Request buffer data
+    // Set next request to buffer data
     message(instrument, Code::RequestBuffer);
 
     delay(TRANSMISSION_DELAY);
 
+    // Request buffer data
     Wire.requestFrom(static_cast<uint8_t>(instrument), length);
 
     // Receive buffer data
@@ -112,11 +114,12 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
 }
 
 bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
-    // Request buffer length
-    message(instrument, Code::RequestBufferNeeded);
+    // Set next request buffer space remaining
+    message(instrument, Code::RequestBufferSpaceRemaining);
 
     delay(TRANSMISSION_DELAY);
 
+    // Request buffer space remaining
     Wire.requestFrom(static_cast<uint8_t>(instrument), 1u);
 
     // Wait for response
@@ -127,21 +130,11 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     auto length = static_cast<uint8_t>(Wire.read());
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer empty data transferred")); }
 
-    Serial.print(F("[INFO] [ControllerCommunication] Actor buffer empty: "));
-    Serial.println(length);
-
-    delay(TRANSMISSION_DELAY);
-
     // Load song data for this instrument into the storage buffer
-    length = storage.loadSongData(instrument, length);
+    length = storage.loadSongData(instrument, length); // Length may be set to less than requested if not enough data is available
     const byte* buffer = storage.getBuffer();
 
-    for (uint8_t i = 0; i < length; i++) {
-        Serial.print(static_cast<char>(buffer[i]));
-    }
-    Serial.println();
-
-    Serial.println(length);
+    delay(TRANSMISSION_DELAY);
 
     // Send buffer to instrument
     sendBuffer(

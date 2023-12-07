@@ -12,37 +12,31 @@
 
 namespace CommunicationActor {
     namespace Internal {
-        // void(*beginRecording)(unsigned long) = nullptr; // Offset ms
-        // void(*stopRecording)() = nullptr;
-        // // Get the length of the currently stored song data
-        // unsigned int(*getSongLength)() = nullptr;
-        // // Get pointer to where data should be read from / written too
-        // byte*(*getSong)() = nullptr;
+        ActorInterface* actorInterface = nullptr;
 
-        ActorInterface* actorBuffer = nullptr;
-
+        /// Stores transmitted request type
         Request request = Request::None;
+        /// Stores length of buffer when length was last transmitted
         uint8_t lastBufferLength = 0; // I miss Rust enums
 
         /// Interrupt called when the actor receives a request for bytes
         inline void requestEvent() {
-            //Serial.println("request event happened");
             if (request == Request::None) {
                 Serial.println(F("Received a request when the request type has not been specified"));
             }
-            //Serial.println("request: " + String(static_cast<uint8_t>(request)));
 
             switch (request) {
                 case Request::BufferLength: {
-                    const uint8_t length = actorBuffer->getBufferLength();
+                    const uint8_t length = actorInterface->getBufferLength();
                     lastBufferLength = length;
-                    //Serial.println("length: " + String(length));
                     Wire.write(length);
                     break;
                 }
                 case Request::Buffer: {
                     const uint8_t length = lastBufferLength;
-                    const ArrAndOffset arr_data = actorBuffer->getBufferRead();
+                    const ArrAndOffset arr_data = actorInterface->getBufferRead();
+
+                    // Read and remove data from circular buffer
                     for (uint8_t i = 0; i < length; i++) {
                         unsigned index = *arr_data.offset + i;
                         if (index >= BUFFER_SIZE) {
@@ -55,10 +49,9 @@ namespace CommunicationActor {
                         *arr_data.offset -= BUFFER_SIZE;
                     }
                 }
-                case Request::BufferEmpty: {
-                    const uint8_t length = actorBuffer->getBufferEmpty();
+                case Request::BufferSpaceRemaining: {
+                    const uint8_t length = actorInterface->getBufferSpaceRemaining();
                     Wire.write(length);
-                    //Serial.println("buffer empty request, empty space: " + String(length));
                     break;
                 }
                 case Request::None: {
@@ -76,19 +69,17 @@ namespace CommunicationActor {
 
         /// Interrupt called when actor receives data from tbe controller
         inline void receiveEvent(int length) {
-            //Serial.println("received event");
-
-            if (Wire.available() <= 0) { return; }
+            if (Wire.available() <= 0) { return; } // A receive event with no data occurs during I2C polling
 
             const Code code = static_cast<Code>(Wire.read());
-            //Serial.println("code: " + String(static_cast<uint8_t>(code)));
+
             switch (code) {
                 case Code::StartRecording: {
-                    actorBuffer->startRecording();
+                    actorInterface->startRecording();
                     break;
                 }
                 case Code::StopRecording: {
-                    actorBuffer->stopRecording();
+                    actorInterface->stopRecording();
                     break;
                 }
                 case Code::RequestBufferLength: {
@@ -99,13 +90,12 @@ namespace CommunicationActor {
                     request = Request::Buffer;
                     break;
                 }
-                case Code::RequestBufferNeeded: {
-                    request = Request::BufferEmpty;
+                case Code::RequestBufferSpaceRemaining: {
+                    request = Request::BufferSpaceRemaining;
                     break;
                 }
                 case Code::BufferData: {
-                    Serial.println(F("receiving buffer data"));
-                    const ArrAndOffset arr_data = actorBuffer->getBufferWrite();
+                    const ArrAndOffset arr_data = actorInterface->getBufferWrite();
                     unsigned i = 0;
                     while (Wire.available() > 0) {
                         unsigned index = *arr_data.offset + i;
@@ -114,9 +104,6 @@ namespace CommunicationActor {
                         }
 
                         arr_data.arr[index] = static_cast<byte>(Wire.read());
-
-                        Serial.print(F("byte: "));
-                        Serial.println(static_cast<char>(arr_data.arr[index]));
 
                         i++;
                     }
@@ -127,15 +114,15 @@ namespace CommunicationActor {
                     }
                 }
                 case Code::StartPlayback: {
-                    actorBuffer->startPlayback();
+                    actorInterface->startPlayback();
                     break;
                 }
                 case Code::StopPlayback: {
-                    actorBuffer->stopPlayback();
+                    actorInterface->stopPlayback();
                     break;
                 }
                 case Code::ClearBuffer: {
-                    actorBuffer->clearBuffer();
+                    actorInterface->clearBuffer();
                     break;
                 }
                 default: {
@@ -152,25 +139,15 @@ namespace CommunicationActor {
         }
     }
 
-    /*inline void initialise(Instrument address,
-        void(*_beginRecording)(unsigned long), void(*_stopRecording)(),
-        byte*(*_getSong)()) {
-
-        Wire.begin(static_cast<uint8_t>(address));
-        Wire.onRequest(requestEvent);
-        Wire.onReceive(receiveEvent);
-
-        beginRecording = _beginRecording;
-        stopRecording = _stopRecording;
-        getSong = _getSong;
-    }*/
-
     /// Initialises actor for communication - does not initialise serial
     inline void initialise(Instrument address, ActorInterface *actorBuffer) {
         Wire.begin(static_cast<uint8_t>(address));
+
+        // Setup interrupts
         Wire.onRequest(Internal::requestEvent);
         Wire.onReceive(Internal::receiveEvent);
-        Internal::actorBuffer = actorBuffer;
+
+        Internal::actorInterface = actorBuffer;
     }
 }
 

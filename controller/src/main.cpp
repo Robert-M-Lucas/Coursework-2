@@ -19,7 +19,7 @@ void setup() {
     communication.init();
 
     communication.updateConnected();
-    Util::bitmask_to_serial(communication.getConnected());
+    Util::bitmask_to_serial(communication.getConnectedBitmask());
 
     storage.init();
     interface.init();
@@ -37,14 +37,17 @@ void loop() {
 
     interface.update();
 
-    if (interface.isRecording()) {
-        if (!prevRecording) {
+    if (interface.isRecording()) { // Recording
+        if (!prevRecording) { // Starting recording
             Serial.println(F("[INFO] [Main Loop] Starting recording"));
-            storage.deleteSong(interface.getSong());
+            storage.deleteSong(interface.getSong()); // Required to prevent instruments only appending to previous files
             communication.startRecording(interface.getSong());
-            digitalWrite(RECORDING_LED, HIGH);
+            digitalWrite(PLAYBACK_LED, LOW);
         }
 
+        // Recording loop
+
+        // Flash recording LED
         if ((millis() / 1000) % 2 == 0) {
             digitalWrite(RECORDING_LED, HIGH);
         }
@@ -54,22 +57,25 @@ void loop() {
 
         communication.recordingLoop();
     }
-    else if (prevRecording) {
-        Serial.println(F("[INFO] [Main Loop] Starting recording"));
+    else if (prevRecording) { // Stopped recording
+        Serial.println(F("[INFO] [Main Loop] Stopped recording"));
         communication.stopRecording();
         digitalWrite(RECORDING_LED, LOW);
     }
-    else if (interface.isPlayback()) {
-        if (!prevPlaying) {
+    else if (interface.isPlayback()) { // Playing back
+        if (!prevPlaying) { // Started playing back
             Serial.println(F("[INFO] [Main Loop] Starting playback"));
             storage.resetPlayback();
             communication.startPlayback(interface.getSong());
+            digitalWrite(RECORDING_LED, LOW);
             digitalWrite(PLAYBACK_LED, HIGH);
         }
 
+        // Playback loop
+
         communication.playbackLoop();
     }
-    else if (prevPlaying) {
+    else if (prevPlaying) { // Stopped playing back
         Serial.println(F("[INFO] [Main Loop] Stopping playback"));
         digitalWrite(PLAYBACK_LED, LOW);
         communication.stopPlayback();

@@ -25,7 +25,9 @@ namespace Util {
         return *reinterpret_cast<T*>(input);
     }
 
+    /// Converts an instrument to its name
     inline const char* instrument_to_name(const Instrument instrument) {
+        // TODO: Change this to be stored on flash?
         switch (instrument) {
             case (Instrument::Keyboard): {
                 return "Keyboard";
@@ -39,8 +41,10 @@ namespace Util {
         }
     }
 
+    /// Takes an instruments connected bitmask as input and serial prints the connected instrument names
     inline void bitmask_to_serial(const byte* bitmask) {
         Serial.println(F("[INFO] Connected instruments:"));
+
         bool found = false;
         for (uint8_t i = 0; i < MAX_INSTRUMENTS; i++) {
             if (bitmask[i / 8] & 1 << (i % 8)) {
@@ -54,9 +58,5 @@ namespace Util {
         }
     }
 }
-
-/*#define tmp(string) { constexpr char s[] PROGMEM = string; \
-    strcpy_P(serial_buffer, (char *)pgm_read_ptr(s));\
-    Serial.println(serial_buffer); }*/
 
 #endif //SHARED_UTIL_H
