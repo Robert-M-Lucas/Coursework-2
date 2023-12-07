@@ -73,7 +73,7 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
 
     delay(TRANSMISSION_DELAY);
 
-    Wire.requestFrom(static_cast<u8>(instrument), (uint8_t) 1);
+    Wire.requestFrom(static_cast<uint8_t>(instrument), 1u);
 
     // Wait for response
     delay(TRANSMISSION_DELAY);
@@ -81,7 +81,7 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
     if (Wire.available() <= 0) { Serial.println(F("[ERROR] [ControllerCommunication] Buffer length not transmitted!")); }
 
     // Read response
-    const u16 length = Wire.read();
+    const uint8_t length = Wire.read();
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer length data transferred")); }
 
     // Request buffer data
@@ -89,7 +89,7 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
 
     delay(TRANSMISSION_DELAY);
 
-    Wire.requestFrom(static_cast<u8>(instrument), length);
+    Wire.requestFrom(static_cast<uint8_t>(instrument), length);
 
     // Receive buffer data
     readResponseToBuffer(storage.getBuffer());
@@ -106,14 +106,14 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
 
     delay(TRANSMISSION_DELAY);
 
-    Wire.requestFrom(static_cast<u8>(instrument), (uint8_t) 1);
+    Wire.requestFrom(static_cast<uint8_t>(instrument), 1u);
 
     // Wait for response
     delay(TRANSMISSION_DELAY);
     if (Wire.available() <= 0) { Serial.println(F("[ERROR] [ControllerCommunication] Buffer empty not transmitted!")); }
 
     // Read response
-    u16 length = static_cast<u16>(Wire.read());
+    auto length = static_cast<uint8_t>(Wire.read());
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer empty data transferred")); }
 
     Serial.print(F("[INFO] [ControllerCommunication] Actor buffer empty: "));
@@ -125,7 +125,7 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     length = storage.loadSongData(instrument, length);
     const byte* buffer = storage.getBuffer();
 
-    for (u16 i = 0; i < length; i++) {
+    for (uint8_t i = 0; i < length; i++) {
         Serial.print(static_cast<char>(buffer[i]));
     }
     Serial.println();
@@ -144,13 +144,16 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
 }
 
 void ControllerCommunication::storeAllInstrumentBuffers() {
-    storeInstrumentBuffer(Instrument::TestInstrument);
+    for_all_instruments
+        storeInstrumentBuffer(instrument);
+    end_for_all_instruments
 }
 
 bool ControllerCommunication::writeAllInstrumentBuffers() {
     bool dataWritten = false;
-    // TODO:
-    dataWritten |= writeInstrumentBuffer(Instrument::TestInstrument);
+    for_all_instruments
+        dataWritten |= writeInstrumentBuffer(instrument);
+    end_for_all_instruments
     return dataWritten;
 }
 
@@ -160,8 +163,10 @@ void ControllerCommunication::message(Instrument instrument, Code code) {
     Wire.endTransmission();
 }
 
-void ControllerCommunication::messageAll(const Code code) {
-    message(Instrument::TestInstrument, code);
+void ControllerCommunication::messageAll(const Code code) const {
+    for_all_instruments
+        message(instrument, code);
+    end_for_all_instruments
 }
 
 unsigned ControllerCommunication::readResponseToBuffer(byte *buffer) {
@@ -176,11 +181,11 @@ unsigned ControllerCommunication::readResponseToBuffer(byte *buffer) {
 void ControllerCommunication::sendBuffer(
     const Instrument instrument,
     const Code code,
-    const u8 *buffer,
-    const u16 length
+    const byte *buffer,
+    const uint8_t length
 ) {
-    Wire.beginTransmission(static_cast<u8>(instrument));
-    Wire.write(static_cast<u8>(code));
-    for (u16 i = 0; i < length; i++) Wire.write(buffer[i]);
+    Wire.beginTransmission(static_cast<uint8_t>(instrument));
+    Wire.write(static_cast<uint8_t>(code));
+    for (uint8_t i = 0; i < length; i++) Wire.write(buffer[i]);
     Wire.endTransmission();
 }

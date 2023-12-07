@@ -13,6 +13,13 @@
 #include "../../shared/src/Constants.h"
 #include "ControllerStorage.h"
 
+#define for_all_instruments \
+    for (uint8_t i = 0; i < MAX_INSTRUMENTS; i++) { \
+        if (connected_devices_bitmask[i / 8] & 1 << (i % 8)) { \
+            Instrument instrument = static_cast<Instrument>(i);
+#define end_for_all_instruments \
+        }\
+    }
 
 class ControllerCommunication {
 private:
@@ -20,24 +27,31 @@ private:
     byte connected_devices_bitmask[MAX_INSTRUMENT_BITMASK_BYTES] = {}; // Ceiling division by 8
 
     /// Transmit a `Code` to an instrument
-    void message(Instrument instrument, Code code);
+    static void message(Instrument instrument, Code code);
+
+    /// Transmit a `Code` to all connected instruments
+    void messageAll(Code code) const;
 
     /// Read bytes from an instrument
     template <class T>
     T readResponse();
 
-    /// Transmit a `Code` to all connected instruments
-    void messageAll(Code code);
-
-    unsigned readResponseToBuffer(byte* buffer);
+    static unsigned readResponseToBuffer(byte* buffer);
 
     /// Transmit a `Code` alongside the buffer contents to an instrument
-    void sendBuffer(Instrument instrument, Code code, const u8 *buffer, u16 length);
+    static void sendBuffer(Instrument instrument, Code code, const byte *buffer, uint8_t length);
+
+    /// Write song data to an instrument
+    bool writeInstrumentBuffer(Instrument instrument);
+
+    void storeAllInstrumentBuffers();
+
+    bool writeAllInstrumentBuffers();
 
 public:
     explicit ControllerCommunication(ControllerStorage &storage);
 
-    void init();
+    static void init();
 
     void updateConnected();
 
@@ -64,14 +78,6 @@ public:
 
     /// Read song data from an instrument and store it
     unsigned storeInstrumentBuffer(Instrument instrument);
-
-    // TODO: Handle no more data
-    /// Write song data to an instrument
-    bool writeInstrumentBuffer(Instrument instrument);
-
-    void storeAllInstrumentBuffers();
-
-    bool writeAllInstrumentBuffers();
 };
 
 template<class T>
