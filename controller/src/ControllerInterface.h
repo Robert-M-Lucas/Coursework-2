@@ -27,11 +27,11 @@ private:
 public:
     explicit ControllerInterface(ControllerStorage* storage);
 
-    void initialise();
+    void init();
 
-    bool isRecording() const { return recordingSelected; }
+    bool isRecording() { return recordingSelected; }
 
-    bool isPlayback() const { return  playbackSelected; }
+    bool isPlayback() { return  playbackSelected; }
 
     uint8_t getSong() const { return song; }
 

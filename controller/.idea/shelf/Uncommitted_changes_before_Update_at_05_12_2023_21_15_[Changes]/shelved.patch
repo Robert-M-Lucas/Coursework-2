@@ -1,0 +1,125 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"CMakeRunConfigurationManager\">\r\n    <generated>\r\n      <config projectName=\"controller\" targetName=\"PlatformIO\" />\r\n    </generated>\r\n  </component>\r\n  <component name=\"CMakeSettings\">\r\n    <configurations>\r\n      <configuration PROFILE_NAME=\"Debug\" ENABLED=\"true\" CONFIG_NAME=\"Debug\" />\r\n    </configurations>\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"48dfd59d-5166-496f-bd1f-3be66a777e4d\" name=\"Changes\" comment=\"Fully implemented recording and playback functionality on controller\">\r\n      <change beforePath=\"$PROJECT_DIR$/src/ControllerInterface.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/ControllerInterface.cpp\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/ControllerInterface.h\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/ControllerInterface.h\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main.cpp\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ClangdSettings\">\r\n    <option name=\"formatViaClangd\" value=\"false\" />\r\n  </component>\r\n  <component name=\"ExecutionTargetManager\" SELECTED_TARGET=\"uno\" />\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n  </component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"file://$USER_HOME$/.platformio/packages/framework-arduino-avr/cores/arduino/Arduino.h\" root0=\"FORCE_HIGHLIGHTING\" />\r\n  </component>\r\n  <component name=\"PlatformioLocalSettings\">\r\n    <option name=\"availableProjects\">\r\n      <map>\r\n        <entry>\r\n          <key>\r\n            <ExternalProjectPojo>\r\n              <option name=\"name\" value=\"controller\" />\r\n              <option name=\"path\" value=\"$PROJECT_DIR$\" />\r\n            </ExternalProjectPojo>\r\n          </key>\r\n          <value>\r\n            <list>\r\n              <ExternalProjectPojo>\r\n                <option name=\"name\" value=\"controller\" />\r\n                <option name=\"path\" value=\"$PROJECT_DIR$\" />\r\n              </ExternalProjectPojo>\r\n            </list>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"projectSyncType\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"RE_IMPORT\" />\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectApplicationVersion\">\r\n    <option name=\"ide\" value=\"CLion\" />\r\n    <option name=\"majorVersion\" value=\"2023\" />\r\n    <option name=\"minorVersion\" value=\"2.2\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;customColor&quot;: &quot;&quot;,\r\n  &quot;associatedIndex&quot;: 4\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2YJBNjTz3GJLfrAyMoAR1a86U2q\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.RadMigrateCodeStyle\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.cidr.known.project.marker\": \"true\",\r\n    \"RunOnceActivity.readMode.enableVisualFormatting\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"cf.first.check.clang-format\": \"false\",\r\n    \"cidr.known.project.marker\": \"true\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/rober/Documents/Coding/Coursework-2/shared\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"settings.editor.selected.configurable\": \"serialmonitor.settings\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\">\r\n    <configuration default=\"true\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\">\r\n      <method v=\"2\">\r\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"PlatformIO\" type=\"platformio\" factoryName=\"PlatformIO Debug\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"controller\" TARGET_NAME=\"PlatformIO\" CONFIG_NAME=\"PlatformIO\">\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"PlatformIO\" type=\"platformio\" factoryName=\"PlatformIO Debug\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"controller\" TARGET_NAME=\"PlatformIO\" CONFIG_NAME=\"PlatformIO\">\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"PlatformIO\" type=\"platformio\" factoryName=\"PlatformIO Debug\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"controller\" TARGET_NAME=\"PlatformIO\" CONFIG_NAME=\"PlatformIO\">\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"PlatformIO\" type=\"platformio\" factoryName=\"PlatformIO Debug\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"controller\" TARGET_NAME=\"PlatformIO\" CONFIG_NAME=\"PlatformIO\">\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"PlatformIO\" type=\"platformio\" factoryName=\"PlatformIO Debug\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"controller\" TARGET_NAME=\"PlatformIO\" CONFIG_NAME=\"PlatformIO\">\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"48dfd59d-5166-496f-bd1f-3be66a777e4d\" name=\"Changes\" comment=\"\" />\r\n      <created>1700233763594</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1700233763594</updated>\r\n      <workItem from=\"1700233764691\" duration=\"1696000\" />\r\n      <workItem from=\"1700238825057\" duration=\"13000\" />\r\n      <workItem from=\"1700297576502\" duration=\"746000\" />\r\n      <workItem from=\"1700497980231\" duration=\"631000\" />\r\n      <workItem from=\"1700562391887\" duration=\"1562000\" />\r\n      <workItem from=\"1700580121433\" duration=\"325000\" />\r\n      <workItem from=\"1700580646079\" duration=\"1360000\" />\r\n      <workItem from=\"1700670392585\" duration=\"119000\" />\r\n      <workItem from=\"1700748505276\" duration=\"4736000\" />\r\n      <workItem from=\"1700754075582\" duration=\"11000\" />\r\n      <workItem from=\"1701103845895\" duration=\"1149000\" />\r\n      <workItem from=\"1701105137680\" duration=\"24000\" />\r\n      <workItem from=\"1701166953642\" duration=\"4668000\" />\r\n      <workItem from=\"1701360308283\" duration=\"23000\" />\r\n      <workItem from=\"1701382080286\" duration=\"2044000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Created example code for controller\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1700581450456</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1700581450456</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"More work on controller storage\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1701104050809</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1701104050809</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"More work on controller storage\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1701104637734</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1701104637734</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"More work on controller storage\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1701105147259</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1701105147259</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"Fully implemented recording and playback functionality on controller\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1701383616359</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1701383616359</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Created example code for controller\" />\r\n    <MESSAGE value=\"More work on controller storage\" />\r\n    <MESSAGE value=\"Fully implemented recording and playback functionality on controller\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Fully implemented recording and playback functionality on controller\" />\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 78ff17bd560f3ead832656b97897c4aa261728e0)
++++ b/.idea/workspace.xml	(date 1701810917920)
+@@ -14,10 +14,8 @@
+     </configurations>
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Fully implemented recording and playback functionality on controller">
+-      <change beforePath="$PROJECT_DIR$/src/ControllerInterface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.cpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/ControllerInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.h" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
++    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Pushed workspace.xml to force everyone to resolve merges :)">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -80,32 +78,32 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.RadMigrateCodeStyle": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.cidr.known.project.marker": "true",
+-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+-    "WebServerToolWindowFactoryState": "false",
+-    "cf.first.check.clang-format": "false",
+-    "cidr.known.project.marker": "true",
+-    "git-widget-placeholder": "main",
+-    "ignore.virus.scanning.warn.message": "true",
+-    "last_opened_file_path": "C:/Users/rober/Documents/Coding/Coursework-2/shared",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "settings.editor.selected.configurable": "serialmonitor.settings",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
++    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
++    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
++    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/rober/Documents/Coding/Coursework-2/shared&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;serialmonitor.settings&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RunManager">
+-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
++    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+       <method v="2">
+-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
++        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+       </method>
+     </configuration>
+     <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="controller" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
+@@ -146,7 +144,8 @@
+       <workItem from="1701105137680" duration="24000" />
+       <workItem from="1701166953642" duration="4668000" />
+       <workItem from="1701360308283" duration="23000" />
+-      <workItem from="1701382080286" duration="2044000" />
++      <workItem from="1701382080286" duration="2732000" />
++      <workItem from="1701810914944" duration="3000" />
+     </task>
+     <task id="LOCAL-00001" summary="Created example code for controller">
+       <option name="closed" value="true" />
+@@ -188,7 +187,23 @@
+       <option name="project" value="LOCAL" />
+       <updated>1701383616359</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="Improved interface">
++      <option name="closed" value="true" />
++      <created>1701384539889</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1701384539889</updated>
++    </task>
++    <task id="LOCAL-00007" summary="Pushed workspace.xml to force everyone to resolve merges :)">
++      <option name="closed" value="true" />
++      <created>1701384599921</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1701384599921</updated>
++    </task>
++    <option name="localTasksCounter" value="8" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -198,7 +213,9 @@
+     <MESSAGE value="Created example code for controller" />
+     <MESSAGE value="More work on controller storage" />
+     <MESSAGE value="Fully implemented recording and playback functionality on controller" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Fully implemented recording and playback functionality on controller" />
++    <MESSAGE value="Improved interface" />
++    <MESSAGE value="Pushed workspace.xml to force everyone to resolve merges :)" />
++    <option name="LAST_COMMIT_MESSAGE" value="Pushed workspace.xml to force everyone to resolve merges :)" />
+   </component>
+   <component name="XSLT-Support.FileAssociations.UIState">
+     <expand />

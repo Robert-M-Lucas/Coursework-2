@@ -10,13 +10,14 @@
 
 #include "../../shared/src/Communication.h"
 #include "../../shared/src/Util.h"
+#include "../../shared/src/Constants.h"
 #include "ControllerStorage.h"
 
 
 class ControllerCommunication {
 private:
     ControllerStorage &storage;
-    uint8_t connected_devices_bitmask = 0;
+    byte connected_devices_bitmask[MAX_INSTRUMENT_BITMASK_BYTES] = {}; // Ceiling division by 8
 
     /// Transmit a `Code` to an instrument
     void message(Instrument instrument, Code code);
@@ -36,9 +37,11 @@ private:
 public:
     explicit ControllerCommunication(ControllerStorage &storage);
 
+    void init();
+
     void updateConnected();
 
-    uint8_t getConnected() { return connected_devices_bitmask; }
+    byte* getConnected() { return connected_devices_bitmask; }
 
     /// Called to begin isRecording
     void startRecording(uint8_t song);

@@ -8,23 +8,25 @@
 #include <Arduino.h>
 #include "../../shared/src/Constants.h"
 
-const u8 SONG_COUNT = 10;
+extern char serial_buffer[];
 
-const pin LEFT_INPUT = A2;
-const pin RIGHT_INPUT = A0;
-const pin SELECT_INPUT = A1;
+constexpr u8 SONG_COUNT = 10;
 
-const pin RECORDING_LED = 8;
-const pin PLAYBACK_LED = 9;
-const pin CHIP_SELECT = 10;
+constexpr pin LEFT_INPUT = A2;
+constexpr pin RIGHT_INPUT = A0;
+constexpr pin SELECT_INPUT = A1;
+
+constexpr pin RECORDING_LED = 8;
+constexpr pin PLAYBACK_LED = 9;
+constexpr pin CHIP_SELECT = 10;
 
 namespace LCD {
-    const pin RS = 2;
-    const pin ENABLE = 3;
-    const pin D0 = 4;
-    const pin D1 = 5;
-    const pin D2 = 6;
-    const pin D3 = 7;
+    constexpr pin RS = 2;
+    constexpr pin ENABLE = 3;
+    constexpr pin D0 = 4;
+    constexpr pin D1 = 5;
+    constexpr pin D2 = 6;
+    constexpr pin D3 = 7;
 }
 
 #endif //CONTROLLER_CONTROLLERCONSTANTS_H

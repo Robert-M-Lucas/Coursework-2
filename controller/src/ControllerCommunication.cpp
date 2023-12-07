@@ -10,8 +10,23 @@ extern "C" {
 };
 
 ControllerCommunication::ControllerCommunication(ControllerStorage &storage) :
-        storage(storage) {
+        storage(storage) {}
+
+
+void ControllerCommunication::init() {
+    Serial.println(F("[INFO] [ControllerCommunication] Initialising"));
     Wire.begin();
+}
+
+
+void ControllerCommunication::updateConnected() {
+    // Scan for connected devices
+    for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
+        byte rc = twi_writeTo(addr, nullptr, 0, 1, 0);
+        if (rc == 0) {
+            connected_devices_bitmask[addr / 8] |= 1 << addr % 8;
+        }
+    }
 }
 
 void ControllerCommunication::startRecording(uint8_t song) {
@@ -63,11 +78,11 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
     // Wait for response
     delay(TRANSMISSION_DELAY);
 
-    if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
+    if (Wire.available() <= 0) { Serial.println(F("[ERROR] [ControllerCommunication] Buffer length not transmitted!")); }
 
     // Read response
     const u16 length = Wire.read();
-    if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
+    if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer length data transferred")); }
 
     // Request buffer data
     message(instrument, Code::RequestBuffer);
@@ -95,12 +110,13 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
 
     // Wait for response
     delay(TRANSMISSION_DELAY);
-    if (Wire.available() <= 0) { Serial.println("Buffer length not transmitted!"); }
+    if (Wire.available() <= 0) { Serial.println(F("[ERROR] [ControllerCommunication] Buffer empty not transmitted!")); }
 
     // Read response
     u16 length = static_cast<u16>(Wire.read());
-    if (Wire.available() > 0) { Serial.println("Too much buffer length data transferred"); }
+    if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer empty data transferred")); }
 
+    Serial.print(F("[INFO] [ControllerCommunication] Actor buffer empty: "));
     Serial.println(length);
 
     delay(TRANSMISSION_DELAY);
@@ -167,14 +183,4 @@ void ControllerCommunication::sendBuffer(
     Wire.write(static_cast<u8>(code));
     for (u16 i = 0; i < length; i++) Wire.write(buffer[i]);
     Wire.endTransmission();
-}
-
-void ControllerCommunication::updateConnected() {
-    // Scan for connected devices
-    for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
-        byte rc = twi_writeTo(addr, nullptr, 0, 1, 0);
-        if (rc == 0) {
-            connected_devices_bitmask |= 1 << addr;
-        }
-    }
 }

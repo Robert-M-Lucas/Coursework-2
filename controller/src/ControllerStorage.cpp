@@ -2,6 +2,7 @@
 // Created by Benny on 27/11/2023.
 //
 #include "ControllerStorage.h"
+#include "ControllerConstants.h"
 
 #include <Arduino.h>
 #include <SD.h>
@@ -9,17 +10,16 @@
 
 #include "ControllerConstants.h"
 
-ControllerStorage::ControllerStorage() {
-}
-
 void ControllerStorage::init() {
-    Serial.println("Initialising SD");
+    Serial.println(F("[INFO] [ControllerStorage] Initialising"));
+    Serial.println(F("[INFO] [ControllerStorage] Initialising SD"));
+
     // Initialise SD library
-    bool ok = SD.begin(CHIP_SELECT);
+    const bool ok = SD.begin(CHIP_SELECT);
     if (ok) {
-        Serial.println("[ControllerStorage] SD card initialised successfully");
+        Serial.println(F("[INFO] [ControllerStorage] SD card initialised successfully"));
     } else {
-        Serial.println("[ControllerStorage] Failed to initialise SD card!");
+        Serial.println(F("[ERROR] [ControllerStorage] Failed to initialise SD card!"));
     }
 
     // Reset playback to begin with
@@ -27,7 +27,7 @@ void ControllerStorage::init() {
 }
 
 String ControllerStorage::getFilePath(const u8 song, const Instrument instrument) {
-    auto instrumentIndex = static_cast<u8>(instrument);
+    const auto instrumentIndex = static_cast<u8>(instrument);
     return String(song) + "/" + String(instrumentIndex) + ".DAT";
 }
 
@@ -69,15 +69,13 @@ u16 ControllerStorage::loadSongData(const Instrument instrument, const u16 lengt
 //    auto path = getFilePath(currentSong, instrument);
 //    Serial.print("Path: ");
 //    Serial.println(path);
-    Serial.println("1");
-    if (SD.exists("1/2.DAT")) { Serial.println("Exists"); }
-    if (SD.exists("1\\2.DAT")) { Serial.println("Exists 2"); }
+    Serial.println(F("1"));
     auto file = SD.open("1/2.DAT", FILE_READ);
-    Serial.println("2");
+    Serial.println(F("2"));
     // Move to the position in the file corresponding to the current playback position
     auto instrumentIndex = static_cast<u8>(instrument);
 //    file.seek(playbackPosition[instrumentIndex]);
-    Serial.println("3");
+    Serial.println(F("3"));
     // Query file for the number of remaining bytes to read
     // The actual number of bytes to read is the minimum of this and the length requested
     auto length = static_cast<u16>(file.available());
@@ -89,13 +87,13 @@ u16 ControllerStorage::loadSongData(const Instrument instrument, const u16 lengt
             reinterpret_cast<void*>(buffer),
             length
     );
-    Serial.println("5");
+    Serial.println(F("5"));
     // Update playback position so that the next call to loadSongData starts at the next segment
     playbackPosition[instrumentIndex] += length;
-    Serial.println("6");
+    Serial.println(F("6"));
     // Make sure to close the file now we're finished
     file.close();
-    Serial.println("7");
+    Serial.println(F("7"));
     return length;
 }
 

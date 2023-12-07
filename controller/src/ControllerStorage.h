@@ -11,9 +11,15 @@
 #include "../../shared/src/Communication.h"
 
 class ControllerStorage {
-public:
-    ControllerStorage();
+private:
+    // Buffer used to hold data to be transferred between the instruments and the SD card
+    byte buffer[BUFFER_SIZE] = {};
 
+    // Position of the playback pointer in bytes, for the given instrument
+    u16 playbackPosition[MAX_INSTRUMENTS] = {};
+
+    u8 currentSong = 0;
+public:
     void init();
 
     // Set the current song to be recorded or played
@@ -43,15 +49,6 @@ public:
 
     // Return the file path for the specified song and instrument
     static String getFilePath(u8 song, Instrument instrument) ;
-private:
-
-    // Buffer used to hold data to be transferred between the instruments and the SD card
-    byte buffer[BUFFER_SIZE] = {};
-
-    // Position of the playback pointer in bytes, for the given instrument
-    u16 playbackPosition[MAX_INSTRUMENTS];
-
-    u8 currentSong = 0;
 };
 
 #endif //CONTROLLER_CONTROLLERSTORAGE_H

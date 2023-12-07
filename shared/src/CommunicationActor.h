@@ -28,7 +28,7 @@ namespace CommunicationActor {
         inline void requestEvent() {
             //Serial.println("request event happened");
             if (request == Request::None) {
-                Serial.println("Received a request when the request type has not been specified");
+                Serial.println(F("Received a request when the request type has not been specified"));
             }
             //Serial.println("request: " + String(static_cast<uint8_t>(request)));
 
@@ -62,12 +62,12 @@ namespace CommunicationActor {
                     break;
                 }
                 case Request::None: {
-                    Serial.println("Request type not set when request was received");
+                    Serial.println(F("Request type not set when request was received"));
                 }
                 default: {
-                    Serial.print("Request type '");
+                    Serial.print(F("Request type '"));
                     Serial.print(static_cast<uint8_t>(request));
-                    Serial.println("' has not been implemented");
+                    Serial.println(F("' has not been implemented"));
                 }
             }
 
@@ -104,7 +104,7 @@ namespace CommunicationActor {
                     break;
                 }
                 case Code::BufferData: {
-                    Serial.println("receiving buffer data");
+                    Serial.println(F("receiving buffer data"));
                     const ArrAndOffset arr_data = actorBuffer->getBufferWrite();
                     unsigned i = 0;
                     while (Wire.available() > 0) {
@@ -115,7 +115,7 @@ namespace CommunicationActor {
 
                         arr_data.arr[index] = static_cast<byte>(Wire.read());
 
-                        Serial.print("byte: ");
+                        Serial.print(F("byte: "));
                         Serial.println(static_cast<char>(arr_data.arr[index]));
 
                         i++;
@@ -139,15 +139,15 @@ namespace CommunicationActor {
                     break;
                 }
                 default: {
-                    Serial.print("Unrecognised code received: ");
+                    Serial.print(F("Unrecognised code received: "));
                     Serial.println(static_cast<uint8_t>(code));
                 }
             }
 
             if (Wire.available() > 0) {
-                Serial.print("Leftover data after code '");
+                Serial.print(F("Leftover data after code '"));
                 Serial.print(static_cast<uint8_t>(code));
-                Serial.println("' was handled");
+                Serial.println(F("' was handled"));
             }
         }
     }

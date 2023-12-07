@@ -109,7 +109,7 @@ public:
             buffer[index] = data[i];
         }
         if (bufferTail < bufferHead && bufferTail + length > bufferHead) {
-            Serial.println("Overflowed buffer storage!");
+            Serial.println(F("Overflowed buffer storage!"));
         }
         bufferTail += length;
         if (bufferTail >= BUFFER_SIZE) {

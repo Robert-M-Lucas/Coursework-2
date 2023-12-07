@@ -15,17 +15,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Added TestInstrument">
+      <change afterPath="$PROJECT_DIR$/src/unused" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_11_2023_16_46_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_11_2023_16_46__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControllerConstants.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerConstants.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControllerInterface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControllerInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerInterface.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControllerStorage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControllerStorage.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-spoofer/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../data-spoofer/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-spoofer/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../data-spoofer/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data-spoofer/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/../data-spoofer/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../shared/src/Constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/../shared/src/Constants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shared/src/Util.h" beforeDir="false" afterPath="$PROJECT_DIR$/../shared/src/Util.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shared/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../shared/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,9 +115,9 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="PlatformIO" type="platformio" factoryName="PlatformIO Debug" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="controller" TARGET_NAME="PlatformIO" CONFIG_NAME="PlatformIO">
@@ -156,6 +160,7 @@
       <workItem from="1701360308283" duration="23000" />
       <workItem from="1701382080286" duration="2044000" />
       <workItem from="1701774907328" duration="6545000" />
+      <workItem from="1701937919300" duration="2225000" />
     </task>
     <task id="LOCAL-00001" summary="Created example code for controller">
       <option name="closed" value="true" />
