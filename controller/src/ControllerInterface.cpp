@@ -6,8 +6,9 @@
 #include "ControllerInterface.h"
 #include "ControllerConstants.h"
 
-ControllerInterface::ControllerInterface(ControllerStorage *storage):
-storage(storage), lcd(LCD::RS, LCD::ENABLE, LCD::D0, LCD::D1, LCD::D2, LCD::D3) {}
+ControllerInterface::ControllerInterface(ControllerStorage *storage, ControllerCommunication *communication):
+storage(storage), communication(communication),
+lcd(LCD::RS, LCD::ENABLE, LCD::D0, LCD::D1, LCD::D2, LCD::D3) {}
 
 
 void ControllerInterface::init() {
@@ -18,6 +19,22 @@ void ControllerInterface::init() {
     pinMode(SELECT_INPUT, INPUT_PULLUP);
 
     lcd.begin(16, 2);
+
+    if (!storage->loaded()) {
+        lcd.setCursor(4, 0);
+        lcd.print(F("SD ERROR"));
+        return;
+    }
+
+    lcd.setCursor(0, 0);
+    lcd.print(F("SD OK"));
+    lcd.setCursor(1, 0);
+    lcd.print(F("Instruments: "));
+    lcd.setCursor(13, 0);
+    lcd.print(communication->countConnected());
+
+    delay(3000);
+
     updateLCD();
 }
 
@@ -70,62 +87,57 @@ void ControllerInterface::onSelect() {
 
 void ControllerInterface::updateLCD() {
     lcd.clear();
-    if (!storage->loaded()) {
-        lcd.setCursor(4, 0);
-        lcd.print("SD ERROR");
-        return;
-    }
 
     if (!songSelected) {
         lcd.setCursor(0, 0);
-        lcd.print("Song:");
+        lcd.print(F("Song:"));
         lcd.print(song);
         if (storage->hasSongOnDisk(song)) {
             lcd.setCursor(8, 0);
-            lcd.print("Has Data");
+            lcd.print(F("Has Data"));
         }
         else {
             lcd.setCursor(9, 0);
-            lcd.print("No Data");
+            lcd.print(F("No Data"));
         }
         lcd.setCursor(0, 1);
         lcd.print('<');
         lcd.setCursor(4, 1);
-        lcd.print("[Select]");
+        lcd.print(F("[Select]"));
         lcd.setCursor(15, 1);
         lcd.print('>');
     }
     else {
         lcd.setCursor(0, 0);
-        lcd.print("Song:");
+        lcd.print(F("Song:"));
         lcd.print(song);
 
         if (playbackSelected) {
             lcd.setCursor(8, 0);
-            lcd.print("Has Data");
+            lcd.print(F("Has Data"));
 
             lcd.setCursor(0, 1);
-            lcd.print("Playing [STOP]");
+            lcd.print(F("Playing [STOP]"));
         }
         else if (recordingSelected) {
             lcd.setCursor(8, 0);
-            lcd.print("Has Data");
+            lcd.print(F("Has Data"));
 
             lcd.setCursor(0, 1);
-            lcd.print("Recording [STOP]");
+            lcd.print(F("Recording [STOP]"));
         }
         else {
             if (storage->hasSongOnDisk(song)) {
                 lcd.setCursor(8, 0);
-                lcd.print("Has Data");
+                lcd.print(F("Has Data"));
             }
             else {
                 lcd.setCursor(9, 0);
-                lcd.print("No Data");
+                lcd.print(F("No Data"));
             }
 
             lcd.setCursor(0, 1);
-            lcd.print("Play< [Bck] >Rec");
+            lcd.print(F("Play< [Bck] >Rec"));
         }
     }
 }

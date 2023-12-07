@@ -10,7 +10,7 @@ char serial_buffer[30] = {};
 
 ControllerStorage storage;
 ControllerCommunication communication(storage);
-ControllerInterface interface(&storage);
+ControllerInterface interface(&storage, &communication);
 
 void setup() {
     Serial.begin(9600);

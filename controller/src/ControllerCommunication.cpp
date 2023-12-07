@@ -21,10 +21,20 @@ void ControllerCommunication::init() {
 
 void ControllerCommunication::updateConnected() {
     // Scan for connected devices
+    // TODO: CREDIT!
     for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
         byte rc = twi_writeTo(addr, nullptr, 0, 1, 0);
         if (rc == 0) {
             connected_devices_bitmask[addr / 8] |= 1 << addr % 8;
+        }
+    }
+}
+
+uint8_t ControllerCommunication::countConnected() {
+    uint8_t count = 0;
+    for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
+        if (connected_devices_bitmask[addr / 8] &= 1 << addr % 8 != 0) {
+            count++;
         }
     }
 }

@@ -55,6 +55,8 @@ public:
 
     void updateConnected();
 
+    uint8_t countConnected();
+
     byte* getConnected() { return connected_devices_bitmask; }
 
     /// Called to begin isRecording

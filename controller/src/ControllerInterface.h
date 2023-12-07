@@ -8,10 +8,12 @@
 #include <LiquidCrystal.h>
 #include "../../shared/src/Constants.h"
 #include "ControllerStorage.h"
+#include "ControllerCommunication.h"
 
 class ControllerInterface {
 private:
     ControllerStorage* storage;
+    ControllerCommunication* communication;
     LiquidCrystal lcd;
 
     bool songSelected = false;
@@ -25,13 +27,13 @@ private:
 
     unsigned long time = 0;
 public:
-    explicit ControllerInterface(ControllerStorage* storage);
+    explicit ControllerInterface(ControllerStorage* storage, ControllerCommunication* communication);
 
     void init();
 
-    bool isRecording() { return recordingSelected; }
+    bool isRecording() const { return recordingSelected; }
 
-    bool isPlayback() { return  playbackSelected; }
+    bool isPlayback() const { return  playbackSelected; }
 
     uint8_t getSong() const { return song; }
 
