@@ -85,7 +85,7 @@ void loop() {
 
         // If recording is starting
         if (!recording) {
-            Serial.println("Starting recording");
+            Serial.println(F("Starting recording"));
             startTime = currentTime;
             whiteBitMask = newWhiteBitMask;
             blackBitMask = newBlackBitMask;
