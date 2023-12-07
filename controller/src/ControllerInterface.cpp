@@ -39,13 +39,13 @@ void ControllerInterface::init() {
 }
 
 void ControllerInterface::onLeft() {
-    if (!songSelected) {
+    if (!songSelected) { // Cycle through songs
         if (song == 1) { song = SONG_COUNT; }
         else { song--; }
         updateLCD();
     }
-    else {
-        if (!recordingSelected && !playbackSelected)  {
+    else { // Start playback
+        if (!recordingSelected && !playbackSelected && storage->hasSongOnDisk(song))  {
             playbackSelected = true;
             updateLCD();
         }
@@ -53,12 +53,12 @@ void ControllerInterface::onLeft() {
 }
 
 void ControllerInterface::onRight() {
-    if (!songSelected) {
+    if (!songSelected) { // Cycle through songs
         if (song == SONG_COUNT) { song = 1; }
         else { song++; }
         updateLCD();
     }
-    else {
+    else { // Start recording
         if (!recordingSelected && !playbackSelected)  {
             recordingSelected = true;
             updateLCD();
@@ -67,18 +67,18 @@ void ControllerInterface::onRight() {
 }
 
 void ControllerInterface::onSelect() {
-    if (!songSelected) {
+    if (!songSelected) { // Select song
         songSelected = true;
         updateLCD();
     }
     else {
-        if (recordingSelected) {
+        if (recordingSelected) { // Stop recording
             recordingSelected = false;
         }
-        else if (playbackSelected) {
+        else if (playbackSelected) { // Stop playback
             playbackSelected = false;
         }
-        else {
+        else { // Go back to song selection
             songSelected = false;
         }
         updateLCD();
@@ -88,7 +88,7 @@ void ControllerInterface::onSelect() {
 void ControllerInterface::updateLCD() {
     lcd.clear();
 
-    if (!songSelected) {
+    if (!songSelected) { // Show song details while selecting
         lcd.setCursor(0, 0);
         lcd.print(F("Song:"));
         lcd.print(song);
@@ -107,19 +107,19 @@ void ControllerInterface::updateLCD() {
         lcd.setCursor(15, 1);
         lcd.print('>');
     }
-    else {
+    else { // Show selected song and options
         lcd.setCursor(0, 0);
         lcd.print(F("Song:"));
         lcd.print(song);
 
-        if (playbackSelected) {
+        if (playbackSelected) { // Show options to stop playback
             lcd.setCursor(8, 0);
             lcd.print(F("Has Data"));
 
             lcd.setCursor(0, 1);
             lcd.print(F("Playing [STOP]"));
         }
-        else if (recordingSelected) {
+        else if (recordingSelected) { // Show options to stop recording
             lcd.setCursor(8, 0);
             lcd.print(F("Has Data"));
 
@@ -127,27 +127,32 @@ void ControllerInterface::updateLCD() {
             lcd.print(F("Recording [STOP]"));
         }
         else {
+            // Show whether a song has data
             if (storage->hasSongOnDisk(song)) {
                 lcd.setCursor(8, 0);
                 lcd.print(F("Has Data"));
+
+                lcd.setCursor(0, 1);
+                lcd.print(F("Play< [Bck] >Rec"));
             }
             else {
                 lcd.setCursor(9, 0);
                 lcd.print(F("No Data"));
-            }
 
-            lcd.setCursor(0, 1);
-            lcd.print(F("Play< [Bck] >Rec"));
+                lcd.setCursor(0, 1);
+                lcd.print(F("      [Bck] >Rec"));
+            }
         }
     }
 }
 
 void ControllerInterface::updateButtons() {
-    // Use !digital read as LOW is read when a button with a pull-up resistor is read
+    // Use !digitalRead as LOW is read when a button with a pull-up resistor is pressed
     bool left = !digitalRead(LEFT_INPUT);
     bool right = !digitalRead(RIGHT_INPUT);
     bool select = !digitalRead(SELECT_INPUT);
 
+    // On button down. De-bouncing handled by delay in main loop
     if (left && !prevLeft) { onLeft(); }
     if (right && !prevRight) { onRight(); }
     if (select && !prevSelect) { onSelect(); }
