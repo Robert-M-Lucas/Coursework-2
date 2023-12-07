@@ -7,4 +7,6 @@
 
 constexpr unsigned int WHITE_ADC_PINS[4] = {10,11,12,13};
 constexpr unsigned int BLACK_ADC_PINS[4] = {6,7,8,13};
+
+constexpr unsigned int SPEAKER_PINS[3] = {3,4,5};
 #endif //KEYBOARD_CONSTANTS_H
