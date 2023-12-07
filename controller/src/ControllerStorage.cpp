@@ -81,9 +81,6 @@ void ControllerStorage::init() {
     } else {
         Serial.println(F("[ERROR] [ControllerStorage] Failed to initialise SD card!"));
     }
-
-    // Reset playback to begin with
-    resetPlayback();
 }
 
 // String ControllerStorage::getFilePath(const u8 song, const Instrument instrument) {
@@ -95,7 +92,7 @@ void ControllerStorage::selectSong(const uint8_t song) {
     currentSong = song;
 }
 
-void ControllerStorage::storeBufferToDisk(const uint8_t length, const Instrument instrument) {
+void ControllerStorage::storeBufferToDisk(Instrument instrument, uint8_t length) {
     // Make sure that folder for song exists
     if (!hasSongOnDisk(currentSong)) {
         buffer_folder(currentSong); // Theoretically redundant
@@ -137,7 +134,11 @@ uint8_t ControllerStorage::loadSongData(const Instrument instrument, const uint8
     // The actual number of bytes to read is the minimum of this and the length requested
     auto length = static_cast<u16>(file.available());
 
-    length = min(length, lengthRequested);
+    // Catch file not existing
+    if (length == 0) { return 0; }
+
+    length = min(length, static_cast<u16>(lengthRequested));
+
     // Read song data into buffer, using buffered read for efficiency
     file.read(
             buffer,
@@ -150,7 +151,7 @@ uint8_t ControllerStorage::loadSongData(const Instrument instrument, const uint8
     // Make sure to close the file now we're finished
     file.close();
 
-    return length;
+    return static_cast<uint8_t>(length);
 }
 
 void ControllerStorage::resetPlayback() {

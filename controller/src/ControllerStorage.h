@@ -28,7 +28,7 @@ private:
 
     void buffer_file(uint8_t song, uint8_t instrument);
 public:
-    void init();
+    static void init();
 
     // Set the current song to be recorded or played
     void selectSong(uint8_t song);
@@ -37,7 +37,7 @@ public:
     byte* getBuffer() { return buffer; }
 
     // Append data in the song buffer to the correct file on the SD card
-    void storeBufferToDisk(uint8_t length, Instrument instrument);
+    void storeBufferToDisk(Instrument instrument, uint8_t length);
 
     // Returns true if the song exists on disk
     bool hasSongOnDisk(uint8_t song);

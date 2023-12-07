@@ -95,7 +95,7 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
     readResponseToBuffer(storage.getBuffer());
 
     // Write to storage
-    storage.storeBufferToDisk(length, instrument);
+    storage.storeBufferToDisk(instrument, length);
 
     return length;
 }

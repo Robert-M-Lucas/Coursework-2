@@ -37,6 +37,7 @@ void loop() {
     if (interface.isRecording()) {
         if (!prevRecording) {
             Serial.println(F("[INFO] [Main Loop] Starting recording"));
+            storage.deleteSong(interface.getSong());
             communication.startRecording(interface.getSong());
             digitalWrite(RECORDING_LED, HIGH);
         }
