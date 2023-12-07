@@ -21,8 +21,8 @@ void ControllerCommunication::init() {
 
 void ControllerCommunication::updateConnected() {
     // Scan for connected devices
-    // TODO: CREDIT!
     for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
+        // Writes nothing to a device to see if the message is delivered
         byte rc = twi_writeTo(addr, nullptr, 0, 1, 0);
         if (rc == 0) {
             connected_devices_bitmask[addr / 8] |= 1 << addr % 8;
@@ -37,6 +37,7 @@ uint8_t ControllerCommunication::countConnected() {
             count++;
         }
     }
+    return count;
 }
 
 void ControllerCommunication::startRecording(uint8_t song) {
