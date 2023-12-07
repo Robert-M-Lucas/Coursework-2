@@ -8,7 +8,7 @@
 
 
 
-LEDActor actor = LEDActor(2, 3);
+LEDActor actor = LEDActor(2, 4);
 Adafruit_MCP3008 inputAdcWhiteKeys;
 Adafruit_MCP3008 inputAdcBlackKeys;
 
@@ -17,6 +17,9 @@ constexpr byte emptyByte = 0;
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
+
+    pinMode(3, OUTPUT);
+
     //Initiate USB serial communication to allow debugging via USB
     Serial.begin(SERIAL_BAUD_RATE);
     //Write startup message to USB serial, 'F' to store string in Flash over RAM
@@ -25,6 +28,7 @@ void setup() {
     //Initialise the ADCs managing, white and Black piano keys respectively
     inputAdcWhiteKeys.begin(WHITE_ADC_PINS[3],WHITE_ADC_PINS[2],WHITE_ADC_PINS[1],WHITE_ADC_PINS[0]);
     inputAdcBlackKeys.begin(BLACK_ADC_PINS[3],BLACK_ADC_PINS[2],BLACK_ADC_PINS[1],BLACK_ADC_PINS[0]);
+
     //Initialise the Keyboard communication actor object
     CommunicationActor::initialise(Instrument::Keyboard, &actor);
 }
@@ -40,7 +44,7 @@ byte readKeys(Adafruit_MCP3008 *keys)
     //sets input mask to the empty byte '00000000'
     byte inputMask = emptyByte;
 
-    for(uint8_t channel = 0; channel < 8; channel++)
+    for(uint8_t channel = 1; channel < 8; channel++)
     {
         //applies bitwise OR between the current channel reading and corresponding bit in the bitmask
         inputMask |= static_cast<byte>(readHigh(keys->readADC(channel)) << channel);
@@ -59,7 +63,6 @@ bool playback = false;
 
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
-    Serial.println(readKeys(&inputAdcWhiteKeys));
     if (playback || actor.getPlayback()) {
         // If playback is starting
         if (!playback) {
@@ -69,7 +72,12 @@ void loop() {
                 unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
                 const byte whiteKeys = data[0];
                 const byte blackKeys = data[1];
-                delay(500); // TODO: Play sounds
+                if (whiteKeys != 0) {
+                    tone(3, 400, duration_ms);
+                }
+                else {
+                    delay(duration_ms);
+                }
             }
             // Playback ended and all notes in buffer have been played
             else if (!actor.getPlayback()) {
