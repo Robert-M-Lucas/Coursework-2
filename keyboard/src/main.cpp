@@ -19,7 +19,7 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     Serial.begin(SERIAL_BAUD_RATE);
-    Serial.println("Init");
+    Serial.println(F("Init"));
 
     //inputs used are not important, just placeholders for now
     inputAdcWhiteKeys.begin(WHITE_ADC_PINS[3],WHITE_ADC_PINS[2],WHITE_ADC_PINS[1],WHITE_ADC_PINS[0]);
@@ -56,7 +56,7 @@ bool playback = false;
 
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
-
+    Serial.println(readKeys(&inputAdcWhiteKeys));
     if (playback || actor.getPlayback()) {
         // If playback is starting
         if (!playback) {
@@ -71,7 +71,7 @@ void loop() {
                 playback = false;
             }
             else {
-                Serial.println("Playback ongoing but no data is available!");
+                Serial.println(F("Playback ongoing but no data is available!"));
             }
         }
     }
@@ -94,7 +94,7 @@ void loop() {
         else if (elapsedTime > MAX_NOTE_DURATION_MS ||
                 whiteBitMask != newWhiteBitMask || blackBitMask != newBlackBitMask //||
                  /*!actor.getRecording()*/) {
-                Serial.println("Writing notes:");
+                Serial.println(F("Writing notes:"));
                 for (uint8_t i = 0; i < 8; i++) {
                     if ((whiteBitMask & (1 << i)) != 0) Serial.print(1);
                     else Serial.print(0);
@@ -108,7 +108,7 @@ void loop() {
                 auto duration = (uint8_t) constrain(elapsedTime / INSTRUMENT_POLL_INTERVAL, 0, 255);
 
                 Serial.println();
-                Serial.print("Duration (x60ms): ");
+                Serial.print(F("Duration (x60ms): "));
                 Serial.println(duration);
 
                 byte data[3] = {};
