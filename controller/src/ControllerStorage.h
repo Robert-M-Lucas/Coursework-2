@@ -15,27 +15,35 @@ private:
     // Buffer used to hold data to be transferred between the instruments and the SD card
     byte buffer[BUFFER_SIZE] = {};
 
+    char path_buf[10] = {};
+
     // Position of the playback pointer in bytes, for the given instrument
     u16 playbackPosition[MAX_INSTRUMENTS] = {};
 
     u8 currentSong = 0;
+
+    static uint8_t write_num_to_buffer_pos(char* buffer_pos, uint8_t num);
+
+    void buffer_folder(uint8_t song);
+
+    void buffer_file(uint8_t song, uint8_t instrument);
 public:
     void init();
 
     // Set the current song to be recorded or played
-    void selectSong(u8 song);
+    void selectSong(uint8_t song);
 
     // Returns a pointer to the internal storage buffer
     byte* getBuffer() { return buffer; }
 
     // Append data in the song buffer to the correct file on the SD card
-    void storeBufferToDisk(u8 length, Instrument instrument) const;
+    void storeBufferToDisk(uint8_t length, Instrument instrument);
 
     // Returns true if the song exists on disk
-    bool hasSongOnDisk(u8 song) const;
+    bool hasSongOnDisk(uint8_t song);
 
     // Delete a song from the disk
-    bool deleteSong(u8 song) const;
+    bool deleteSong(uint8_t song);
 
     // Reset the playback to start at the beginning of the file
     void resetPlayback();
@@ -45,10 +53,10 @@ public:
     // The loaded data is stored in the buffer, meaning that it is only valid until another
     // operation overwrites the buffer
     // Returns the number of bytes loaded, which is <= lengthRequested
-    u16 loadSongData(Instrument instrument, u16 lengthRequested);
+    uint8_t loadSongData(Instrument instrument, uint8_t lengthRequested);
 
     // Return the file path for the specified song and instrument
-    static String getFilePath(u8 song, Instrument instrument) ;
+    // static String getFilePath(u8 song, Instrument instrument) ;
 };
 
 #endif //CONTROLLER_CONTROLLERSTORAGE_H
