@@ -69,11 +69,12 @@ void loop() {
             if (actor.readDataAvailable(3)) {
                 byte data[3] = {};
                 actor.readDataAndRemove(data, 3);
-                unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
+                unsigned long duration_ms = static_cast<unsigned int>(data[2]) * INSTRUMENT_POLL_INTERVAL;
                 const byte whiteKeys = data[0];
                 const byte blackKeys = data[1];
                 if (whiteKeys != 0) {
                     tone(3, 400, duration_ms);
+                    delay(duration_ms);
                 }
                 else {
                     delay(duration_ms);
@@ -135,8 +136,6 @@ void loop() {
                 blackBitMask = newBlackBitMask;
                 startTime = currentTime;
         }
-
-        delay(INSTRUMENT_POLL_INTERVAL);
 
         recording = actor.getRecording();
     }
