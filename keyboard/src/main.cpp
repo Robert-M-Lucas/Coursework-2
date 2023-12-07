@@ -17,29 +17,32 @@ constexpr byte emptyByte = 0;
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
-
+    //Initiate USB serial communication to allow debugging via USB
     Serial.begin(SERIAL_BAUD_RATE);
+    //Write startup message to USB serial, 'F' to store string in Flash over RAM
     Serial.println(F("Init"));
 
-    //inputs used are not important, just placeholders for now
+    //Initialise the ADCs managing, white and Black piano keys respectively
     inputAdcWhiteKeys.begin(WHITE_ADC_PINS[3],WHITE_ADC_PINS[2],WHITE_ADC_PINS[1],WHITE_ADC_PINS[0]);
     inputAdcBlackKeys.begin(BLACK_ADC_PINS[3],BLACK_ADC_PINS[2],BLACK_ADC_PINS[1],BLACK_ADC_PINS[0]);
-
+    //Initialise the Keyboard communication actor object
     CommunicationActor::initialise(Instrument::Keyboard, &actor);
 }
 
 bool readHigh(const unsigned reading)
 {
-    //test if input is above highThreshold
+    //Converts analogue reading to boolean (0 or 1) for usage in Bitwise calculations
     return reading > highThreshold;
 }
 
 byte readKeys(Adafruit_MCP3008 *keys)
 {
+    //sets input mask to the empty byte '00000000'
     byte inputMask = emptyByte;
 
     for(uint8_t channel = 0; channel < 8; channel++)
     {
+        //applies bitwise OR between the current channel reading and corresponding bit in the bitmask
         inputMask |= static_cast<byte>(readHigh(keys->readADC(channel)) << channel);
     }
 
