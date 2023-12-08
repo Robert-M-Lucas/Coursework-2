@@ -39,6 +39,32 @@ bool readHigh(const unsigned reading)
     return reading > highThreshold;
 }
 
+unsigned int* getNotes(byte wholes, byte sharps)
+{
+    unsigned int notesToPlay[3];
+    unsigned int noteIndex = 0;
+    for(int noteNum = 0; noteNum < 8; noteNum++)
+    {
+        if(noteIndex < 3 && ((wholes & (1 << noteNum)) >> noteNum))
+        {
+            notesToPlay[noteIndex] = OCTAVE[noteNum];
+            noteIndex ++;
+        }
+
+    }
+
+    for(int noteNum = 0; noteNum < 5; noteNum++)
+    {
+        if(noteIndex < 3 && ((sharps & (1 << noteNum)) >> noteNum))
+        {
+            notesToPlay[noteIndex] = SHARPS[noteNum];
+            noteIndex ++;
+        }
+    }
+
+    return notesToPlay;
+}
+
 byte readKeys(Adafruit_MCP3008 *keys)
 {
     //sets input mask to the empty byte '00000000'
