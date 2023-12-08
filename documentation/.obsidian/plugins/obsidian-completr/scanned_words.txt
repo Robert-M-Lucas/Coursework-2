@@ -133,6 +133,8 @@ Starting
 Sends
 Storage
 Stop
+SCL
+SDA
 while
 will
 what
@@ -155,6 +157,7 @@ Passes
 TODO
 The
 This
+TOP
 Data
 Requesting
 Receiving
@@ -165,8 +168,11 @@ Removes
 knows
 keep
 Variable
+VCC
 Length
 Looping
 On
 head
 Ending
+GND
+BOTTOM

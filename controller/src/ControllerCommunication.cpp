@@ -25,7 +25,7 @@ void ControllerCommunication::updateConnected() {
         // Writes nothing to a device to see if the message is delivered
         byte rc = twi_writeTo(addr, nullptr, 0, 1, 0);
         if (rc == 0) {
-            connected_devices_bitmask[addr / 8] |= 1 << addr % 8;
+            connected_devices_bitmask[addr / 8] |= 1 << (addr % 8);
         }
     }
 }
@@ -33,7 +33,7 @@ void ControllerCommunication::updateConnected() {
 uint8_t ControllerCommunication::countConnected() {
     uint8_t count = 0;
     for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
-        if (connected_devices_bitmask[addr / 8] &= 1 << addr % 8 != 0) {
+        if ((connected_devices_bitmask[addr / 8] & (1 << (addr % 8))) != 0) {
             count++;
         }
     }
@@ -54,24 +54,34 @@ void ControllerCommunication::recordingLoop() {
 void ControllerCommunication::stopRecording() {
     messageAll(Code::StopRecording);
     delay(TRANSMISSION_DELAY);
-    storeAllInstrumentBuffers();
+    Serial.print(F("[INFO] [ControllerCommunication] Reading all buffers after recording... "));
+    while (storeAllInstrumentBuffers()) {
+        delay(TRANSMISSION_DELAY);
+    }
+    Serial.println(F("Done"));
 }
 
 void ControllerCommunication::startPlayback(uint8_t song) {
     storage.selectSong(song);
     clearBuffers();
     delay(TRANSMISSION_DELAY);
-    writeAllInstrumentBuffers();
+    Serial.print(F("[INFO] [ControllerCommunication] Writing all buffers before playback... "));
+    while (writeAllInstrumentBuffers()) {
+        delay(TRANSMISSION_DELAY);
+    }
+    Serial.println(F("Done"));
     delay(TRANSMISSION_DELAY);
     messageAll(Code::StartPlayback);
 }
 
-void ControllerCommunication::playbackLoop() {
-    writeAllInstrumentBuffers();
+bool ControllerCommunication::playbackLoop() {
+    return writeAllInstrumentBuffers();
 }
 
 void ControllerCommunication::stopPlayback() {
     messageAll(Code::StopPlayback);
+    delay(TRANSMISSION_DELAY);
+    clearBuffers();
 }
 
 void ControllerCommunication::clearBuffers() {
@@ -114,6 +124,7 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
 }
 
 bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
+//    Serial.println("Writing to instrument");
     // Set next request buffer space remaining
     message(instrument, Code::RequestBufferSpaceRemaining);
 
@@ -130,9 +141,17 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     auto length = static_cast<uint8_t>(Wire.read());
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer empty data transferred")); }
 
+    length = min(30, length);
+
+//    Serial.print("Length before: ");
+//    Serial.println(length);
+
     // Load song data for this instrument into the storage buffer
     length = storage.loadSongData(instrument, length); // Length may be set to less than requested if not enough data is available
     const byte* buffer = storage.getBuffer();
+
+//    Serial.print("Length after");
+//    Serial.println(length);
 
     delay(TRANSMISSION_DELAY);
 
@@ -144,13 +163,15 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
             length
     );
 
-    return true;
+    return length > 0;
 }
 
-void ControllerCommunication::storeAllInstrumentBuffers() {
+bool ControllerCommunication::storeAllInstrumentBuffers() {
+    bool stored = false;
     for_all_instruments
-        storeInstrumentBuffer(instrument);
+        stored |= storeInstrumentBuffer(instrument) > 0;
     end_for_all_instruments
+    return stored;
 }
 
 bool ControllerCommunication::writeAllInstrumentBuffers() {

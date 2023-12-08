@@ -72,7 +72,6 @@ void loop() {
         }
 
         // Playback loop
-
         communication.playbackLoop();
     }
     else if (prevPlaying) { // Stopped playing back
