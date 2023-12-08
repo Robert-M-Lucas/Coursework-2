@@ -15,6 +15,7 @@ Adafruit_MCP3008 inputAdcBlackKeys;
 constexpr unsigned highThreshold = 512;
 constexpr byte emptyByte = 0;
 
+
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -41,11 +42,13 @@ bool readHigh(const unsigned reading)
 
 unsigned int* getNotes(byte wholes, byte sharps)
 {
-    unsigned int notesToPlay[3];
+    constexpr unsigned int notesSize = 3;
+    unsigned int notesToPlay[notesSize];
     unsigned int noteIndex = 0;
+
     for(int noteNum = 0; noteNum < 8; noteNum++)
     {
-        if(noteIndex < 3 && ((wholes & (1 << noteNum)) >> noteNum))
+        if(noteIndex < notesSize && ((wholes & (true << noteNum)) >> noteNum))
         {
             notesToPlay[noteIndex] = OCTAVE[noteNum];
             noteIndex ++;
@@ -55,7 +58,7 @@ unsigned int* getNotes(byte wholes, byte sharps)
 
     for(int noteNum = 0; noteNum < 5; noteNum++)
     {
-        if(noteIndex < 3 && ((sharps & (1 << noteNum)) >> noteNum))
+        if(noteIndex < notesSize && ((sharps & (true << noteNum)) >> noteNum))
         {
             notesToPlay[noteIndex] = SHARPS[noteNum];
             noteIndex ++;
@@ -63,6 +66,14 @@ unsigned int* getNotes(byte wholes, byte sharps)
     }
 
     return notesToPlay;
+}
+
+void playNotes(unsigned int* notes)
+{
+    //Unwrapped to maximise time efficiency over for loop
+    tone(SPEAKER_PINS[0],notes[0]);
+    tone(SPEAKER_PINS[1],notes[1]);
+    tone(SPEAKER_PINS[2],notes[2]);
 }
 
 byte readKeys(Adafruit_MCP3008 *keys)
