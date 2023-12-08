@@ -12,6 +12,7 @@
 enum class Instrument : uint8_t {
     Keyboard = 1,
     TestInstrument = 2,
+    Drum = 3,
 };
 
 /// Code that is is always the first bit of a transfer

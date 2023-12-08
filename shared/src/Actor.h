@@ -55,12 +55,12 @@ class DefaultActor : public ActorInterface {
 private:
     /// Circular data buffer
     byte buffer[BUFFER_SIZE] = {};
-    unsigned bufferHead = 0;
-    unsigned bufferTail = 0;
     bool isRecording = false;
     bool isPlayingBack = false;
 
 public:
+    unsigned bufferHead = 0;
+    unsigned bufferTail = 0;
     void startRecording() override {
         isRecording = true;
     }

@@ -21,7 +21,7 @@ namespace Util {
 
     /// Convert a byte array back into a value
     template <class T>
-    T fromBytes(const byte *input) {
+    T fromBytes(byte *input) {
         return *reinterpret_cast<T*>(input);
     }
 

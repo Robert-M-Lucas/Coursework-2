@@ -6,6 +6,9 @@
 
 DefaultActor actor;
 
+char buffer[1024];
+int i = 0;
+
 void setup() {
     Serial.begin(9600);
     Serial.println("hello");
@@ -14,11 +17,22 @@ void setup() {
 
 void loop() {
     if (actor.getPlayback()) {
-        for (int i = 0; i < 50; ++i) {
+        for (int j = 0; j < 50; ++j) {
             if (actor.readDataAvailable(1)) {
-                byte data;
-                actor.readDataAndRemove(&data, 1);
-                Serial.print(static_cast<char>(data));
+                if (i > 990) {
+                    Wire.end();
+                    // finished buffer
+                    buffer[i] = '\0';
+                    Serial.println("printing data");
+                    Serial.println(buffer);
+                    i = 0;
+                    return;
+                } else {
+                    byte data;
+                    actor.readDataAndRemove(&data, 1);
+                    buffer[i] = static_cast<char>(data);
+                    i++;
+                }
             } else {
                 Serial.println("Ran out of data");
                 Serial.println(actor.getBufferLength());
@@ -26,6 +40,11 @@ void loop() {
             }
         }
 
-        delay(1000);
+        if (i > 1000) {
+            // finished buffer
+            buffer[i++] = '\0';
+            Serial.println(buffer);
+        }
+        delay(100);
     }
 }
