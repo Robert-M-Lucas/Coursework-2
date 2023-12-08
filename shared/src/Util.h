@@ -32,6 +32,9 @@ namespace Util {
             case (Instrument::Keyboard): {
                 return "Keyboard";
             }
+            case (Instrument::Drum): {
+                return "Drum";
+            }
             case (Instrument::TestInstrument): {
                 return "Test Instrument";
             }
