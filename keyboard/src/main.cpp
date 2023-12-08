@@ -61,6 +61,20 @@ unsigned long startTime = 0;
 
 bool playback = false;
 
+void playNotes(byte whiteNotes, byte blackNotes){
+    bool noteMask[8];
+    unsigned int noteIndex = 0;
+    unsigned int notes[3];
+
+    for(int noteNum = 0; noteNum < 8; noteNum++)
+    {
+        if(noteIndex < 3 && ((whiteNotes & (1 << noteNum)) >> noteNum))
+        {
+            notes[noteIndex] = OCTAVE[noteNum];
+            noteIndex ++;
+        }
+    }
+}
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
     if (playback || actor.getPlayback()) {
