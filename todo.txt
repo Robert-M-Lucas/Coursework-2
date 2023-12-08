@@ -1,0 +1,1 @@
+make sure no instrument file for an instrument doesnt break playback
