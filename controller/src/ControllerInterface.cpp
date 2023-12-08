@@ -33,7 +33,7 @@ void ControllerInterface::init() {
     lcd.setCursor(13, 1);
     lcd.print(communication->countConnected());
 
-    delay(3000);
+    delay(2000);
 
     updateLCD();
 }
@@ -151,6 +151,46 @@ void ControllerInterface::updateButtons() {
     bool left = !digitalRead(LEFT_INPUT);
     bool right = !digitalRead(RIGHT_INPUT);
     bool select = !digitalRead(SELECT_INPUT);
+
+    if (left && right && select) {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Hold for 3s");
+        lcd.setCursor(0, 1);
+        lcd.print("To wipe drive");
+        delay(1000);
+        lcd.setCursor(0, 0);
+        lcd.print("Hold for 2s");
+        lcd.setCursor(0, 1);
+        lcd.print("To wipe drive");
+        delay(1000);
+        lcd.setCursor(0, 0);
+        lcd.print("Hold for 1s");
+        lcd.setCursor(0, 1);
+        lcd.print("To wipe drive");
+        delay(1000);
+
+        left = !digitalRead(LEFT_INPUT);
+        right = !digitalRead(RIGHT_INPUT);
+        select = !digitalRead(SELECT_INPUT);
+
+
+        if (left && right && select) {
+            storage->wipeDrive();
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Done");
+            delay(2000);
+            updateLCD();
+            return;
+        }
+        else {
+            updateLCD();
+            return;
+        }
+    }
+
+    if (left && right) { return; }
 
     // On button down. De-bouncing handled by delay in main loop
     if (left && !prevLeft) { onLeft(); }

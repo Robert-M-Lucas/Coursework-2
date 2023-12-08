@@ -102,12 +102,15 @@ void ControllerStorage::storeBufferToDisk(Instrument instrument, uint8_t length)
 
     // Write data to file
     file.write(buffer, length);
-
     // Close file
     file.close();
 }
 
 bool ControllerStorage::deleteSong(const uint8_t song) {
+    for (uint8_t i = 0; i < MAX_INSTRUMENTS; i++) {
+        buffer_file(song, i);
+        SD.remove(path_buf);
+    }
     buffer_folder(song);
     return SD.rmdir(path_buf);
 }
@@ -155,6 +158,12 @@ uint8_t ControllerStorage::loadSongData(const Instrument instrument, const uint8
 void ControllerStorage::resetPlayback() {
     for (u16 &i : playbackPosition) {
         i = 0;
+    }
+}
+
+void ControllerStorage::wipeDrive() {
+    for (uint8_t i = 1; i <= SONG_COUNT; i++) {
+        deleteSong(i);
     }
 }
 
