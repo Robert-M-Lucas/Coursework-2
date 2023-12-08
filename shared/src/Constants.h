@@ -11,7 +11,7 @@ typedef uint8_t pin;
 constexpr unsigned int BUFFER_SIZE = 255;
 
 /// Delay between consecutive transfers/requests to actors to prevent an interrupt during an interrupt
-constexpr unsigned int TRANSMISSION_DELAY = 30;
+constexpr unsigned int TRANSMISSION_DELAY = 10;
 
 /// How frequently an instrument is polled for note changes
 constexpr unsigned int INSTRUMENT_POLL_INTERVAL = 30;

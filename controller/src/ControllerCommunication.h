@@ -15,7 +15,7 @@
 
 #define for_all_instruments \
     for (uint8_t i = 0; i < MAX_INSTRUMENTS; i++) { \
-        if (connected_devices_bitmask[i / 8] & 1 << (i % 8)) { \
+        if (connected_devices_bitmask[i / 8] & (1 << (i % 8))) { \
             Instrument instrument = static_cast<Instrument>(i);
 #define end_for_all_instruments \
         }\
@@ -49,7 +49,7 @@ private:
     bool writeInstrumentBuffer(Instrument instrument);
 
     /// Write all instrument buffers to storage
-    void storeAllInstrumentBuffers();
+    bool storeAllInstrumentBuffers();
 
     /// Write song data to all instruments
     bool writeAllInstrumentBuffers();
@@ -80,7 +80,7 @@ public:
     void startPlayback(uint8_t song);
 
     /// Called during playback
-    void playbackLoop();
+    bool playbackLoop();
 
     /// Called to end playback
     void stopPlayback();
