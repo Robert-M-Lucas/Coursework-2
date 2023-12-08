@@ -21,7 +21,7 @@ namespace Util {
 
     /// Convert a byte array back into a value
     template <class T>
-    T fromBytes(const byte *input) {
+    T fromBytes(byte *input) {
         return *reinterpret_cast<T*>(input);
     }
 
@@ -31,6 +31,9 @@ namespace Util {
         switch (instrument) {
             case (Instrument::Keyboard): {
                 return "Keyboard";
+            }
+            case (Instrument::Drum): {
+                return "Drum";
             }
             case (Instrument::TestInstrument): {
                 return "Test Instrument";

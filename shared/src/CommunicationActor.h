@@ -27,7 +27,8 @@ namespace CommunicationActor {
 
             switch (request) {
                 case Request::BufferLength: {
-                    const uint8_t length = actorInterface->getBufferLength();
+                    uint8_t length = actorInterface->getBufferLength();
+                    length = min(length, 30);
                     lastBufferLength = length;
                     Wire.write(length);
                     break;
