@@ -59,34 +59,25 @@ byte blackBitMask = 0;
 
 unsigned long startTime = 0;
 
-bool playback = false;
-
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
-    if (playback || actor.getPlayback()) {
-        // If playback is starting
-        if (!playback) {
-            if (actor.readDataAvailable(3)) {
-                byte data[3] = {};
-                actor.readDataAndRemove(data, 3);
-                unsigned long duration_ms = static_cast<unsigned int>(data[2]) * INSTRUMENT_POLL_INTERVAL;
-                const byte whiteKeys = data[0];
-                const byte blackKeys = data[1];
-                if (whiteKeys != 0) {
-                    tone(3, 400, duration_ms);
-                    delay(duration_ms);
-                }
-                else {
-                    delay(duration_ms);
-                }
-            }
-            // Playback ended and all notes in buffer have been played
-            else if (!actor.getPlayback()) {
-                playback = false;
+    if (actor.getPlayback()) {
+        if (actor.readDataAvailable(3)) {
+            byte data[3] = {};
+            actor.readDataAndRemove(data, 3);
+            unsigned long duration_ms = static_cast<unsigned int>(data[2]) * INSTRUMENT_POLL_INTERVAL;
+            const byte whiteKeys = data[0];
+            const byte blackKeys = data[1];
+            if (whiteKeys != 0 || blackKeys != 0) {
+                tone(3, 400, duration_ms);
+                delay(duration_ms);
             }
             else {
-                Serial.println(F("Playback ongoing but no data is available!"));
+                delay(duration_ms);
             }
+        }
+        else {
+            Serial.println(F("Playback ongoing but no data is available!"));
         }
     }
     else if (recording || actor.getRecording()) {
