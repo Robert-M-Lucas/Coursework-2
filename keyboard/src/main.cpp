@@ -43,7 +43,7 @@ bool readHigh(const unsigned reading)
 unsigned int* getNotes(byte wholes, byte sharps)
 {
     constexpr unsigned int notesSize = 3;
-    unsigned int notesToPlay[notesSize];
+    unsigned int notesToPlay[notesSize] = {0,0,0};
     unsigned int noteIndex = 0;
 
     for(int noteNum = 0; noteNum < 8; noteNum++)
@@ -71,9 +71,9 @@ unsigned int* getNotes(byte wholes, byte sharps)
 void playNotes(unsigned int* notes)
 {
     //Unwrapped to maximise time efficiency over for loop
-    tone(SPEAKER_PINS[0],notes[0]);
-    tone(SPEAKER_PINS[1],notes[1]);
-    tone(SPEAKER_PINS[2],notes[2]);
+    tone(SPEAKER_PINS[0],notes[0],KEY_TIME);
+    tone(SPEAKER_PINS[1],notes[1],KEY_TIME);
+    tone(SPEAKER_PINS[2],notes[2],KEY_TIME);
 }
 
 byte readKeys(Adafruit_MCP3008 *keys)
@@ -131,8 +131,8 @@ void loop() {
 
         const byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
         const byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
-
-
+        //Live playback
+        playNotes(getNotes(whiteBitMask,blackBitMask));
         // If recording is starting
         if (!recording) {
             Serial.println(F("Starting recording"));
