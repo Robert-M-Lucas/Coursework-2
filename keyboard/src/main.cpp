@@ -15,6 +15,7 @@ Adafruit_MCP3008 inputAdcBlackKeys;
 constexpr unsigned highThreshold = 512;
 constexpr byte emptyByte = 0;
 
+
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -39,6 +40,42 @@ bool readHigh(const unsigned reading)
     return reading > highThreshold;
 }
 
+unsigned int* getNotes(byte wholes, byte sharps)
+{
+    constexpr unsigned int notesSize = 3;
+    unsigned int notesToPlay[notesSize];
+    unsigned int noteIndex = 0;
+
+    for(int noteNum = 0; noteNum < 8; noteNum++)
+    {
+        if(noteIndex < notesSize && ((wholes & (true << noteNum)) >> noteNum))
+        {
+            notesToPlay[noteIndex] = OCTAVE[noteNum];
+            noteIndex ++;
+        }
+
+    }
+
+    for(int noteNum = 0; noteNum < 5; noteNum++)
+    {
+        if(noteIndex < notesSize && ((sharps & (true << noteNum)) >> noteNum))
+        {
+            notesToPlay[noteIndex] = SHARPS[noteNum];
+            noteIndex ++;
+        }
+    }
+
+    return notesToPlay;
+}
+
+void playNotes(unsigned int* notes)
+{
+    //Unwrapped to maximise time efficiency over for loop
+    tone(SPEAKER_PINS[0],notes[0]);
+    tone(SPEAKER_PINS[1],notes[1]);
+    tone(SPEAKER_PINS[2],notes[2]);
+}
+
 byte readKeys(Adafruit_MCP3008 *keys)
 {
     //sets input mask to the empty byte '00000000'
@@ -59,25 +96,33 @@ byte blackBitMask = 0;
 
 unsigned long startTime = 0;
 
+bool playback = false;
+
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
-    if (actor.getPlayback()) {
-        if (actor.readDataAvailable(3)) {
-            byte data[3] = {};
-            actor.readDataAndRemove(data, 3);
-            unsigned long duration_ms = static_cast<unsigned int>(data[2]) * INSTRUMENT_POLL_INTERVAL;
-            const byte whiteKeys = data[0];
-            const byte blackKeys = data[1];
-            if (whiteKeys != 0 || blackKeys != 0) {
-                tone(3, 400, duration_ms);
-                delay(duration_ms);
+    if (playback || actor.getPlayback()) {
+        // If playback is starting
+        if (!playback) {
+            if (actor.readDataAvailable(3)) {
+                byte data[3] = {};
+                actor.readDataAndRemove(data, 3);
+                unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
+                const byte whiteKeys = data[0];
+                const byte blackKeys = data[1];
+                if (whiteKeys != 0) {
+                    tone(3, 400, duration_ms);
+                }
+                else {
+                    delay(duration_ms);
+                }
+            }
+            // Playback ended and all notes in buffer have been played
+            else if (!actor.getPlayback()) {
+                playback = false;
             }
             else {
-                delay(duration_ms);
+                Serial.println(F("Playback ongoing but no data is available!"));
             }
-        }
-        else {
-            Serial.println(F("Playback ongoing but no data is available!"));
         }
     }
     else if (recording || actor.getRecording()) {
@@ -127,6 +172,8 @@ void loop() {
                 blackBitMask = newBlackBitMask;
                 startTime = currentTime;
         }
+
+        delay(INSTRUMENT_POLL_INTERVAL);
 
         recording = actor.getRecording();
     }
