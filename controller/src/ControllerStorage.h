@@ -65,6 +65,8 @@ public:
 
     // Return the file path for the specified song and instrument
     // static String getFilePath(u8 song, Instrument instrument) ;
+
+    void wipeDrive();
 };
 
 #endif //CONTROLLER_CONTROLLERSTORAGE_H

@@ -15,6 +15,7 @@ Adafruit_MCP3008 inputAdcBlackKeys;
 constexpr unsigned highThreshold = 512;
 constexpr byte emptyByte = 0;
 
+
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -37,6 +38,42 @@ bool readHigh(const unsigned reading)
 {
     //Converts analogue reading to boolean (0 or 1) for usage in Bitwise calculations
     return reading > highThreshold;
+}
+
+unsigned int* getNotes(byte wholes, byte sharps)
+{
+    constexpr unsigned int notesSize = 3;
+    unsigned int notesToPlay[notesSize] = {0,0,0};
+    unsigned int noteIndex = 0;
+
+    for(int noteNum = 0; noteNum < 8; noteNum++)
+    {
+        if(noteIndex < notesSize && ((wholes & (true << noteNum)) >> noteNum))
+        {
+            notesToPlay[noteIndex] = OCTAVE[noteNum];
+            noteIndex ++;
+        }
+
+    }
+
+    for(int noteNum = 0; noteNum < 5; noteNum++)
+    {
+        if(noteIndex < notesSize && ((sharps & (true << noteNum)) >> noteNum))
+        {
+            notesToPlay[noteIndex] = SHARPS[noteNum];
+            noteIndex ++;
+        }
+    }
+
+    return notesToPlay;
+}
+
+void playNotes(unsigned int* notes)
+{
+    //Unwrapped to maximise time efficiency over for loop
+    tone(SPEAKER_PINS[0],notes[0],KEY_TIME);
+    tone(SPEAKER_PINS[1],notes[1],KEY_TIME);
+    tone(SPEAKER_PINS[2],notes[2],KEY_TIME);
 }
 
 byte readKeys(Adafruit_MCP3008 *keys)
@@ -69,12 +106,11 @@ void loop() {
             if (actor.readDataAvailable(3)) {
                 byte data[3] = {};
                 actor.readDataAndRemove(data, 3);
-                unsigned long duration_ms = static_cast<unsigned int>(data[2]) * INSTRUMENT_POLL_INTERVAL;
+                unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
                 const byte whiteKeys = data[0];
                 const byte blackKeys = data[1];
                 if (whiteKeys != 0) {
                     tone(3, 400, duration_ms);
-                    delay(duration_ms);
                 }
                 else {
                     delay(duration_ms);
@@ -95,8 +131,8 @@ void loop() {
 
         const byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
         const byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
-
-
+        //Live playback
+        playNotes(getNotes(whiteBitMask,blackBitMask));
         // If recording is starting
         if (!recording) {
             Serial.println(F("Starting recording"));
@@ -136,6 +172,8 @@ void loop() {
                 blackBitMask = newBlackBitMask;
                 startTime = currentTime;
         }
+
+        delay(INSTRUMENT_POLL_INTERVAL);
 
         recording = actor.getRecording();
     }
