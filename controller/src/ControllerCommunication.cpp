@@ -141,7 +141,7 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     auto length = static_cast<uint8_t>(Wire.read());
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer empty data transferred")); }
 
-    length = min(30, length);
+    length = min(length, MAX_TRANSFER_SIZE - 2);
 
 //    Serial.print("Length before: ");
 //    Serial.println(length);

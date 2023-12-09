@@ -25,4 +25,6 @@ constexpr unsigned long MAX_NOTE_DURATION_MS = INSTRUMENT_POLL_INTERVAL * 256;
 /// serial communications standardised baud rate
 constexpr unsigned int SERIAL_BAUD_RATE = 9600;
 
+constexpr uint8_t MAX_TRANSFER_SIZE = 32;
+
 #endif //CONSTANTS_H
