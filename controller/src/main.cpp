@@ -15,6 +15,7 @@ ControllerInterface interface(&storage, &communication);
 void setup() {
     Serial.begin(9600);
     Serial.println(F("[INFO] [Setup] Init"));
+    delay(1000);
 
     communication.init();
 
