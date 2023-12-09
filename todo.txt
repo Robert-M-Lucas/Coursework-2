@@ -1,1 +1,14 @@
-make sure no instrument file for an instrument doesnt break playback
+Controller
+- Resolve bugs that come up in Keyboard and multi-instrument testing
+- Circuit Diagram
+
+Drums
+- Wire servor
+- Neaten wiring
+- (Optional) Go to lovelace lab to find better sound source
+- Circuit Diagram
+
+Keyboard
+- Lachlan
+- Circuit Diagram
+
