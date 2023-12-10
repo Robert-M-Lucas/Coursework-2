@@ -17,11 +17,12 @@ const int knockThreshold = 10;
 float ledValue = 0.0; // Led is bright if ledValue > 0
 float ledDecay = 0.1; // Controls how quickly the LED switches off
 
-unsigned long lastNoteTime = 0; // Timestamp of the last note played
+unsigned long startTime = 0; // Timestamp of recording started
 
 bool recording = false; // Used to keep track of whether we are currently recording a song
 bool playback  = false; // Used to keep track of whether we are currently playing back a song
 bool blocking  = false; // Whether to block the playback or recording
+bool knockLastIteration = false;
 unsigned long blockingEndTime = 0; // Timestamp when blocking ends
 
 void setup() {
@@ -39,7 +40,10 @@ void setup() {
 // Returns true when a knock is detected
 bool knockDetected() {
     auto piezoValue = analogRead(piezoPin); // Value read from the piezo sensor
-    return piezoValue > knockThreshold;
+    bool knock = piezoValue > knockThreshold; // Whether the sensor is currently being knocked
+    bool newKnock = knock && !knockLastIteration; // Whether this is the first iteration where this knock is detected
+    knockLastIteration = knock; // Update previous knock variable
+    return newKnock;
 }
 
 void updateLed(bool knock) {
@@ -80,22 +84,20 @@ void loop() {
             // ----------------------------------------
 
             if (!playback) {
-                // Play last note
-                // This will always play a note at the beginning of playback
-                knock = true;
+                if (actor.readDataAvailable(1)) {
+                    byte data;
+                    actor.readDataAndRemove(&data, 1);
 
-                // Update last note time
-                lastNoteTime = millis();
-
-                // Next note
-                if (actor.readDataAvailable(2)) {
-                    byte data[2];
-                    actor.readDataAndRemove(data, 2);
-
-                    auto noteTimestamp = Util::fromBytes<uint16_t>(data) + lastNoteTime;
-
-                    // Block until note should play
-                    blockUntil(noteTimestamp);
+                    if (data == 0) {
+                        // beat
+                        knock = true;
+                    } else {
+                        // interval
+                        auto duration = static_cast<unsigned long>(data) * INSTRUMENT_POLL_INTERVAL;
+                        blockUntil(millis() + duration);
+                    }
+                } else {
+                    playback = false;
                 }
             } else if (!actor.getPlayback()) {
                 // Playback ended and all notes in the buffer have been played
@@ -108,27 +110,36 @@ void loop() {
             // Recording mode
             // ----------------------------------------
 
+            knock = knockDetected();
+
+            const unsigned long currentTime = millis();
+            const unsigned long elapsedTime = currentTime - startTime;
+
+            // If recording is starting
             if (!recording) {
-                // Recording is beginning
+                // Update log that recording has started
                 Serial.println(F("Starting recording"));
-                lastNoteTime = millis();
+
+                // Set recording start timestamp
+                startTime = currentTime;
+            }
+            // If not changed, note too long or recording is ending
+            else if (elapsedTime > MAX_NOTE_DURATION_MS || knock) {
+                auto duration = (uint8_t) constrain(elapsedTime / INSTRUMENT_POLL_INTERVAL, 0, 255);
+                duration = max(duration, 1);
+
+                actor.writeData(&duration, 1);
+
+                if (knock) {
+                    uint8_t knockFlag = 0;
+                    actor.writeData(&knockFlag, 1);
+                }
+
+                // Update start time
+                startTime = currentTime;
             }
 
-            if (knockDetected()) {
-                knock = true;
-
-                // Record note
-                auto currentTime = millis();
-                auto timeTillNote = currentTime - lastNoteTime;
-                byte data[2];
-                Util::toBytes(timeTillNote, data);
-
-                // Write note to buffer
-                actor.writeData(data, 2);
-
-                // Update lastNoteTime
-                lastNoteTime = currentTime;
-            }
+            recording = actor.getRecording();
         } else {
             // ----------------------------------------
             // Normal mode
@@ -139,4 +150,5 @@ void loop() {
     }
 
     updateLed(knock);
+    delay(5);
 }
