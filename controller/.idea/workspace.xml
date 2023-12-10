@@ -15,14 +15,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Added missing return statement">
+      <change afterPath="$PROJECT_DIR$/../keyboard/src/tones.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerCommunication.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerCommunication.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ControllerStorage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControllerStorage.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shared/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shared/.idea/shared.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shared/src/CommunicationActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/../shared/src/CommunicationActor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../keyboard/src/constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/../keyboard/src/constants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../keyboard/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../keyboard/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include <Wire.h>
-#include <Tone.h>
+//#include <Tone.h>
 #include "../../shared/src/CommunicationActor.h"
 #include "../../shared/src/Constants.h"
 #include "../../shared/src/Actor.h"
@@ -21,9 +21,9 @@ bool recording = false;
 byte whiteBitMask = 0;
 byte blackBitMask = 0;
 
-unsigned long startTime = 0;
-
 bool playback = false;
+
+unsigned long startTime = 0;
 
 unsigned long iteration = 0; // Tracks the current iteration of loop
 
@@ -56,26 +56,32 @@ bool readHigh(const unsigned reading) {
     return reading > highThreshold;
 }
 
-void getNotes(byte wholes, byte sharps, unsigned int* notesToPlay) {
+void getNotes(byte naturals, byte sharps, unsigned int* notesToPlay) {
     constexpr unsigned int notesSize = 3;
     unsigned int noteIndex = 0;
 
-    for(int noteNum = 0; noteNum < 8; noteNum++)
-    {
-        if(noteIndex < notesSize && ((wholes & (true << noteNum)) >> noteNum))
-        {
-            notesToPlay[noteIndex] = OCTAVE[noteNum];
-            noteIndex ++;
+    bool done = false;
+    while (noteIndex < notesSize && !done) {
+        done = true;
+
+        for (uint8_t i = 0; i < 8; i++) {
+            if ((naturals & (1 << i)) != 0) {
+                notesToPlay[noteIndex] = NATURALS[i];
+                noteIndex++;
+                done = false;
+                break;
+            }
         }
 
-    }
-
-    for(int noteNum = 0; noteNum < 5; noteNum++)
-    {
-        if(noteIndex < notesSize && ((sharps & (true << noteNum)) >> noteNum))
-        {
-            notesToPlay[noteIndex] = SHARPS[noteNum];
-            noteIndex ++;
+        if (done) {
+            for (uint8_t i = 0; i < 5; i++) {
+                if ((sharps & (1 << i)) != 0) {
+                    notesToPlay[noteIndex] = SHARPS[i];
+                    noteIndex++;
+                    done = false;
+                    break;
+                }
+            }
         }
     }
 }
@@ -92,7 +98,7 @@ void playNotes(unsigned int* notes) {
     // However, this causes linker errors because two libraries are declaring handles to the same timers
     // So I just play the first one
 
-    if (notes[0] != 0 ) {
+    if (notes[0] != 0) {
         tone(tonePin, notes[0]);
     } else {
         noTone(tonePin);
@@ -115,30 +121,31 @@ byte readKeys(Adafruit_MCP3008 *keys)
 
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
-    if (playback || actor.getPlayback()) {
-        // If playback is starting
-        if (!playback) {
-            if (actor.readDataAvailable(3)) {
-                byte data[3] = {};
-                actor.readDataAndRemove(data, 3);
-                unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
-                const byte whiteKeys = data[0];
-                const byte blackKeys = data[1];
-                if (whiteKeys != 0) {
-                    tone(3, 400, duration_ms);
-                }
-                else {
-                    delay(duration_ms);
-                }
-            }
-            // Playback ended and all notes in buffer have been played
-            else if (!actor.getPlayback()) {
-                playback = false;
-            }
-            else {
-                Serial.println(F("Playback ongoing but no data is available!"));
-            }
+    if (actor.getPlayback()) {
+        if (actor.readDataAvailable(3)) {
+            byte data[3] = {};
+            actor.readDataAndRemove(data, 3);
+            unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
+            const byte whiteKeys = data[0];
+            const byte blackKeys = data[1];
+
+            // Get first three pressed notes
+            unsigned int notes[3] = {0, 0, 0 };
+            getNotes(whiteKeys, blackKeys, notes);
+            // Play notes
+            playNotes(notes);
+
+            delay(duration_ms);
         }
+        else {
+            Serial.println(F("Playback ongoing but no data is available!"));
+        }
+        playback = true;
+    }
+    else if (playback) {
+        playback = false;
+        unsigned int notes[3] = {0, 0, 0};
+        playNotes(notes);
     }
     else if (recording || actor.getRecording()) {
         const unsigned long currentTime = millis();

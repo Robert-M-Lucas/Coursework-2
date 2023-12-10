@@ -14,7 +14,7 @@ constexpr unsigned int BUFFER_SIZE = 255;
 constexpr unsigned int TRANSMISSION_DELAY = 10;
 
 /// How frequently an instrument is polled for note changes
-constexpr unsigned int INSTRUMENT_POLL_INTERVAL = 30;
+constexpr unsigned int INSTRUMENT_POLL_INTERVAL = 10;
 
 /// The maximum instrument ID that can be used (and maximum number of connected instruments)
 constexpr unsigned int MAX_INSTRUMENTS = 8;
