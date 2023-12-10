@@ -123,6 +123,7 @@ namespace CommunicationActor {
                     break;
                 }
                 case Code::ClearBuffer: {
+                    Serial.println("Cleared buffer");
                     actorInterface->clearBuffer();
                     break;
                 }

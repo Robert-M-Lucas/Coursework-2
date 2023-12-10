@@ -54,6 +54,9 @@ private:
     /// Write song data to all instruments
     bool writeAllInstrumentBuffers();
 
+    /// Clears every instrument's buffer
+    void clearBuffers();
+
 public:
     explicit ControllerCommunication(ControllerStorage &storage);
 
@@ -65,6 +68,7 @@ public:
     /// Counts the connected devices from the stored bitmask
     uint8_t countConnected();
 
+    /// Returns the connected devices as a bitmask
     byte* getConnectedBitmask() { return connected_devices_bitmask; }
 
     /// Called to begin recording
@@ -84,9 +88,6 @@ public:
 
     /// Called to end playback
     void stopPlayback();
-
-    /// Clears every instrument's buffer
-    void clearBuffers();
 };
 
 //template<class T>

@@ -5,10 +5,12 @@
 #include "ControllerConstants.h"
 
 #include <Arduino.h>
-#include <SD.h>
+#include <SdFat.h>
 #include <SPI.h>
 
 #include "ControllerConstants.h"
+
+SdFat SD;
 
 uint8_t ControllerStorage::write_num_to_buffer_pos(char* buffer_pos, uint8_t num) {
     uint8_t i = 0;
@@ -127,9 +129,12 @@ uint8_t ControllerStorage::loadSongData(const Instrument instrument, const uint8
     buffer_file(currentSong, static_cast<uint8_t>(instrument));
     auto file = SD.open(path_buf, FILE_READ);
 
+    Serial.println(path_buf);
+
     // Move to the position in the file corresponding to the current playback position
     const auto instrumentIndex = static_cast<uint8_t>(instrument);
     file.seek(playbackPosition[instrumentIndex]);
+    Serial.println(playbackPosition[instrumentIndex]);
 
     // Query file for the number of remaining bytes to read
     // The actual number of bytes to read is the minimum of this and the length requested

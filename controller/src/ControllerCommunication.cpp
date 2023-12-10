@@ -141,17 +141,27 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     auto length = static_cast<uint8_t>(Wire.read());
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer empty data transferred")); }
 
+    Serial.println("Len");
+    Serial.println(length);
+
     length = min(length, MAX_TRANSFER_SIZE - 2);
+
+    Serial.println(length);
 
 //    Serial.print("Length before: ");
 //    Serial.println(length);
 
     // Load song data for this instrument into the storage buffer
     length = storage.loadSongData(instrument, length); // Length may be set to less than requested if not enough data is available
+    Serial.println(length);
     const byte* buffer = storage.getBuffer();
 
 //    Serial.print("Length after");
 //    Serial.println(length);
+
+//    if (length == 0) {
+//        return false;
+//    }
 
     delay(TRANSMISSION_DELAY);
 
@@ -164,6 +174,7 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     );
 
     return length > 0;
+//    return true;
 }
 
 bool ControllerCommunication::storeAllInstrumentBuffers() {
