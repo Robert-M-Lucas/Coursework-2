@@ -23,6 +23,7 @@ bool recording = false; // Used to keep track of whether we are currently record
 bool playback  = false; // Used to keep track of whether we are currently playing back a song
 bool blocking  = false; // Whether to block the playback or recording
 bool knockLastIteration = false;
+unsigned long lastNoteEndTime; // Tracks the time that the last note should end, used to synchronise playback
 unsigned long blockingEndTime = 0; // Timestamp when blocking ends
 
 void setup() {
@@ -65,10 +66,17 @@ void loop() {
     updateBlocking();
 
     if (!blocking) {
-        if (actor.getPlayback()) {
+        if (playback || actor.getPlayback()) {
             // ----------------------------------------
             // Playback mode
             // ----------------------------------------
+
+            if (!playback) {
+                // Playback just started
+                lastNoteEndTime = millis();
+            }
+            playback = true;
+
             if (actor.readDataAvailable(1)) {
                 byte data;
                 actor.readDataAndRemove(&data, 1);
@@ -79,10 +87,11 @@ void loop() {
                 } else {
                     // interval
                     auto duration = static_cast<unsigned long>(data) * INSTRUMENT_POLL_INTERVAL;
-                    blockUntil(millis() + duration);
+                    lastNoteEndTime += duration;
+                    blockUntil(lastNoteEndTime);
                 }
-            } else {
-//                Serial.println(F("No data available"));
+            } else if (!actor.getPlayback()){
+                playback = false;
             }
         } else if (recording || actor.getRecording()) {
             // ----------------------------------------

@@ -17,15 +17,18 @@ const int tonePin = 3;
 constexpr unsigned highThreshold = 512;
 constexpr byte emptyByte = 0;
 
+bool playback = false;
 bool recording = false;
 byte whiteBitMask = 0;
 byte blackBitMask = 0;
-
-bool playback = false;
+unsigned long lastNoteEndTime = 0; // Time that the last note ended, used to synchronise playback
 
 unsigned long startTime = 0;
 
 unsigned long iteration = 0; // Tracks the current iteration of loop
+
+bool blocking = false; // Whether to block the playback or recording
+unsigned long blockingEndTime = 0; // Timestamp when blocking ends
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -54,6 +57,17 @@ void setup() {
 bool readHigh(const unsigned reading) {
     //Converts analogue reading to boolean (0 or 1) for usage in Bitwise calculations
     return reading > highThreshold;
+}
+
+void updateBlocking() {
+    if (millis() > blockingEndTime) {
+        blocking = false;
+    }
+}
+
+void blockUntil(unsigned long time) {
+    blocking = true;
+    blockingEndTime = time;
 }
 
 void getNotes(byte naturals, byte sharps, unsigned int* notesToPlay) {
@@ -120,55 +134,65 @@ byte readKeys(Adafruit_MCP3008 *keys)
 }
 
 void loop() {
-    // TODO: Move functionality to 'shared' where applicable
-    if (actor.getPlayback()) {
-        if (actor.readDataAvailable(3)) {
-            byte data[3] = {};
-            actor.readDataAndRemove(data, 3);
-            unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
-            const byte whiteKeys = data[0];
-            const byte blackKeys = data[1];
+    if (!blocking) {
+        if (playback || actor.getPlayback()) {
+            if (!playback) {
+                // Playback just started
+                Serial.println("Playback just started");
 
-            // Get first three pressed notes
-            unsigned int notes[3] = {0, 0, 0 };
-            getNotes(whiteKeys, blackKeys, notes);
-            // Play notes
+                // Reset lastNoteEndTime
+                lastNoteEndTime = millis();
+            }
+            playback = true;
+
+            if (actor.readDataAvailable(3)) {
+                byte data[3] = {};
+                actor.readDataAndRemove(data, 3);
+                unsigned long duration_ms = data[2] * INSTRUMENT_POLL_INTERVAL;
+                const byte whiteKeys = data[0];
+                const byte blackKeys = data[1];
+
+                // Get first three pressed notes
+                unsigned int notes[3] = {0, 0, 0};
+                getNotes(whiteKeys, blackKeys, notes);
+                // Play notes
+                playNotes(notes);
+
+                lastNoteEndTime += duration_ms;
+                blockUntil(lastNoteEndTime);
+            } else if (!actor.getPlayback()) {
+                playback = false;
+                noTone(tonePin);
+                return;
+            } else {
+                Serial.println(F("Playback ongoing but no data is available!"));
+            }
+        } else if (playback) {
+            playback = false;
+            unsigned int notes[3] = {0, 0, 0};
+            playNotes(notes);
+        } else if (recording || actor.getRecording()) {
+            const unsigned long currentTime = millis();
+            const unsigned long elapsedTime = currentTime - startTime;
+
+            const byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
+            const byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
+            //Live playback
+            unsigned int notes[3] = {0, 0, 0};
+            getNotes(whiteBitMask, blackBitMask, notes);
             playNotes(notes);
 
-            delay(duration_ms);
-        }
-        else {
-            Serial.println(F("Playback ongoing but no data is available!"));
-        }
-        playback = true;
-    }
-    else if (playback) {
-        playback = false;
-        unsigned int notes[3] = {0, 0, 0};
-        playNotes(notes);
-    }
-    else if (recording || actor.getRecording()) {
-        const unsigned long currentTime = millis();
-        const unsigned long elapsedTime = currentTime - startTime;
-
-        const byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
-        const byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
-        //Live playback
-        unsigned int notes[3] = {0, 0, 0};
-        getNotes(whiteBitMask, blackBitMask, notes);
-        playNotes(notes);
-
-        // If recording is starting
-        if (!recording) {
-            Serial.println(F("Starting recording"));
-            startTime = currentTime;
-            whiteBitMask = newWhiteBitMask;
-            blackBitMask = newBlackBitMask;
-        }
-        // If not changed, note too long or recording is ending
-        else if (elapsedTime > MAX_NOTE_DURATION_MS ||
-                whiteBitMask != newWhiteBitMask || blackBitMask != newBlackBitMask //||
-                 /*!actor.getRecording()*/) {
+            // If recording is starting
+            if (!recording) {
+                Serial.println(F("Starting recording"));
+                startTime = currentTime;
+                whiteBitMask = newWhiteBitMask;
+                blackBitMask = newBlackBitMask;
+            }
+                // If not changed, note too long or recording is ending
+            else if (elapsedTime > MAX_NOTE_DURATION_MS ||
+                     whiteBitMask != newWhiteBitMask || blackBitMask != newBlackBitMask //||
+                /*!actor.getRecording()*/) {
                 Serial.println(F("Writing notes:"));
                 for (uint8_t i = 0; i < 8; i++) {
                     if ((whiteBitMask & (1 << i)) != 0) Serial.print(1);
@@ -196,25 +220,26 @@ void loop() {
                 whiteBitMask = newWhiteBitMask;
                 blackBitMask = newBlackBitMask;
                 startTime = currentTime;
+            }
+
+            delay(INSTRUMENT_POLL_INTERVAL);
+
+            recording = actor.getRecording();
+        } else {
+            // Normal mode
+
+            // Read keys
+            whiteBitMask = readKeys(&inputAdcWhiteKeys);
+            blackBitMask = readKeys(&inputAdcBlackKeys);
+
+            // Get first three pressed notes
+            unsigned int notes[3] = {0, 0, 0};
+            getNotes(whiteBitMask, blackBitMask, notes);
+
+            // Play notes
+            playNotes(notes);
         }
-
-        delay(INSTRUMENT_POLL_INTERVAL);
-
-        recording = actor.getRecording();
-    } else {
-        // Normal mode
-
-        // Read keys
-        whiteBitMask = readKeys(&inputAdcWhiteKeys);
-        blackBitMask = readKeys(&inputAdcBlackKeys);
-
-        // Get first three pressed notes
-        unsigned int notes[3] = {0, 0, 0 };
-        getNotes(whiteBitMask, blackBitMask, notes);
-
-        // Play notes
-        playNotes(notes);
     }
+
+    updateBlocking();
 }
-
-
