@@ -15,7 +15,7 @@ const int inputPiezoPin = A0;
 const int knockThreshold = 40;
 
 const int toneFrequency = 200;
-const int toneDuration  = 30;
+const int toneDuration  = 100;
 
 unsigned long startTime = 0; // Timestamp of recording started
 
@@ -65,32 +65,24 @@ void loop() {
     updateBlocking();
 
     if (!blocking) {
-        if (playback || actor.getPlayback()) {
+        if (actor.getPlayback()) {
             // ----------------------------------------
             // Playback mode
             // ----------------------------------------
+            if (actor.readDataAvailable(1)) {
+                byte data;
+                actor.readDataAndRemove(&data, 1);
 
-            if (!playback) {
-                if (actor.readDataAvailable(1)) {
-                    byte data;
-                    actor.readDataAndRemove(&data, 1);
-
-                    if (data == 0) {
-                        // beat
-                        knock = true;
-                    } else {
-                        // interval
-                        auto duration = static_cast<unsigned long>(data) * INSTRUMENT_POLL_INTERVAL;
-                        blockUntil(millis() + duration);
-                    }
+                if (data == 0) {
+                    // beat
+                    knock = true;
                 } else {
-                    playback = false;
+                    // interval
+                    auto duration = static_cast<unsigned long>(data) * INSTRUMENT_POLL_INTERVAL;
+                    blockUntil(millis() + duration);
                 }
-            } else if (!actor.getPlayback()) {
-                // Playback ended and all notes in the buffer have been played
-                playback = false;
             } else {
-                Serial.println(F("Playback ongoing but no data is available"));
+//                Serial.println(F("No data available"));
             }
         } else if (recording || actor.getRecording()) {
             // ----------------------------------------
