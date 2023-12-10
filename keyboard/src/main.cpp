@@ -80,6 +80,7 @@ void getNotes(byte naturals, byte sharps, unsigned int* notesToPlay) {
 
         for (uint8_t i = 0; i < 8; i++) {
             if ((naturals & (1 << i)) != 0) {
+                if (i == 0) { continue; }
                 notesToPlay[noteIndex] = NATURALS[i];
                 noteIndex++;
                 done = false;
@@ -88,8 +89,9 @@ void getNotes(byte naturals, byte sharps, unsigned int* notesToPlay) {
         }
 
         if (done) {
-            for (uint8_t i = 0; i < 5; i++) {
+            for (uint8_t i = 0; i < 7; i++) {
                 if ((sharps & (1 << i)) != 0) {
+                    if (i == 0) { continue; }
                     notesToPlay[noteIndex] = SHARPS[i];
                     noteIndex++;
                     done = false;
@@ -117,6 +119,18 @@ void playNotes(unsigned int* notes) {
     } else {
         noTone(tonePin);
     }
+
+    Serial.println(F("Writing notes:"));
+    for (uint8_t i = 0; i < 8; i++) {
+        if ((whiteBitMask & (1 << i)) != 0) Serial.print(1);
+        else Serial.print(0);
+    }
+    Serial.print("-");
+    for (uint8_t i = 0; i < 8; i++) {
+        if ((blackBitMask & (1 << i)) != 0) Serial.print(1);
+        else Serial.print(0);
+    }
+    Serial.println();
 }
 
 byte readKeys(Adafruit_MCP3008 *keys)
