@@ -1,34 +1,47 @@
 #include <Arduino.h>
+
 #include <Wire.h>
+#include <Tone.h>
 #include "../../shared/src/CommunicationActor.h"
 #include "../../shared/src/Constants.h"
 #include "../../shared/src/Actor.h"
 #include "constants.h"
 #include <Adafruit_MCP3008.h>
 
-
-
-
 LEDActor actor = LEDActor(2, 4);
 Adafruit_MCP3008 inputAdcWhiteKeys;
 Adafruit_MCP3008 inputAdcBlackKeys;
-Tone speaker0;
-Tone speaker1;
-Tone speaker2;
+
+const int tonePin = 3;
 
 constexpr unsigned highThreshold = 512;
 constexpr byte emptyByte = 0;
 
+bool recording = false;
+byte whiteBitMask = 0;
+byte blackBitMask = 0;
+
+unsigned long startTime = 0;
+
+bool playback = false;
+
+unsigned long iteration = 0; // Tracks the current iteration of loop
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    pinMode(3, OUTPUT);
+    // Set
+    pinMode(tonePin, OUTPUT);
 
     //Initiate USB serial communication to allow debugging via USB
     Serial.begin(SERIAL_BAUD_RATE);
     //Write startup message to USB serial, 'F' to store string in Flash over RAM
     Serial.println(F("Init"));
+
+    //Initialise speakers
+    //speaker0.begin(3);
+    //speaker1.begin(5);
+    //speaker2.begin(6);
 
     //Initialise the ADCs managing, white and Black piano keys respectively
     inputAdcWhiteKeys.begin(WHITE_ADC_PINS[3],WHITE_ADC_PINS[2],WHITE_ADC_PINS[1],WHITE_ADC_PINS[0]);
@@ -38,16 +51,13 @@ void setup() {
     CommunicationActor::initialise(Instrument::Keyboard, &actor);
 }
 
-bool readHigh(const unsigned reading)
-{
+bool readHigh(const unsigned reading) {
     //Converts analogue reading to boolean (0 or 1) for usage in Bitwise calculations
     return reading > highThreshold;
 }
 
-unsigned int* getNotes(byte wholes, byte sharps)
-{
+void getNotes(byte wholes, byte sharps, unsigned int* notesToPlay) {
     constexpr unsigned int notesSize = 3;
-    unsigned int notesToPlay[notesSize] = {0,0,0};
     unsigned int noteIndex = 0;
 
     for(int noteNum = 0; noteNum < 8; noteNum++)
@@ -68,16 +78,25 @@ unsigned int* getNotes(byte wholes, byte sharps)
             noteIndex ++;
         }
     }
-
-    return notesToPlay;
 }
 
-void playNotes(unsigned int* notes)
-{
-    //Unwrapped to maximise time efficiency over for loop
-    speaker0.play(notes[0]);
-    speaker1.play(notes[1]);
-    speaker2.play(notes[2]);
+void playNotes(unsigned int* notes) {
+    // Initially, we planned to use the Tone.h library to control 3 Piezos, meaning that
+    // we could play three tones at once (to allow for chords)
+    //
+    // Then this function would look like this:
+    //   speaker0.play(notes[0]);
+    //   speaker1.play(notes[1]);
+    //   speaker2.play(notes[2]);
+    //
+    // However, this causes linker errors because two libraries are declaring handles to the same timers
+    // So I just play the first one
+
+    if (notes[0] != 0 ) {
+        tone(tonePin, notes[0]);
+    } else {
+        noTone(tonePin);
+    }
 }
 
 byte readKeys(Adafruit_MCP3008 *keys)
@@ -93,14 +112,6 @@ byte readKeys(Adafruit_MCP3008 *keys)
 
     return inputMask;
 }
-
-bool recording = false;
-byte whiteBitMask = 0;
-byte blackBitMask = 0;
-
-unsigned long startTime = 0;
-
-bool playback = false;
 
 void loop() {
     // TODO: Move functionality to 'shared' where applicable
@@ -136,7 +147,10 @@ void loop() {
         const byte newWhiteBitMask = readKeys(&inputAdcWhiteKeys);
         const byte newBlackBitMask = readKeys(&inputAdcBlackKeys);
         //Live playback
-        playNotes(getNotes(whiteBitMask,blackBitMask));
+        unsigned int notes[3] = {0, 0, 0};
+        getNotes(whiteBitMask, blackBitMask, notes);
+        playNotes(notes);
+
         // If recording is starting
         if (!recording) {
             Serial.println(F("Starting recording"));
@@ -180,6 +194,19 @@ void loop() {
         delay(INSTRUMENT_POLL_INTERVAL);
 
         recording = actor.getRecording();
+    } else {
+        // Normal mode
+
+        // Read keys
+        whiteBitMask = readKeys(&inputAdcWhiteKeys);
+        blackBitMask = readKeys(&inputAdcBlackKeys);
+
+        // Get first three pressed notes
+        unsigned int notes[3] = {0, 0, 0 };
+        getNotes(whiteBitMask, blackBitMask, notes);
+
+        // Play notes
+        playNotes(notes);
     }
 }
 

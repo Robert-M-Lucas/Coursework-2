@@ -9,13 +9,13 @@
 // Actor interface with controller
 LEDActor actor = LEDActor(2, 4);
 
-const int ledPin = 13;
-const int piezoPin = A0;
+const int outputPiezoPin = 10;
+const int inputPiezoPin = A0;
 
-const int knockThreshold = 10;
+const int knockThreshold = 40;
 
-float ledValue = 0.0; // Led is bright if ledValue > 0
-float ledDecay = 0.1; // Controls how quickly the LED switches off
+const int toneFrequency = 200;
+const int toneDuration  = 30;
 
 unsigned long startTime = 0; // Timestamp of recording started
 
@@ -27,7 +27,8 @@ unsigned long blockingEndTime = 0; // Timestamp when blocking ends
 
 void setup() {
     // Setup pins
-    pinMode(ledPin, OUTPUT);
+    pinMode(outputPiezoPin, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
 
     // Initialize USB serial connection for debugging
     Serial.begin(9600);
@@ -39,25 +40,11 @@ void setup() {
 
 // Returns true when a knock is detected
 bool knockDetected() {
-    auto piezoValue = analogRead(piezoPin); // Value read from the piezo sensor
+    auto piezoValue = analogRead(inputPiezoPin); // Value read from the piezo sensor
     bool knock = piezoValue > knockThreshold; // Whether the sensor is currently being knocked
     bool newKnock = knock && !knockLastIteration; // Whether this is the first iteration where this knock is detected
     knockLastIteration = knock; // Update previous knock variable
     return newKnock;
-}
-
-void updateLed(bool knock) {
-    if (knock) {
-        ledValue = 1.0;
-    } else {
-        ledValue -= ledDecay;
-    }
-
-    if (ledValue > 0.0) {
-        digitalWrite(ledPin, HIGH);
-    } else {
-        digitalWrite(ledPin, LOW);
-    }
 }
 
 void updateBlocking() {
@@ -149,6 +136,13 @@ void loop() {
         }
     }
 
-    updateLed(knock);
+    // Play tone when a knock occurs
+    if (knock) {
+        tone(outputPiezoPin, toneFrequency, toneDuration);
+        digitalWrite(LED_BUILTIN, HIGH);
+    } else {
+        digitalWrite(LED_BUILTIN, LOW);
+    }
+
     delay(5);
 }
