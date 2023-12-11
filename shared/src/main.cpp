@@ -2,7 +2,7 @@
 
 #include "Actor.h"
 #include "Communication.h"
-#include "CommunicationActor.h"
+#include "ActorCommunication.h"
 #include "Util.h"
 
 void setup() {

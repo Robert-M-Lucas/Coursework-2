@@ -88,7 +88,7 @@ public:
     }
 
     uint8_t getBufferSpaceRemaining() override {
-        return BUFFER_SIZE - getBufferLength() - 1;
+        return BUFFER_SIZE - getBufferLength() - 1; // Subtract one to prevent head and tail crossing
     }
 
     ArrAndOffset getBufferWrite() override {

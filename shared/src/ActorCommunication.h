@@ -10,7 +10,7 @@
 #include "Actor.h"
 #include "Util.h"
 
-namespace CommunicationActor {
+namespace ActorCommunication {
     namespace Internal {
         ActorInterface* actorInterface = nullptr;
 
@@ -36,7 +36,7 @@ namespace CommunicationActor {
                 case Request::Buffer: {
                     const uint8_t length = lastBufferLength;
                     const ArrAndOffset arr_data = actorInterface->getBufferRead();
-
+                    // TODO: Use actorInterface functions
                     // Read and remove data from circular buffer
                     for (uint8_t i = 0; i < length; i++) {
                         unsigned index = *arr_data.offset + i;
@@ -96,6 +96,7 @@ namespace CommunicationActor {
                     break;
                 }
                 case Code::BufferData: {
+                    // TODO: Use actorInterface functions
                     const ArrAndOffset arr_data = actorInterface->getBufferWrite();
                     unsigned i = 0;
                     while (Wire.available() > 0) {

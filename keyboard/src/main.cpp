@@ -2,7 +2,7 @@
 
 #include <Wire.h>
 //#include <Tone.h>
-#include "../../shared/src/CommunicationActor.h"
+#include "../../shared/src/ActorCommunication.h"
 #include "../../shared/src/Constants.h"
 #include "../../shared/src/Actor.h"
 #include "constants.h"
@@ -51,7 +51,7 @@ void setup() {
     inputAdcBlackKeys.begin(BLACK_ADC_PINS[3],BLACK_ADC_PINS[2],BLACK_ADC_PINS[1],BLACK_ADC_PINS[0]);
 
     //Initialise the Keyboard communication actor object
-    CommunicationActor::initialise(Instrument::Keyboard, &actor);
+    ActorCommunication::initialise(Instrument::Keyboard, &actor);
 }
 
 bool readHigh(const unsigned reading) {

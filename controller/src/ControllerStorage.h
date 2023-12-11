@@ -12,16 +12,19 @@
 
 class ControllerStorage {
 private:
-    bool load = false;
+    /// Stores whether ControllerStorage has initialised successfully
+    bool initialised = false;
 
-    // Buffer used to hold data to be transferred between the instruments and the SD card
+    /// Buffer used to hold data to be transferred between the instruments and the SD card
     byte buffer[BUFFER_SIZE] = {};
 
+    /// Buffer used to construct file paths
     char path_buf[10] = {};
 
-    // Position of the playback pointer in bytes, for the given instrument
+    /// Position of the playback pointer in bytes for all instruments
     u16 playbackPosition[MAX_INSTRUMENTS] = {};
 
+    /// Current song being played
     u8 currentSong = 0;
 
     /// Writes a number as character into a buffer without a null terminator. Returns chars written
@@ -36,7 +39,7 @@ public:
     void init();
 
     /// Returns whether ControllerStorage correctly initialised
-    bool loaded() const { return load; }
+    bool is_initialised() const { return initialised; }
 
     /// Set the current song to be recorded or played
     void selectSong(uint8_t song);
@@ -50,22 +53,23 @@ public:
     /// Returns true if the song exists on disk
     bool hasSongOnDisk(uint8_t song);
 
-    /// Delete a song from the disk
+    /// Delete a song from the disk. Returns success state
     bool deleteSong(uint8_t song);
 
     /// Reset the playback to start at the beginning of the file
     void resetPlayback();
 
     /// Loads data from the SD card and stores it in the instrument file
-    /// Data is loaded from the current playback position
-    /// The loaded data is stored in the buffer, meaning that it is only valid until another
+    /// Data is is_initialised from the current playback position
+    /// The is_initialised data is stored in the buffer, meaning that it is only valid until another
     /// operation overwrites the buffer
-    /// Returns the number of bytes loaded, which is <= lengthRequested
+    /// Returns the number of bytes is_initialised, which is <= lengthRequested
     uint8_t loadSongData(Instrument instrument, uint8_t lengthRequested);
 
     // Return the file path for the specified song and instrument
     // static String getFilePath(u8 song, Instrument instrument) ;
 
+    /// Deletes all folders on the SD card. Debug function.
     void wipeDrive();
 };
 
