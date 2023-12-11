@@ -9,10 +9,10 @@
 
 #include "Constants.h"
 
-//struct ArrAndOffset {
-//    byte* arr;
-//    unsigned* offset;
-//};
+struct ArrAndOffset {
+    byte* arr;
+    unsigned* offset;
+};
 
 class ActorInterface {
 public:
@@ -23,16 +23,15 @@ public:
     virtual void stopRecording() = 0;
     /// Returns the current length of the buffer
     virtual uint8_t getBufferLength() = 0;
-
-//    /// Returns the buffer and the head pointer
-//    virtual ArrAndOffset getBufferRead() = 0;
+    /// Returns the buffer and the head pointer
+    virtual ArrAndOffset getBufferRead() = 0;
 
     /// Empties the buffer
     virtual void clearBuffer() = 0;
     /// Returns the empty space in the buffer
     virtual uint8_t getBufferSpaceRemaining() = 0;
-//    /// Returns the buffer nad the tail pointer
-//    virtual ArrAndOffset getBufferWrite() = 0;
+    /// Returns the buffer nad the tail pointer
+    virtual ArrAndOffset getBufferWrite() = 0;
     /// Starts playback
     virtual void startPlayback() = 0;
     /// Stops playback
@@ -71,7 +70,6 @@ public:
     }
 
     uint8_t getBufferLength() override {
-        // Read the size of the circular buffer
         if (bufferTail >= bufferHead) {
             return bufferTail - bufferHead;
         }
@@ -80,9 +78,9 @@ public:
         }
     }
 
-//    ArrAndOffset getBufferRead() override {
-//        return ArrAndOffset {buffer, &bufferHead };
-//    }
+    ArrAndOffset getBufferRead() override {
+        return ArrAndOffset {buffer, &bufferHead };
+    }
 
     void clearBuffer() override {
         bufferHead = 0;
@@ -93,9 +91,9 @@ public:
         return BUFFER_SIZE - getBufferLength() - 1; // Subtract one to prevent head and tail crossing
     }
 
-//    ArrAndOffset getBufferWrite() override {
-//        return ArrAndOffset {buffer, &bufferTail };
-//    }
+    ArrAndOffset getBufferWrite() override {
+        return ArrAndOffset {buffer, &bufferTail };
+    }
 
     void startPlayback() override {
         isPlayingBack = true;
@@ -118,7 +116,6 @@ public:
         if (bufferTail < bufferHead && bufferTail + length > bufferHead) {
             Serial.println(F("Overflowed buffer storage!"));
         }
-        // Move tail
         bufferTail += length;
         if (bufferTail >= BUFFER_SIZE) {
             bufferTail -= BUFFER_SIZE;
@@ -139,7 +136,7 @@ public:
 
             destination[i] = buffer[index];
         }
-        // Move head
+
         bufferHead += amount;
         if (bufferHead >= BUFFER_SIZE) {
             bufferHead -= BUFFER_SIZE;
@@ -155,7 +152,6 @@ public:
     }
 };
 
-/// Adds LEDs that turn on and off to indicate playback and recording state
 class LEDActor final : public DefaultActor {
 private:
     uint8_t recordingLED;
