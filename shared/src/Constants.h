@@ -22,9 +22,10 @@ constexpr unsigned int MAX_INSTRUMENT_BITMASK_BYTES = (MAX_INSTRUMENTS + 7) / 8;
 
 constexpr unsigned long MAX_NOTE_DURATION_MS = INSTRUMENT_POLL_INTERVAL * 256;
 
-/// serial communications standardised baud rate
+/// Serial communications standardised baud rate
 constexpr unsigned int SERIAL_BAUD_RATE = 9600;
 
+/// Maximum amount of bytes that can be transferred at once using Wire.h on the Arduino Uno
 constexpr uint8_t MAX_TRANSFER_SIZE = 32;
 
 #endif //CONSTANTS_H

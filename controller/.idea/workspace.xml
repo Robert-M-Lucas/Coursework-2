@@ -14,16 +14,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Added missing return statement">
-      <change afterPath="$PROJECT_DIR$/.idea/controller.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../drums/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../drums/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../keyboard/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../keyboard/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shared/src/Actor.h" beforeDir="false" afterPath="$PROJECT_DIR$/../shared/src/Actor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shared/src/CommunicationActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/../shared/src/ActorCommunication.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shared/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../shared/src/main.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="48dfd59d-5166-496f-bd1f-3be66a777e4d" name="Changes" comment="Refactoring and commenting" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -182,7 +173,7 @@
       <workItem from="1702234596919" duration="2046000" />
       <workItem from="1702275948247" duration="159000" />
       <workItem from="1702291449821" duration="43000" />
-      <workItem from="1702292599075" duration="435000" />
+      <workItem from="1702292599075" duration="1802000" />
     </task>
     <task id="LOCAL-00001" summary="Created example code for controller">
       <option name="closed" value="true" />
@@ -296,7 +287,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701949271439</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Refactoring and commenting">
+      <option name="closed" value="true" />
+      <created>1702294400505</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1702294400505</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,7 +325,8 @@
     <MESSAGE value="Improved interface and moved constant interface strings from RAM to flash" />
     <MESSAGE value="Fixed bad interface text position" />
     <MESSAGE value="Added missing return statement" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added missing return statement" />
+    <MESSAGE value="Refactoring and commenting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactoring and commenting" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

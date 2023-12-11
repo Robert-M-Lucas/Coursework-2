@@ -22,20 +22,21 @@ namespace ActorCommunication {
         /// Interrupt called when the actor receives a request for bytes
         inline void requestEvent() {
             if (request == Request::None) {
-                Serial.println(F("Received a request when the request type has not been specified"));
+                Serial.println(F("Received a request when the request type has not been specified!"));
             }
 
             switch (request) {
-                case Request::BufferLength: {
+                case Request::BufferLength: { // Buffer length requested
                     uint8_t length = actorInterface->getBufferLength();
-                    length = min(length, MAX_TRANSFER_SIZE - 2);
-                    lastBufferLength = length;
+                    length = min(length, MAX_TRANSFER_SIZE - 2); // Limit maximum transfer size
+                    lastBufferLength = length; // Store what the Controller thinks the buffer size is
                     Wire.write(length);
                     break;
                 }
-                case Request::Buffer: {
-                    const uint8_t length = lastBufferLength;
+                case Request::Buffer: { // Buffer requested
+                    const uint8_t length = lastBufferLength; // Use last length value transmitted to controller
 
+                    // Write bytes to Controller
                     for (uint8_t i = 0; i < length; i++) {
                         byte x = 0;
                         actorInterface->readDataAndRemove(&x, 1);
@@ -56,29 +57,31 @@ namespace ActorCommunication {
 //                        *arr_data.offset -= BUFFER_SIZE;
 //                    }
                 }
-                case Request::BufferSpaceRemaining: {
+                case Request::BufferSpaceRemaining: { // Amount of space left in buffer requested
                     const uint8_t length = actorInterface->getBufferSpaceRemaining();
+                    // Length doesn't need to be stored here as the Controller will always transfer < the
+                    // maximum amount of empty space.
                     Wire.write(length);
                     break;
                 }
                 case Request::None: {
-                    Serial.println(F("Request type not set when request was received"));
+                    Serial.println(F("Request type not set when request was received!"));
                 }
                 default: {
                     Serial.print(F("Request type '"));
                     Serial.print(static_cast<uint8_t>(request));
-                    Serial.println(F("' has not been implemented"));
+                    Serial.println(F("' has not been implemented!"));
                 }
             }
 
             request = Request::None;
         }
 
-        /// Interrupt called when actor receives data from tbe controller
+        /// Interrupt called when actor receives data from the controller
         inline void receiveEvent(int length) {
             if (Wire.available() <= 0) { return; } // A receive event with no data occurs during I2C polling
 
-            const Code code = static_cast<Code>(Wire.read());
+            const Code code = static_cast<Code>(Wire.read()); // Get code
 
             switch (code) {
                 case Code::StartRecording: {
@@ -90,18 +93,19 @@ namespace ActorCommunication {
                     break;
                 }
                 case Code::RequestBufferLength: {
-                    request = Request::BufferLength;
+                    request = Request::BufferLength; // Store that the next request will be for the buffer length
                     break;
                 }
-                case Code::RequestBuffer: {
+                case Code::RequestBuffer: { // Store that the next request will be for the buffer
                     request = Request::Buffer;
                     break;
                 }
-                case Code::RequestBufferSpaceRemaining: {
+                case Code::RequestBufferSpaceRemaining: { // Store that the next request will be for the space remaining in the buffer
                     request = Request::BufferSpaceRemaining;
                     break;
                 }
-                case Code::BufferData: {
+                case Code::BufferData: { // Song data transferred from Controller
+                    // Write data
                     while (Wire.available() > 0) {
                         byte x = static_cast<byte>(Wire.read());
                         actorInterface->writeData(&x, 1);
@@ -133,13 +137,12 @@ namespace ActorCommunication {
                     actorInterface->stopPlayback();
                     break;
                 }
-                case Code::ClearBuffer: {
-                    Serial.println("Cleared buffer");
+                case Code::ClearBuffer: { // Empty the buffer
                     actorInterface->clearBuffer();
                     break;
                 }
                 default: {
-                    Serial.print(F("Unrecognised code received: "));
+                    Serial.print(F("Unrecognised code received!: "));
                     Serial.println(static_cast<uint8_t>(code));
                 }
             }
@@ -153,14 +156,14 @@ namespace ActorCommunication {
     }
 
     /// Initialises actor for communication - does not initialise serial
-    inline void initialise(Instrument address, ActorInterface *actorBuffer) {
+    inline void initialise(Instrument address, ActorInterface *actorInterface) {
         Wire.begin(static_cast<uint8_t>(address));
 
         // Setup interrupts
         Wire.onRequest(Internal::requestEvent);
         Wire.onReceive(Internal::receiveEvent);
 
-        Internal::actorInterface = actorBuffer;
+        Internal::actorInterface = actorInterface;
     }
 }
 

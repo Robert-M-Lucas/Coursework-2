@@ -21,13 +21,12 @@ namespace Util {
 
     /// Convert a byte array back into a value
     template <class T>
-    T fromBytes(byte *input) {
+    T fromBytes(const byte *input) {
         return *reinterpret_cast<T*>(input);
     }
 
     /// Converts an instrument to its name
     inline const char* instrument_to_name(const Instrument instrument) {
-        // TODO: Change this to be stored on flash?
         switch (instrument) {
             case (Instrument::Keyboard): {
                 return "Keyboard";
@@ -48,6 +47,7 @@ namespace Util {
     inline void bitmask_to_serial(const byte* bitmask) {
         Serial.println(F("[INFO] Connected instruments:"));
 
+        // Iterate through bitmask bits
         bool found = false;
         for (uint8_t i = 0; i < MAX_INSTRUMENTS; i++) {
             if (bitmask[i / 8] & 1 << (i % 8)) {
@@ -56,6 +56,8 @@ namespace Util {
                 found = true;
             }
         }
+
+        // Nothing connected
         if (!found) {
             Serial.println(F("No instruments"));
         }
