@@ -35,20 +35,26 @@ namespace ActorCommunication {
                 }
                 case Request::Buffer: {
                     const uint8_t length = lastBufferLength;
-                    const ArrAndOffset arr_data = actorInterface->getBufferRead();
-                    // TODO: Use actorInterface functions
-                    // Read and remove data from circular buffer
+
                     for (uint8_t i = 0; i < length; i++) {
-                        unsigned index = *arr_data.offset + i;
-                        if (index >= BUFFER_SIZE) {
-                            index -= BUFFER_SIZE;
-                        }
-                        Wire.write(arr_data.arr[index]);
+                        byte x = 0;
+                        actorInterface->readDataAndRemove(&x, 1);
+                        Wire.write(x);
                     }
-                    *arr_data.offset += length;
-                    if (*arr_data.offset >= BUFFER_SIZE) {
-                        *arr_data.offset -= BUFFER_SIZE;
-                    }
+
+//                    const ArrAndOffset arr_data = actorInterface->getBufferRead();
+//                    // Read and remove data from circular buffer
+//                    for (uint8_t i = 0; i < length; i++) {
+//                        unsigned index = *arr_data.offset + i;
+//                        if (index >= BUFFER_SIZE) {
+//                            index -= BUFFER_SIZE;
+//                        }
+//                        Wire.write(arr_data.arr[index]);
+//                    }
+//                    *arr_data.offset += length;
+//                    if (*arr_data.offset >= BUFFER_SIZE) {
+//                        *arr_data.offset -= BUFFER_SIZE;
+//                    }
                 }
                 case Request::BufferSpaceRemaining: {
                     const uint8_t length = actorInterface->getBufferSpaceRemaining();
@@ -96,24 +102,28 @@ namespace ActorCommunication {
                     break;
                 }
                 case Code::BufferData: {
-                    // TODO: Use actorInterface functions
-                    const ArrAndOffset arr_data = actorInterface->getBufferWrite();
-                    unsigned i = 0;
                     while (Wire.available() > 0) {
-                        unsigned index = *arr_data.offset + i;
-                        if (index >= BUFFER_SIZE) {
-                            index -= BUFFER_SIZE;
-                        }
-
-                        arr_data.arr[index] = static_cast<byte>(Wire.read());
-
-                        i++;
+                        byte x = static_cast<byte>(Wire.read());
+                        actorInterface->writeData(&x, 1);
                     }
 
-                    *arr_data.offset += i;
-                    if (*arr_data.offset >= BUFFER_SIZE) {
-                        *arr_data.offset -= BUFFER_SIZE;
-                    }
+//                    const ArrAndOffset arr_data = actorInterface->getBufferWrite();
+//                    unsigned i = 0;
+//                    while (Wire.available() > 0) {
+//                        unsigned index = *arr_data.offset + i;
+//                        if (index >= BUFFER_SIZE) {
+//                            index -= BUFFER_SIZE;
+//                        }
+//
+//                        arr_data.arr[index] = static_cast<byte>(Wire.read());
+//
+//                        i++;
+//                    }
+//
+//                    *arr_data.offset += i;
+//                    if (*arr_data.offset >= BUFFER_SIZE) {
+//                        *arr_data.offset -= BUFFER_SIZE;
+//                    }
                 }
                 case Code::StartPlayback: {
                     actorInterface->startPlayback();
