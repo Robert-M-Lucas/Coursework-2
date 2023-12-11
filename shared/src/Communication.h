@@ -15,7 +15,7 @@ enum class Instrument : uint8_t {
     Drum = 3,
 };
 
-/// Code that is is always the first bit of a transfer
+/// Code that is is always the first bit of a transfer representing the transfer type
 enum class Code : uint8_t {
     StartRecording = 1,
     StopRecording = 2,
@@ -28,7 +28,7 @@ enum class Code : uint8_t {
     ClearBuffer = 9
 };
 
-/// Represents the data the controller is expecting when it requests data from the actor
+/// Represents the data the controller is expecting when it next requests data from the actor
 enum class Request : uint8_t {
     None = 0,
     BufferLength = 1,

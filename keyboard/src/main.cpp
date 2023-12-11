@@ -2,7 +2,7 @@
 
 #include <Wire.h>
 //#include <Tone.h>
-#include "../../shared/src/CommunicationActor.h"
+#include "../../shared/src/ActorCommunication.h"
 #include "../../shared/src/Constants.h"
 #include "../../shared/src/Actor.h"
 #include "constants.h"
@@ -11,8 +11,6 @@
 LEDActor actor = LEDActor(2, 4);
 Adafruit_MCP3008 inputAdcWhiteKeys;
 Adafruit_MCP3008 inputAdcBlackKeys;
-
-const int tonePin = 3;
 
 constexpr unsigned highThreshold = 512;
 constexpr byte emptyByte = 0;
@@ -34,7 +32,7 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     // Set
-    pinMode(tonePin, OUTPUT);
+    pinMode(TONE_PIN, OUTPUT);
 
     //Initiate USB serial communication to allow debugging via USB
     Serial.begin(SERIAL_BAUD_RATE);
@@ -51,7 +49,7 @@ void setup() {
     inputAdcBlackKeys.begin(BLACK_ADC_PINS[3],BLACK_ADC_PINS[2],BLACK_ADC_PINS[1],BLACK_ADC_PINS[0]);
 
     //Initialise the Keyboard communication actor object
-    CommunicationActor::initialise(Instrument::Keyboard, &actor);
+    ActorCommunication::initialise(Instrument::Keyboard, &actor);
 }
 
 bool readHigh(const unsigned reading) {
@@ -80,6 +78,7 @@ void getNotes(byte naturals, byte sharps, unsigned int* notesToPlay) {
 
         for (uint8_t i = 0; i < 8; i++) {
             if ((naturals & (1 << i)) != 0) {
+                if (i == 0) { continue; }
                 notesToPlay[noteIndex] = NATURALS[i];
                 noteIndex++;
                 done = false;
@@ -88,8 +87,9 @@ void getNotes(byte naturals, byte sharps, unsigned int* notesToPlay) {
         }
 
         if (done) {
-            for (uint8_t i = 0; i < 5; i++) {
+            for (uint8_t i = 0; i < 7; i++) {
                 if ((sharps & (1 << i)) != 0) {
+                    if (i == 0) { continue; }
                     notesToPlay[noteIndex] = SHARPS[i];
                     noteIndex++;
                     done = false;
@@ -113,10 +113,22 @@ void playNotes(unsigned int* notes) {
     // So I just play the first one
 
     if (notes[0] != 0) {
-        tone(tonePin, notes[0]);
+        tone(TONE_PIN, notes[0]);
     } else {
-        noTone(tonePin);
+        noTone(TONE_PIN);
     }
+
+    Serial.println(F("Writing notes:"));
+    for (uint8_t i = 0; i < 8; i++) {
+        if ((whiteBitMask & (1 << i)) != 0) Serial.print(1);
+        else Serial.print(0);
+    }
+    Serial.print("-");
+    for (uint8_t i = 0; i < 8; i++) {
+        if ((blackBitMask & (1 << i)) != 0) Serial.print(1);
+        else Serial.print(0);
+    }
+    Serial.println();
 }
 
 byte readKeys(Adafruit_MCP3008 *keys)
@@ -162,7 +174,7 @@ void loop() {
                 blockUntil(lastNoteEndTime);
             } else if (!actor.getPlayback()) {
                 playback = false;
-                noTone(tonePin);
+                noTone(TONE_PIN);
                 return;
             } else {
                 Serial.println(F("Playback ongoing but no data is available!"));

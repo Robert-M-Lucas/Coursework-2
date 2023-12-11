@@ -21,6 +21,7 @@ private:
     bool recordingSelected = false;
     bool playbackSelected = false;
 
+    // Previous button values
     bool prevLeft = false;
     bool prevRight = false;
     bool prevSelect = false;
@@ -42,7 +43,6 @@ private:
     /// Called to update the button states and call corresponding function if a button is pressed
     void updateButtons();
 public:
-
     explicit ControllerInterface(ControllerStorage* storage, ControllerCommunication* communication);
 
     void init();

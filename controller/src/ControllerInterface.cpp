@@ -7,25 +7,28 @@
 #include "ControllerConstants.h"
 
 ControllerInterface::ControllerInterface(ControllerStorage *storage, ControllerCommunication *communication):
-storage(storage), communication(communication),
-lcd(LCD::RS, LCD::ENABLE, LCD::D0, LCD::D1, LCD::D2, LCD::D3) {}
+    storage(storage), communication(communication),
+    lcd(LCD::RS, LCD::ENABLE, LCD::D0, LCD::D1, LCD::D2, LCD::D3) {}
 
 
 void ControllerInterface::init() {
     Serial.println(F("[INFO] [ControllerInterface] Initialising"));
 
+    // Pull-up mode - input with be high when button is not pressed
     pinMode(LEFT_INPUT, INPUT_PULLUP);
     pinMode(RIGHT_INPUT, INPUT_PULLUP);
     pinMode(SELECT_INPUT, INPUT_PULLUP);
 
     lcd.begin(16, 2);
 
-    if (!storage->loaded()) {
+    // Show error in case of sd error
+    if (!storage->is_initialised()) {
         lcd.setCursor(4, 0);
         lcd.print(F("SD ERROR"));
         return;
     }
 
+    // Show startup information
     lcd.setCursor(0, 0);
     lcd.print(F("SD OK"));
     lcd.setCursor(0, 1);
@@ -35,6 +38,7 @@ void ControllerInterface::init() {
 
     delay(2000);
 
+    // Initial lcd refresh
     updateLCD();
 }
 
@@ -152,6 +156,7 @@ void ControllerInterface::updateButtons() {
     bool right = !digitalRead(RIGHT_INPUT);
     bool select = !digitalRead(SELECT_INPUT);
 
+    // Allows the SD card to be wiped for debugging
     if (left && right && select) {
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -189,7 +194,6 @@ void ControllerInterface::updateButtons() {
             return;
         }
     }
-
     if (left && right) { return; }
 
     // On button down. De-bouncing handled by delay in main loop

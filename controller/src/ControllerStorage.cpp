@@ -61,10 +61,10 @@ void ControllerStorage::buffer_folder(const uint8_t song) {
 }
 
 void ControllerStorage::buffer_file(const uint8_t song, const uint8_t instrument) {
-    uint8_t pos = write_num_to_buffer_pos(path_buf, song);
+    uint8_t pos = write_num_to_buffer_pos(path_buf, song); // Folder
     path_buf[pos] = '/';
     pos++;
-    pos += write_num_to_buffer_pos(path_buf + pos, instrument);
+    pos += write_num_to_buffer_pos(path_buf + pos, instrument); // File
     path_buf[pos] = '.';
     path_buf[pos+1] = 'D';
     path_buf[pos+2] = 'A';
@@ -79,10 +79,10 @@ void ControllerStorage::init() {
     // Initialise SD library
     const bool ok = SD.begin(CHIP_SELECT);
     if (ok) {
-        load = true;
+        initialised = true;
         Serial.println(F("[INFO] [ControllerStorage] SD card initialised successfully"));
     } else {
-        load = false;
+        initialised = false;
         Serial.println(F("[ERROR] [ControllerStorage] Failed to initialise SD card!"));
     }
 }
@@ -109,10 +109,13 @@ void ControllerStorage::storeBufferToDisk(Instrument instrument, uint8_t length)
 }
 
 bool ControllerStorage::deleteSong(const uint8_t song) {
+    // Check for files belonging to any instrument
+    // An instrument could be disconnected after writing to this folder so all possible files have to be checked
     for (uint8_t i = 0; i < MAX_INSTRUMENTS; i++) {
         buffer_file(song, i);
         SD.remove(path_buf);
     }
+
     buffer_folder(song);
     return SD.rmdir(path_buf);
 }
@@ -128,8 +131,6 @@ uint8_t ControllerStorage::loadSongData(const Instrument instrument, const uint8
     // Open file for reading
     buffer_file(currentSong, static_cast<uint8_t>(instrument));
     auto file = SD.open(path_buf, FILE_READ);
-
-    Serial.println(path_buf);
 
     // Move to the position in the file corresponding to the current playback position
     const auto instrumentIndex = static_cast<uint8_t>(instrument);

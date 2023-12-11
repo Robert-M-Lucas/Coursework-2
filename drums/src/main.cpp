@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#include "../../shared/src/CommunicationActor.h"
+#include "../../shared/src/ActorCommunication.h"
 #include "../../shared/src/Constants.h"
 #include "../../shared/src/Actor.h"
 #include "../../shared/src/Util.h"
@@ -36,7 +36,7 @@ void setup() {
     Serial.println(F("Init")); // F macro stores string in flash rather than RAM
 
     // Initialize I2C communication with the controller
-    CommunicationActor::initialise(Instrument::Drum, &actor);
+    ActorCommunication::initialise(Instrument::Drum, &actor);
 }
 
 // Returns true when a knock is detected

@@ -31,6 +31,7 @@ void ControllerCommunication::updateConnected() {
 }
 
 uint8_t ControllerCommunication::countConnected() {
+    // Iterate through bitmask bits and count 1s
     uint8_t count = 0;
     for (uint8_t addr = 1; addr < MAX_INSTRUMENTS; addr++) {
         if ((connected_devices_bitmask[addr / 8] & (1 << (addr % 8))) != 0) {
@@ -42,7 +43,7 @@ uint8_t ControllerCommunication::countConnected() {
 
 void ControllerCommunication::startRecording(uint8_t song) {
     storage.selectSong(song);
-    clearBuffers();
+    clearBuffers(); // Remove data from previous recording/playback
     delay(TRANSMISSION_DELAY);
     messageAll(Code::StartRecording);
 }
@@ -54,6 +55,8 @@ void ControllerCommunication::recordingLoop() {
 void ControllerCommunication::stopRecording() {
     messageAll(Code::StopRecording);
     delay(TRANSMISSION_DELAY);
+
+    // Save all remaining data in instrument buffers to storage
     Serial.print(F("[INFO] [ControllerCommunication] Reading all buffers after recording... "));
     while (storeAllInstrumentBuffers()) {
         delay(TRANSMISSION_DELAY);
@@ -63,13 +66,16 @@ void ControllerCommunication::stopRecording() {
 
 void ControllerCommunication::startPlayback(uint8_t song) {
     storage.selectSong(song);
-    clearBuffers();
+    clearBuffers(); // Remove data from previous recording/playback
     delay(TRANSMISSION_DELAY);
+
+    // Fill instrument buffers before playback begins
     Serial.print(F("[INFO] [ControllerCommunication] Writing all buffers before playback... "));
     while (writeAllInstrumentBuffers()) {
         delay(TRANSMISSION_DELAY);
     }
     Serial.println(F("Done"));
+
     delay(TRANSMISSION_DELAY);
     messageAll(Code::StartPlayback);
 }
@@ -88,7 +94,7 @@ void ControllerCommunication::clearBuffers() {
     messageAll(Code::ClearBuffer);
 }
 
-unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
+uint8_t ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
     // Set next request to buffer length
     message(instrument, Code::RequestBufferLength);
 
@@ -97,7 +103,6 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
     // Request buffer length
     Wire.requestFrom(static_cast<uint8_t>(instrument), 1u);
 
-    // Wait for response
     delay(TRANSMISSION_DELAY);
 
     if (Wire.available() <= 0) { Serial.println(F("[ERROR] [ControllerCommunication] Buffer length not transmitted!")); }
@@ -111,7 +116,7 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
 
     delay(TRANSMISSION_DELAY);
 
-    // Request buffer data
+    // Request buffer data now that length is known
     Wire.requestFrom(static_cast<uint8_t>(instrument), length);
 
     // Receive buffer data
@@ -124,7 +129,6 @@ unsigned ControllerCommunication::storeInstrumentBuffer(Instrument instrument) {
 }
 
 bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
-//    Serial.println("Writing to instrument");
     // Set next request buffer space remaining
     message(instrument, Code::RequestBufferSpaceRemaining);
 
@@ -141,27 +145,14 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     auto length = static_cast<uint8_t>(Wire.read());
     if (Wire.available() > 0) { Serial.println(F("[ERROR] [ControllerCommunication] Too much buffer empty data transferred")); }
 
-    Serial.println("Len");
-    Serial.println(length);
-
+    // Limit transfer size due to Wire.h max buffer size
     length = min(length, MAX_TRANSFER_SIZE - 2);
 
-    Serial.println(length);
-
-//    Serial.print("Length before: ");
-//    Serial.println(length);
-
     // Load song data for this instrument into the storage buffer
-    length = storage.loadSongData(instrument, length); // Length may be set to less than requested if not enough data is available
-    Serial.println(length);
+    // Length may be set to less than requested if not enough data remains on the SD
+    length = storage.loadSongData(instrument, length);
+
     const byte* buffer = storage.getBuffer();
-
-//    Serial.print("Length after");
-//    Serial.println(length);
-
-//    if (length == 0) {
-//        return false;
-//    }
 
     delay(TRANSMISSION_DELAY);
 
@@ -174,7 +165,6 @@ bool ControllerCommunication::writeInstrumentBuffer(Instrument instrument) {
     );
 
     return length > 0;
-//    return true;
 }
 
 bool ControllerCommunication::storeAllInstrumentBuffers() {

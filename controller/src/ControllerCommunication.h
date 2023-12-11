@@ -32,7 +32,7 @@ private:
     /// Transmit a `Code` to all connected instruments
     void messageAll(Code code) const;
 
-    /// Read bytes from an instrument
+//    /// Read bytes from an instrument
 //    template <class T>
 //    T readResponse();
 
@@ -42,16 +42,16 @@ private:
     /// Transmit a `Code` alongside the buffer contents to an instrument
     static void sendBuffer(Instrument instrument, Code code, const byte *buffer, uint8_t length);
 
-    /// Write instrument buffer to storage
-    unsigned storeInstrumentBuffer(Instrument instrument);
+    /// Write instrument buffer to storage. Returns amount of data stored
+    uint8_t storeInstrumentBuffer(Instrument instrument);
 
-    /// Write song data to an instrument
+    /// Write song data to an instrument. Returns whether any data was written
     bool writeInstrumentBuffer(Instrument instrument);
 
-    /// Write all instrument buffers to storage
+    /// Write all instrument buffers to storage. Returns whether any data was stored
     bool storeAllInstrumentBuffers();
 
-    /// Write song data to all instruments
+    /// Write song data to all instruments. Returns whether any data was written
     bool writeAllInstrumentBuffers();
 
     /// Clears every instrument's buffer
