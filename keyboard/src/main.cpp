@@ -177,6 +177,8 @@ void loop() {
                 noTone(TONE_PIN);
                 return;
             } else {
+                unsigned int notes[3] = {0, 0, 0};
+                playNotes(notes);
                 Serial.println(F("Playback ongoing but no data is available!"));
             }
         } else if (playback) {
