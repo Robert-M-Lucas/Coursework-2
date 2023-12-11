@@ -14,7 +14,7 @@ const int inputPiezoPin = A0;
 
 const int knockThreshold = 40;
 
-const int toneFrequency = 200;
+const int toneFrequency = 300;
 const int toneDuration  = 100;
 
 unsigned long startTime = 0; // Timestamp of recording started
