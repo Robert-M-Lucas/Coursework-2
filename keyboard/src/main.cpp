@@ -12,8 +12,6 @@ LEDActor actor = LEDActor(2, 4);
 Adafruit_MCP3008 inputAdcWhiteKeys;
 Adafruit_MCP3008 inputAdcBlackKeys;
 
-const int tonePin = 3;
-
 constexpr unsigned highThreshold = 512;
 constexpr byte emptyByte = 0;
 
@@ -34,7 +32,7 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     // Set
-    pinMode(tonePin, OUTPUT);
+    pinMode(TONE_PIN, OUTPUT);
 
     //Initiate USB serial communication to allow debugging via USB
     Serial.begin(SERIAL_BAUD_RATE);
@@ -115,9 +113,9 @@ void playNotes(unsigned int* notes) {
     // So I just play the first one
 
     if (notes[0] != 0) {
-        tone(tonePin, notes[0]);
+        tone(TONE_PIN, notes[0]);
     } else {
-        noTone(tonePin);
+        noTone(TONE_PIN);
     }
 
     Serial.println(F("Writing notes:"));
@@ -176,7 +174,7 @@ void loop() {
                 blockUntil(lastNoteEndTime);
             } else if (!actor.getPlayback()) {
                 playback = false;
-                noTone(tonePin);
+                noTone(TONE_PIN);
                 return;
             } else {
                 Serial.println(F("Playback ongoing but no data is available!"));
