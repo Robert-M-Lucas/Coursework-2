@@ -1,0 +1,1 @@
+A digital instrument with a central recording / playback board that controls other 'instruments' allowing you to record and playback music. Created using a custom communication protocol and efficient storage format to allow the daisy-chaining of up to 127 'instruments'.
